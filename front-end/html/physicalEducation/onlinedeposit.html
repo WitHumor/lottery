@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>线上取款</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="Shortcut Icon" href="favicon.ico">
+    <link href="../../fonts/iconfont.css" rel="stylesheet">
+    <link href="../../css/common.css" rel="stylesheet">
+    <link href="../../css/physicalEducation/deposit.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="thiscontent">
+        <ul class="paytype">
+            <li class="active" litype="BTB">
+                <i class="icon-btb"></i><span class="alignmid">数字货币支付</span></li>
+            <!-- <li litype="SM">
+            扫码支付</li><li litype="YHK">
+            银行卡转账
+            </li> -->
+        </ul>
+        <div class="paycontent">
+            <div class="active" divtype="BTB">
+                <div id="firsts">
+                    <div class="form-group">
+                        <label class="col-2 control-label"></label>
+                        <div class="col-10 yelCol">
+                            当前汇率：1 <span>比特币</span> = <span class="cny-btc-rate">61359.78</span> 点
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-2 control-label">充值币种：</label>
+                        <div class="col-7">
+                            <select class="form-control">
+                                <option value="BTC">比特币（BTC）</option>
+                                <option value="EOS">柚子币（EOS）</option>
+                                <option value="ETH">以太币（ETH）</option>
+                                <option value="XRP">瑞波币（XRP）</option>
+                                <option value="LTC">莱特币（LTC）</option>
+                                <option value="QTVM">量子币（QTVM）</option>
+                            </select>
+                        </div>
+                        <div class="col-3 btnA btnYel">
+                            <a class="pointer-link">
+                                <i class="iconfont icon-goldadd fSize"></i>
+                                <em>币种</em>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-2 control-label">充值金额：</label>
+                        <div class="col-7">
+                            <input id="rechargebtb" name="btc" type="text" maxlength="9" class="form-control" placeholder="单笔充值金额 0.1-200 个数字货币">
+                        </div>
+                        <div class="col-3 btnA btnYel">
+                            <a class="pointer-link">
+                                <i class="iconfont icon-jine fSize"></i>
+                                <em>货币</em>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-2 control-label"></label>
+                        <div class="col-7">
+                            <input id="btb-rmb" type="text" class="form-control" readonly>
+                        </div>
+                        <div class="col-3 btnA btnYel2">
+                            <a class="pointer-link">
+                                <i class="iconfont icon-shuzihuobichongzhi fSize"></i>
+                                <em>点</em>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="error-tip btc-tip"></div>
+                    <div class="form-group">
+                        <label class="col-2 control-label">首存特惠：</label>
+                        <div class="col-7">
+                            <input id="discounts" type="text" class="form-control" readonly placeholder="首存即送 188 点">
+                        </div>
+                        <div class="col-3 btnA btnRed">
+                            <a class="pointer-link">
+                                <span class="hongb">188</span>点
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-2 control-label">充值优惠：</label>
+                        <div class="col-7">
+                            <input id="charge-dis" type="text" class="form-control" readonly placeholder="优惠金额无上限">
+                        </div>
+                        <div class="col-3 btnA btnRed">
+                            <a class="pointer-link">
+                                <span class="hongb">1%</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-2 control-label">到账金额：</label>
+                        <div class="col-7 yelCol">
+                            <input id="total-charge" type="text" class="form-control" readonly placeholder="充值金额 + 优惠金额">
+                        </div>
+                        <div class="col-3 btnA btnRed">
+                            <a class="pointer-link">
+                                <i class="iconfont icon-shuzihuobichongzhi fSize"></i>
+                                <em>点</em>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-2"></div>
+                        <div class="col-10 mt15">
+                            <a class="btn-submit btn-next">下一步</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="nexts" class="hide">
+                    <div class="form-group">
+                        <label class="col-2 control-label">可得优惠：</label>
+                        <div class="col-10">
+                            <input id="can-dis" type="text" class="form-control next-part" readonly value="61359.78 点">
+                        </div>
+                    </div>
+                    <div class="error-tip" style="display: block;">优惠将在充值到账后，30分钟内自动添加</div>
+                    <div class="form-group">
+                        <label class="col-2 control-label">订单号：</label>
+                        <div class="col-10">
+                            <input id="order-num" type="text" class="form-control next-part" readonly value="VC18050818384865">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-2 control-label">充值金额：</label>
+                        <div class="col-10">
+                            <input id="re-amount" type="text" class="form-control next-part" readonly value="1 比特币">
+                            <span class="form-control-right">（15195.66点）</span>
+                            <a id="btn-copy-amount" data-clipboard-text="1" class="btn btn-copy btn-orange">复制</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-2 control-label">收款地址：</label>
+                        <div class="col-10">
+                            <input id="bene-address" type="text" class="form-control next-part" readonly value="0x196b522DB2e0EEd8bEf28d5446C0F4001DF02F4D">
+                            <a id="btn-copy-address" data-clipboard-text="0x196b522DB2e0EEd8bEf28d5446C0F4001DF02F4D" class="btn btn-copy btn-orange">复制</a>
+                        </div>
+                    </div>
+                    <div class=" other-tip"><img src="../../img/ewm.jpg" /></div>
+                    <div class="other-tip">您可通过复制或二维码扫描，以获得收款地址来进行充值。</div>
+                    <div class="form-group">
+                        <div class="col-2"></div>
+                        <div class="col-10 mt15 finish-div">
+                        </div>
+                    </div>
+                    <p class="tipss col-offset-2">温馨提示：订单有效期为15分钟，请于有效期内完成转账汇款，如订单失效，则需重新提交充值申请，并按照最新汇率换算。</p>
+                </div>
+            </div>
+            <!-- <div divtype="SM"></div>
+            <div divtype="YHK"></div> -->
+        </div>
+    </div>
+    <div class="hrs"></div>
+    <script src="../../lib/jquery-3.3.1.min.js"></script>
+    <!-- 页面配置文件 -->
+    <script src="../../js/config/config.js"></script>
+    <!-- 公共文件 -->
+    <script src="../../js/com.js"></script>
+    <script src="../../js/ZeroClipboard.js"></script>
+    <script src="../../plugins/layer/layer.min.js"></script>
+    <script src="../../fonts/iconfont.js"></script>
+    <script src="../../js/physicalEducation/deposit.js"></script>
+</body>
+
+</html>

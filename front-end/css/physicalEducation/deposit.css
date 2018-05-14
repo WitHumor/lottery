@@ -1,0 +1,269 @@
+.thiscontent {
+    margin: 80px 100px 20px;
+    border: 1px solid #B4B4B4;
+}
+
+.paytype {
+    color: #454040;
+    font-size: 22px;
+    background-color: #fff;
+    border-bottom: 4px solid #472C35;
+    /*#CB910F*/
+}
+
+.paytype li {
+    display: inline-block;
+    height: 60px;
+    line-height: 60px;
+    vertical-align: middle;
+    /*width: 33.3%;*/
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    opacity: .9;
+    border-right: 1px solid #B4B4B4;
+}
+
+.paytype li:hover {
+  opacity: 1;
+}
+
+.paytype li.active {
+    color: #fff;
+    /*#CB910F*/
+    background-color: #4A2B2B;
+    border: none;
+}
+
+.paytype li:last-child {
+    border-right: none;
+}
+
+.icon-btb {
+    width: 26px;
+    height: 26px;
+    display: inline-block;
+    vertical-align: middle;
+    background-image: url(../../img/deposit_tabs_icons.png);
+    margin-right: 5px;
+    background-position: -49px -169px;
+}
+
+.paycontent {
+    position: relative;
+    padding: 30px 0;
+    margin: 0 auto;
+    background-color: #fff;
+}
+
+.paycontent > div {
+    display: none;
+    /*width: 480px;*/
+    width: 550px;
+    margin: 0 auto;
+    /*background-color: gray;*/
+    font-family: "Microsoft YaHei", Arial;
+}
+
+.paycontent > div.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group:after {
+    content: " ";
+    display: table;
+    clear: both;
+}
+
+.form-group > * {
+    position: relative;
+    height: 38px;
+    line-height: 38px;
+    font-size: 14px;
+}
+
+.form-group .yelCol {
+    color: #D4230F;
+}
+
+.form-control {
+    height: 38px;
+    line-height: 38px;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    border-color: #e5e5e5;
+}
+
+.form-group .btnYel {
+    /*#92BDF1*/
+    background: #F9AB4D;
+}
+
+.form-group .btnYel2 {
+    /*#175EB4  #f76a1d*/
+    background: #f7941d;
+}
+
+.form-group .btnRed {
+    background: #be4822;
+}
+
+.form-group .btnA {
+    position: relative;
+    -webkit-border-top-right-radius: 5px;
+    border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    height: 38px;
+    padding-left: 15px;
+}
+
+.form-group .btnA a {
+    color: #fff;
+    line-height: 38px;
+    outline: none;
+}
+
+.form-group .btnA a > i {
+    margin-left: 8px;
+    margin-right: 10px;
+}
+
+.pointer-link {
+    cursor: pointer;
+}
+
+.form-group em {
+    display: inline-block;
+    position: relative;
+    top: -5px;
+}
+
+.form-group .fSize {
+    font-size: 30px !important;
+}
+
+.form-group .btnA a span.hongb {
+    padding-left: 50px;
+}
+
+.form-group .hongb:before {
+    content: '';
+    width: 23px;
+    height: 30px;
+    display: block;
+    background: url(../../img/hongb.png) no-repeat;
+    position: absolute;
+    left: 25px;
+    top: 5px;
+}
+
+.form-group .mt15 {
+    margin-top: 15px;
+}
+
+.form-group .btn-submit {
+    /*width: 277px;*/
+    width: 320px;
+    display: inline-block;
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
+    /*#be4822*/
+    background-color: #C77503;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    height: 38px;
+    line-height: 38px;
+    padding: 0;
+    opacity: .9;
+}
+
+.form-group .btn-submit:hover {
+    opacity: 1;
+}
+
+.form-group .btn-submit.disabled {
+    background-color: #ccc !important;
+}
+
+.form-group .btn-finish {
+    width: 380px;
+    background-color: #be4822;
+}
+
+.error-tip {
+    display: none;
+    -webkit-transform: translate(-50%, -50%);
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    width: 500px;
+    padding: 5px;
+    color: #be4822;
+    text-align: left;
+    font-size: 14px;
+    margin-left: 135px;
+    position: relative;
+    left: 200px;
+    top: 5px;
+}
+
+.other-tip {
+    position: relative;
+    display: block;
+    text-align: center;
+    width: 550px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 5px;
+    color: #be4822;
+    font-size: 14px;
+}
+
+.other-tip img {
+    max-width: 300px;
+    border-radius: 5px;
+    border: 1px solid gray;
+    padding: 10px;
+}
+
+.form-control + .form-control-right {
+    color: #594333;
+}
+
+.form-control-right {
+    position: absolute;
+    top: 0;
+    right: 95px;
+    z-index: 9;
+}
+
+.next-part {
+    width: 380px;
+}
+
+.btn-orange {
+    background-color: #a8401e;
+    color: #fff !important;
+}
+
+.btn-copy {
+    position: absolute;
+    top: 0;
+    right: 10px;
+}
+
+.tipss {
+    width: 380px;
+    text-align: center;
+    border: 1px dashed #d1601a;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    color: #d1601a;
+    margin-top: 20px;
+}

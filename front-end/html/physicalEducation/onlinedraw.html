@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>线上取款</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="Shortcut Icon" href="favicon.ico">
+    <link href="../../fonts/iconfont.css" rel="stylesheet">
+    <link href="../../css/common.css" rel="stylesheet">
+    <link href="../../css/physicalEducation/draw.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="thiscontent">
+        <!-- <div class="userinfo">
+            <div class="col-12 utitles">账户信息</div>
+            <div class="inform">
+                <label class="col-4">账户：</label>
+                <div class="col-8">hffse5215e51f</div>
+            </div>
+            <div class="inform">
+                <label class="col-4">余额：</label>
+                <div class="col-8">500000000点</div>
+            </div>
+            <div class="Clear"></div>
+        </div> -->
+        <div class="paycontent">
+            <div class="drawtitle">取款单</div>
+            <div class="form-group">
+                <label class="col-2 control-label"></label>
+                <div class="col-10 yelCol">
+                    当前汇率：1 <span class="bi-type">比特币</span> = <span class="cny-rate">61359.78</span> 点
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-2 control-label">取款币种：</label>
+                <div class="col-7">
+                    <select id="bitype" class="form-control">
+                        <option value="BTC">比特币（BTC）</option>
+                        <option value="EOS">柚子币（EOS）</option>
+                        <option value="ETH">以太币（ETH）</option>
+                        <option value="XRP">瑞波币（XRP）</option>
+                        <option value="LTC">莱特币（LTC）</option>
+                        <option value="QTVM">量子币（QTVM）</option>
+                    </select>
+                </div>
+                <div class="col-1 btnA btnYel2">
+                    <a class="pointer-link">
+                        <i class="iconfont icon-goldadd fSize"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-2 control-label"><label class="yelCol fwb">*&nbsp;&nbsp;</label>取款金额：</label>
+                <div class="col-7">
+                    <input id="rechargebtb" type="text" inpt="in_rec" maxlength="9" class="form-control forminput" placeholder="取款金额至少1000点">
+                </div>
+                <div class="col-1 btnA btnYel2">
+                    <a class="pointer-link">
+                        <i class="iconfont icon-jine fSize"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-2 control-label"></label>
+                <div class="col-7">
+                    <input id="btb-rmb" type="text" class="form-control" readonly>
+                </div>
+                <div class="col-1 btnA btnYel2">
+                    <a class="pointer-link">
+                        <i class="iconfont icon-shuzihuobichongzhi fSize fwb"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="error-tip btc-tip" inpt="in_rec"></div>
+            <div class="form-group">
+                <label class="col-2 control-label"><label class="yelCol fwb">*&nbsp;&nbsp;</label>电话号码：</label>
+                <div class="col-7">
+                    <input id="telphone" type="text" inpt="in_tel" class="form-control forminput" maxlength="12" placeholder="">
+                </div>
+                <div class="col-1 btnA btnYel2">
+                    <a class="pointer-link">
+                        <i class="iconfont icon-dianhuahaoma fSize fwb"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="error-tip btc-tip" inpt="in_tel"></div>
+            <div class="form-group">
+                <label class="col-2 control-label"><label class="yelCol fwb">*&nbsp;&nbsp;</label>钱包地址：</label>
+                <div class="col-7">
+                    <input id="purseaddress" type="text" inpt="in_pur" class="form-control forminput" placeholder="">
+                </div>
+                <div class="col-1 btnA btnYel2">
+                    <a class="pointer-link">
+                        <i class="iconfont icon-qianbaodizhi fSize fwb"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="error-tip btc-tip" inpt="in_pur"></div>
+            <div class="form-group">
+                <label class="col-2 control-label"><label class="yelCol fwb">*&nbsp;&nbsp;</label>取款密码：</label>
+                <div class="col-7">
+                    <input id="withpass" type="text" inpt="in_wit" class="form-control forminput" maxlength="4" placeholder="">
+                </div>
+                <div class="col-1 btnA btnYel2">
+                    <a class="pointer-link">
+                        <i class="iconfont icon-mima fSize fwb"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="error-tip btc-tip" inpt="in_wit"></div>
+            <div class="form-group hide">
+                <label class="col-2 control-label">矿工费用</label>
+                <div class="col-7">
+                    <input id="" type="text" class="form-control">
+                </div>
+                <div class="col-1 btnA btnYel2">
+                    <a class="pointer-link">
+                        <i class="iconfont icon-dianhuahaoma fSize fwb"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-2 control-label">备注：</label>
+                <div class="col-7 yelCol">
+                    <input id="beizhu" type="text" class="form-control" placeholder="">
+                </div>
+                <div class="col-1 btnA btnYel2">
+                    <a class="pointer-link">
+                        <i class="iconfont icon-beizhu fSize fwb"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-2"></div>
+                <div class="col-7 mt15">
+                    <a class="btn-submit">提交</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hrs"></div>
+    <script src="../../lib/jquery-3.3.1.min.js"></script>
+    <!-- 页面配置文件 -->
+    <script src="../../js/config/config.js"></script>
+    <!-- 公共文件 -->
+    <script src="../../js/com.js"></script>
+    <script src="../../plugins/layer/layer.min.js"></script>
+    <script src="../../fonts/iconfont.js"></script>
+    <script src="../../js/physicalEducation/draw.js"></script>
+</body>
+
+</html>

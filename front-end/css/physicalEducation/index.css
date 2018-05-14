@@ -1,0 +1,291 @@
+
+.navigate {
+    background-color: #AB6607;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    padding-top: 30px;
+}
+
+.nav-type, .ball-type {
+    margin-bottom: 0px;
+}
+
+.nav-type li {
+    width: 100px;
+    margin-right: 5px;
+    font-weight: bold;
+    text-align: center;
+    list-style: none;
+    display: inline-block;
+}
+
+.nav-type a {
+    display: block;
+    padding: 10px 5px 5px;
+    background-color: #493218;
+    color: #E7B565;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-top: 1px solid gray;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+}
+
+.nav-type a:hover,
+.ball-type a:hover {
+    color: #F8C100;
+}
+
+.nav-type a.active {
+    color: #F8C100;
+    background-color: #850E02;
+}
+
+.nav-type .time {
+    width: 260px;
+    color: #fff;
+}
+
+.left-part {
+    width: 273px;
+    height: 700px;
+    background-color: #493721;
+    float: left;
+}
+
+.right-part {
+    height: 700px;
+    float: left;
+    width: calc(100% - 273px);
+    background-color: #fff;
+    border-left: 1px solid #fff;
+}
+
+.right-part li {
+    list-style: none;
+    display: inline-block;
+}
+
+.ball-type,
+.other-type {
+    color: #fff;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    padding: 0 10px;
+    border-bottom: 1px solid #fff;
+}
+
+.ball-type {
+    background-color: #54300A;
+}
+
+.ball-type a {
+    line-height: 30px;
+    display: block;
+}
+
+.ball-type a.active {
+    color: #F9C100;
+}
+
+.other-type {
+    background-color: #260707;
+}
+
+#datalists {
+    width: 100%;
+    height: 630px;
+    max-height: 630px;
+    padding: 20px;
+    background-color: #fff;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.listcontainer {
+    color: #fff;
+    border-radius: 5px;
+    border: 3px solid #BC9A3F;
+}
+
+.listss {
+    line-height: 30px;
+    padding: 0px 5px;
+    font-size: 14px;
+}
+
+.listtitle {
+    font-weight: bold;
+    background-color: #5F452C;
+}
+
+.listinfo {
+    margin-top: 1px;
+    background-color: #86715C;
+}
+
+.listinfo button {
+    width: 70px;
+    line-height: 20px;
+    margin: 2px 0;
+    padding: 3px 5px;
+    color: #D8AB10;
+    border: none;
+    float: right;
+    background-color: #525252;
+}
+
+.listinfo button:hover {
+    opacity: .8;
+}
+
+.listcontainer table {
+    background-color: #D7D7C1;
+    font-size: 12px;
+    width: 100%;
+    text-align: center;
+    color: #000;
+}
+
+.listcontainer .theads {
+    background-color: #C8A670;
+}
+
+.listcontainer .everytitle {
+    background-color: #FCF9CE;
+    text-align: left;
+    color: #4B3621;
+    font-weight: bold;
+}
+
+.listcontainer .coal {
+    white-space: nowrap;
+    line-height: 19px;
+    text-align: left;
+}
+
+.canclick {
+    font-weight: bold;
+    color: red;
+}
+
+tr {
+    background-color: #fff;
+    height: 19px;
+}
+
+td,
+th {
+    padding: 2px 5px;
+}
+
+.dealingTicket {
+    margin: 20px 10px;
+    padding: 5px;
+    font-size: 12px;
+    line-height: 20px;
+    border-radius: 5px;
+    background-color: #FEF6E4;
+}
+
+.dtitle {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.dleague {
+    background-color: #EBDCBF;
+    padding-left: 5px;
+    line-height: 30px;
+}
+
+.dleague button {
+    float: right;
+    background-color: #00AE4C;
+    border: none;
+    margin: 4px 5px;
+    padding: 1px 4px;
+    line-height: 20px;
+    color: #fff;
+    border-radius: 2px;
+}
+
+.commons {
+    background-color: #E1D6C2;
+    margin-bottom: 5px;
+    padding: 0 8px;
+    border: 1px solid #493721;
+}
+
+
+/*.tinfo {
+        border: 1px solid #493721;
+    }*/
+
+.tinfo>p:first-child {
+    background-color: #CFC0A1;
+    margin: 0 -8px;
+    padding: 0 8px;
+}
+
+.chsteam {
+    background-color: #ffffff;
+    border: 2px solid #937B52;
+}
+
+.tranDetail {
+    padding: 5px 8px;
+}
+
+.cancelDeal,
+.sureDeal {
+    height: 28px;
+    line-height: 28px;
+    padding: 0 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #2C2C2C;
+    background-color: #525252;
+}
+
+.cancelDeal {
+    width: calc(45% - 5px);
+    color: #fff;
+}
+
+.sureDeal {
+    width: calc(55% - 5px);
+    float: right;
+    color: #F8C100;
+}
+
+.noDeal {
+    margin: 10px 0;
+    height: 100px;
+    text-align: center;
+    padding-top: 30px;
+    background-color: #E3CFAA;
+}
+
+.noDeal div {
+    font-weight: bold;
+}
+
+.noDeal button {
+    width: 30%;
+    height: 25px;
+    line-height: 25px;
+    margin-top: 10px;
+    text-align: center;
+    background-color: #525252;
+    border: 1px solid #2C2C2C;
+}
+.radio {
+    font-size: 16px;
+    color: red;
+    font-weight: bold;
+}

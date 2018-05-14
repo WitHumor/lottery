@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>资金交易记录</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="Shortcut Icon" href="favicon.ico">
+    <link href="../../fonts/iconfont.css" rel="stylesheet">
+    <link href="../../plugins/layui/css/layui.css" rel="stylesheet">
+    <link href="../../css/common.css" rel="stylesheet">
+    <link href="../../css/physicalEducation/tradingrecord.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="thiscontent">
+        <ul class="recordtype">
+            <li class="active" litype="1">
+                提现记录</li>
+            <li litype="0">
+                充值记录</li>
+        </ul>
+        <div class="thislist">
+            <div class="filtrate">
+                <label>日期范围</label>
+                <input id="startTime" type="text" readonly class="input-group" placeholder="开始时间" />
+                <label>至</label>
+                <input id="endTime" type="text" readonly class="input-group" placeholder="开始时间" />
+                <div class="czjl" style="display: none;">
+                    <label>类型</label>
+                    <div class="input-group">
+                        <select id="withdrawType" class="form-control">
+                            <option value="1">比特币支付</option>
+                        </select>
+                    </div>
+                </div>
+                <label>状态</label>
+                <div class="input-group">
+                    <select id="withdrawStatus" class="form-control">
+                        <option value="" selected>全部</option>
+                    </select>
+                </div>
+                <button class="btn btn-orange" id="all-search"><i class="iconfont icon-search f14"></i> 查询</button>
+            </div>
+            <table id="deal-list" lay-filter="test"></table>
+        </div>
+        <!-- <div dtype="RCR">
+            <div class="filtrate"></div>
+        </div> -->
+    </div>
+    <div class="hrs"></div>
+    <!-- 全局js -->
+    <script src="../../lib/jquery-3.3.1.min.js"></script>
+    <!-- 页面配置文件 -->
+    <script src="../../js/config/config.js"></script>
+    <!-- 公共文件 -->
+    <script src="../../js/com.js"></script>
+    <script src="../../plugins/layer/layer.min.js"></script>
+    <script src="../../plugins/laydate/laydate.js"></script>
+    <script src="../../plugins/layui/layui.js"></script>
+    <script src="../../fonts/iconfont.js"></script>
+    <script src="../../js/physicalEducation/tradingrecord.js"></script>
+</body>
+
+</html>

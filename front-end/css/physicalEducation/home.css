@@ -1,0 +1,93 @@
+
+
+.banner {
+    height: 400px;
+    /*width: 1000px;*/
+    font-size: 40px;
+    text-align: center;
+    /*margin: 0 auto;*/
+    margin-bottom: 20px;
+    background-color: #464576;
+}
+
+.carousel-item {
+    position: relative;
+    line-height: 400px;
+    color: #fff;
+}
+
+.content {
+    margin: 0 auto;
+    width: 1000px;
+}
+
+.inform {
+    border: 1px solid #083A67;
+    border-radius: 10px;
+    background-color: #031322;
+    height: 50px;
+    line-height: 50px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.inform marquee {
+    cursor: pointer;
+    display: inline-block;
+    width: calc(100% - 150px);
+}
+
+.infoicon {
+    padding: 0 20px;
+    font-weight: bold;
+    background-color: #37A4E1;
+    display: inline-block;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    float: left;
+    height: 48px;
+}
+
+.game {
+    /*width: 950px;*/
+    text-align: center;
+    font-size: 24px;
+}
+
+.game > a {
+    height: 300px;
+    width: 270px;
+    margin: 0 30px 30px;
+    padding: 15px;
+    float: left;
+    opacity: .9;
+    background-color: #2D7D9F;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.game img {
+    margin-top: 10px;
+}
+
+.game p i {
+    font-size: 24px;
+}
+
+.game > a:hover {
+    color: #CCAC38;
+    border: 1px solid #CCAC38;
+    opacity: 1;
+}
+
+.oinfo {
+    position: relative;
+    text-align: center;
+}
+
+.oinfo > img {
+    margin: 0 auto;
+    width: 450px;
+    opacity: .8;
+    cursor: pointer;
+}
