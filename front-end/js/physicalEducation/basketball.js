@@ -134,16 +134,16 @@ function analysis(datas) {
                 '<td rowspan="2">' + timeabout + '</td>' +
                 '<td class="coal" rowspan="2">' + item[withdraws('team_h')] + '<br>' + item[withdraws('team_c')] + '</td>' +
                 '<td><a href="javascript:void(0);" class="canclick" vi="ior_MH">' + item[withdraws('ior_MH')] + '</a></td>' +
-                '<td class="t_right">' + (item[withdraws('strong')] == 'H' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RH">' + item[withdraws('ior_RH')] + '</a></td>' +
-                '<td>' + item[withdraws('ratio_o')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUC">' + item[withdraws('ior_OUC')] + '</a></td>' +
-                '<td class="t_right bgFCF9E7">' + item[withdraws('ratio_ouho')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUHO">' + item[withdraws('ior_OUHO')] + '</a></td>' +
-                '<td class="t_right bgFCF9E7">' + item[withdraws('ratio_ouhu')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUHU">' + item[withdraws('ior_OUHU')] + '</a></td>' +
+                '<td class="t_right" fronts="'+ (item[withdraws('strong')] == 'H' ? 'ratio' : '') +'">' + (item[withdraws('strong')] == 'H' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RH">' + item[withdraws('ior_RH')] + '</a></td>' +
+                '<td fonts="ratio_o">' + item[withdraws('ratio_o')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUC">' + item[withdraws('ior_OUC')] + '</a></td>' +
+                '<td class="t_right bgFCF9E7" fonts="ratio_ouho">' + item[withdraws('ratio_ouho')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUHO">' + item[withdraws('ior_OUHO')] + '</a></td>' +
+                '<td class="t_right bgFCF9E7" fonts="ratio_ouhu">' + item[withdraws('ratio_ouhu')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUHU">' + item[withdraws('ior_OUHU')] + '</a></td>' +
                 '</tr>';
             html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="C"><td><a href="javascript:void(0);" class="canclick" vi="ior_MC">' + item[withdraws('ior_MC')] + '</a></td>' +
-                '<td class="t_right">' + (item[withdraws('strong')] == 'C' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RC">' + item[withdraws('ior_RC')] + '</a></td>' +
-                '<td>' + item[withdraws('ratio_u')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUH">' + item[withdraws('ior_OUH')] + '</a></td>' +
-                '<td class="t_right bgECE3C4">' + item[withdraws('ratio_ouco')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUCO">' + item[withdraws('ior_OUCO')] + '</a></td>' +
-                '<td class="t_right bgECE3C4">' + item[withdraws('ratio_oucu')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUCU">' + item[withdraws('ior_OUCU')] + '</a></td>' +
+                '<td class="t_right" fronts="'+ (item[withdraws('strong')] == 'C' ? 'ratio' : '') +'">' + (item[withdraws('strong')] == 'C' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RC">' + item[withdraws('ior_RC')] + '</a></td>' +
+                '<td fonts="ratio_u">' + item[withdraws('ratio_u')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUH">' + item[withdraws('ior_OUH')] + '</a></td>' +
+                '<td class="t_right bgECE3C4" fonts="ratio_ouco">' + item[withdraws('ratio_ouco')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUCO">' + item[withdraws('ior_OUCO')] + '</a></td>' +
+                '<td class="t_right bgECE3C4" fonts="ratio_oucu">' + item[withdraws('ratio_oucu')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUCU">' + item[withdraws('ior_OUCU')] + '</a></td>' +
                 '</tr>';
             var finfo = JSON.stringify({
                 gid: item[withdraws('gid')],
@@ -160,6 +160,7 @@ function analysis(datas) {
         var me = $(this);
         tgid = me.parents('tr').attr('gid'),
             tmtype = me.parents('tr').attr('tmtype'),
+            fonts = me.parents('td').attr('fonts'),
             finfo = JSON.parse(me.parents('tr').siblings('tr[fgid="f' + tgid + '"]').attr('finfo').replace(/'/g, '"')),
             navtype = $('#navType a.active').attr('tabType'),
             balltype = 'BK';
@@ -179,14 +180,18 @@ function analysis(datas) {
         // if(me.hasClass('odd_even')) {
         //     getData.rtype = nt + (tmtype=='H' ? 'ODD' : 'EVEN');
         // }
-        var dsinfo = JSON.stringify({
+        var dsinfojson = {
             gid: finfo.gid,
             url: currentUrl,
             ratio: me.attr('vi'),
             bet: tmtype,
             betType: 'BK',
             ratioData: parseFloat(me.text()).toFixed(2),
-        }).replace(/"/g, '\'');
+        };
+        if(fonts) {
+            dsinfojson.iorRatio = fonts;
+        }
+        var dsinfo = JSON.stringify(dsinfojson).replace(/"/g, '\'');
         var html = '<div class="dtitle">交易单</div>' +
             '<div class="dleague"><span>篮球美式足球</span></div>' +
             '<div class="tinfo commons">' +
