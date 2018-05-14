@@ -104,8 +104,34 @@ function analysis(datas) {
                 leagues = item[withdraws('league')];
                 html += '<tr class="everytitle"><td colspan="7">&nbsp;&nbsp;' + item[withdraws('league')] + '</td></tr>';
             }
+            var timeabout = '';
+            if ($('#navType a.active').attr('tabType') == 'today') {
+                timeabout = item[withdraws('datetime')].replace("RunningBall", "<span class=\"c_red\">滚球<span>");
+            } else {
+                var knobble = ' - ';
+                switch (item[withdraws('nowSession')]) {
+                    case 'Q1':
+                        knobble = "第一节";
+                        break;
+                    case 'Q2':
+                        knobble = "第二节";
+                        break;
+                    case 'Q3':
+                        knobble = "第三节";
+                        break;
+                    case 'Q4':
+                        knobble = "第四节";
+                        break;
+                    case 'HT':
+                        knobble = "半场";
+                        break;
+                    default:
+                        knobble = " - ";
+                };
+                timeabout = '<div class="halftimes"><div >' + knobble + '</div></div><div>' + (item[withdraws('scoreH')]||0) + ' - ' + (item[withdraws('scoreC')]||0) + '</div>';
+            }
             html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="H">' +
-                '<td rowspan="2">' + item[withdraws('datetime')].replace("RunningBall", "<span class=\"c_red\">滚球<span>") + '</td>' +
+                '<td rowspan="2">' + timeabout + '</td>' +
                 '<td class="coal" rowspan="2">' + item[withdraws('team_h')] + '<br>' + item[withdraws('team_c')] + '</td>' +
                 '<td><a href="javascript:void(0);" class="canclick" vi="ior_MH">' + item[withdraws('ior_MH')] + '</a></td>' +
                 '<td class="t_right">' + (item[withdraws('strong')] == 'H' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RH">' + item[withdraws('ior_RH')] + '</a></td>' +
@@ -220,7 +246,7 @@ function sureDeal(datastr) {
         // $('#canwin').text((money*rate).toFixed(2));
         // return true;
     }
-    if(money < 10) {
+    if (money < 10) {
         layer.msg("下注金额至少10元！", {
             time: 2000
         });

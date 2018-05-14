@@ -116,12 +116,13 @@ function analysis(datas) {
             if($('#navType a.active').attr('tabType') == 'today') {
                 timeabout = item[withdraws('datetime')];
             } else {
-                if(item[withdraws('retimeset')].indexOf('Start') == -1) {
+                console.log(item[withdraws('retimeset')].indexOf('Start'));
+                if(item[withdraws('retimeset')].indexOf('Start') > -1) {
                     timeabout = '<div class="halftimes"><div> - </div></div><div>0 - 0</div>';
                 } else {
                     var hingf = item[withdraws('retimeset')] < '0H^45:00' ? '上半场' : '下半场';
                     var strArr = item[withdraws('retimeset')].split('^');
-                    timeabout = '<div class="halftimes"><div >'+ hingf +'</div><div>'+ strArr[1] +'</div></div><div>'+ 0 +' - '+ 0 +'</div>';
+                    timeabout = '<div class="halftimes"><div >'+ hingf +'</div><div>'+ strArr[1] +'\'</div></div><div>'+ (item[withdraws('score_h')]||0) +' - '+ (item[withdraws('score_c')]||0) +'</div>';
                 }
             }
             html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="H">' +
