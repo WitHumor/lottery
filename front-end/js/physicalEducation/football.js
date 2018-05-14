@@ -113,35 +113,38 @@ function analysis(datas) {
                 html += '<tr class="everytitle"><td colspan="9">&nbsp;&nbsp;' + item[withdraws('league')] + '</td></tr>';
             }
             var timeabout = '';
-            if($('#navType a.active').attr('tabType') == 'today') {
+            if ($('#navType a.active').attr('tabType') == 'today') {
                 timeabout = item[withdraws('datetime')];
             } else {
-                console.log(item[withdraws('retimeset')].indexOf('Start'));
-                if(item[withdraws('retimeset')].indexOf('Start') > -1) {
+                if (item[withdraws('retimeset')].indexOf('Start') > -1) {
                     timeabout = '<div class="halftimes"><div> - </div></div><div>0 - 0</div>';
                 } else {
-                    var hingf = item[withdraws('retimeset')] < '0H^45:00' ? '上半场' : '下半场';
                     var strArr = item[withdraws('retimeset')].split('^');
-                    timeabout = '<div class="halftimes"><div >'+ hingf +'</div><div>'+ strArr[1] +'\'</div></div><div>'+ (item[withdraws('score_h')]||0) +' - '+ (item[withdraws('score_c')]||0) +'</div>';
+                    if (strArr[1].indexOf('半场') > -1) {
+                        timeabout = '<div class="halftimes"><div>半场</div></div><div>' + (item[withdraws('score_h')] || 0) + ' - ' + (item[withdraws('score_c')] || 0) + '</div>';
+                    } else {
+                        var hingf = strArr[1] < '46:00' ? '上半场' : '下半场';
+                        timeabout = '<div class="halftimes"><div >' + hingf + '</div><div>' + strArr[1] + '\'</div></div><div>' + (item[withdraws('score_h')] || 0) + ' - ' + (item[withdraws('score_c')] || 0) + '</div>';
+                    }
                 }
             }
             html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="H">' +
                 '<td rowspan="3">' + timeabout + '</td>' +
                 '<td class="coal" rowspan="3">' + item[withdraws('team_h')] + '<br>' + item[withdraws('team_c')] + '<br>和局</td>' +
                 '<td><a href="javascript:void(0);" class="canclick" vi="ior_MH">' + item[withdraws('ior_MH')] + '</a></td>' +
-                '<td class="t_right" fronts="'+ (item[withdraws('strong')] == 'H' ? 'ratio' : '') +'">' + (item[withdraws('strong')] == 'H' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RH">' + item[withdraws('ior_RH')] + '</a></td>' +
+                '<td class="t_right" fronts="' + (item[withdraws('strong')] == 'H' ? 'ratio' : '') + '">' + (item[withdraws('strong')] == 'H' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RH">' + item[withdraws('ior_RH')] + '</a></td>' +
                 '<td class="t_right" fonts="ratio_o">' + item[withdraws('ratio_o')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUC">' + item[withdraws('ior_OUC')] + '</a></td>' +
                 '<td fonts="str_odd">' + item[withdraws('str_odd')] + '&nbsp;<a href="javascript:void(0);" class="canclick odd_even" vi="ior_EOO">' + item[withdraws('ior_EOO')] + '</a></td>' +
                 '<td class="bgF0F1B5"><a href="javascript:void(0);" class="canclick halfs" vi="ior_HMH">' + item[withdraws('ior_HMH')] + '</a></td>' +
-                '<td class="t_right bgF0F1B5" fronts="'+ (item[withdraws('hstrong')] == 'H' ? 'hratio' : '') +'">' + (item[withdraws('hstrong')] == 'H' ? item[withdraws('hratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick halfs" vi="ior_HRH">' + item[withdraws('ior_HRH')] + '</a></td>' +
+                '<td class="t_right bgF0F1B5" fronts="' + (item[withdraws('hstrong')] == 'H' ? 'hratio' : '') + '">' + (item[withdraws('hstrong')] == 'H' ? item[withdraws('hratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick halfs" vi="ior_HRH">' + item[withdraws('ior_HRH')] + '</a></td>' +
                 '<td class="t_right bgF0F1B5" fonts="hratio_o">' + item[withdraws('hratio_o')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick halfs" vi="ior_HOUC">' + item[withdraws('ior_HOUC')] + '</a></td>' +
                 '</tr>';
             html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="C"><td class="hide"></td><td class="hide"></td><td><a href="javascript:void(0);" class="canclick" vi="ior_MC">' + item[withdraws('ior_MC')] + '</a></td>' +
-                '<td class="t_right" fronts="'+ (item[withdraws('strong')] == 'C' ? 'ratio' : '') +'">' + (item[withdraws('strong')] == 'C' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RC">' + item[withdraws('ior_RC')] + '</a></td>' +
+                '<td class="t_right" fronts="' + (item[withdraws('strong')] == 'C' ? 'ratio' : '') + '">' + (item[withdraws('strong')] == 'C' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RC">' + item[withdraws('ior_RC')] + '</a></td>' +
                 '<td class="t_right" fonts="ratio_u">' + item[withdraws('ratio_u')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUH">' + item[withdraws('ior_OUH')] + '</a></td>' +
                 '<td fonts="str_even">' + item[withdraws('str_even')] + '&nbsp;<a href="javascript:void(0);" class="canclick odd_even" vi="ior_EOE">' + item[withdraws('ior_EOE')] + '</a></td>' +
                 '<td class="bgF0F1B5"><a href="javascript:void(0);" class="canclick halfs" vi="ior_HMC">' + item[withdraws('ior_HMC')] + '</a></td>' +
-                '<td class="t_right bgF0F1B5" fronts="'+ (item[withdraws('hstrong')] == 'H' ? 'hratio' : '') +'">' + (item[withdraws('hstrong')] == 'C' ? item[withdraws('hratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick halfs" vi="ior_HRC">' + item[withdraws('ior_HRC')] + '</a></td>' +
+                '<td class="t_right bgF0F1B5" fronts="' + (item[withdraws('hstrong')] == 'H' ? 'hratio' : '') + '">' + (item[withdraws('hstrong')] == 'C' ? item[withdraws('hratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick halfs" vi="ior_HRC">' + item[withdraws('ior_HRC')] + '</a></td>' +
                 '<td class="t_right bgF0F1B5" fonts="hratio_u">' + item[withdraws('hratio_u')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick halfs" vi="ior_HOUH">' + item[withdraws('ior_HOUH')] + '</a></td>' +
                 '</tr>';
             html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="N"><td class="hide"></td><td class="hide"></td><td><a href="javascript:void(0);" class="canclick" vi="ior_MN">' + item[withdraws('ior_MN')] + '</a></td>' +
@@ -191,7 +194,7 @@ function analysis(datas) {
             betType: 'FT',
             ratioData: parseFloat(me.text()).toFixed(2),
         };
-        if(fonts) {
+        if (fonts) {
             dsinfojson.iorRatio = fonts;
         }
         var dsinfo = JSON.stringify(dsinfojson).replace(/"/g, '\'');
@@ -254,7 +257,7 @@ function sureDeal(datastr) {
         // $('#canwin').text((money*rate).toFixed(2));
         // return true;
     }
-    if(money < 10) {
+    if (money < 10) {
         layer.msg("下注金额至少10元！", {
             time: 2000
         });
