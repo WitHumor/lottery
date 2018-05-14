@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.lottery.mybatis.MemberDao">
+	
+	<!-- 20180428会员开户 -->
+	<insert id="addMember" parameterType="com.springboot.lottery.entity.Member">
+		INSERT INTO 
+			member(mid,
+			name,
+			password,
+			phone,
+			address,
+			sum,
+			real_name,
+			bank_password,
+			bank_name,
+			bank_number)
+	    VALUES(#{mid},
+			#{name},
+			#{password},
+			#{phone},
+			#{address},
+			#{sum},
+			#{real_name},
+			#{bank_password},
+			#{bank_name},
+			#{bank_number})
+	</insert>
+	
+	<!-- 20180502会员下注 -->
+	<insert id="betMember" parameterType="com.springboot.lottery.entity.MemberSingleNote">
+		INSERT INTO 
+			single_note(snid,
+			mid,
+			bet_time,
+			number,
+			type,
+			league,
+			team_h,
+			team_c,
+			bet,
+			score,
+			bet_type,
+			interval,
+			ior_type,
+			ior_ratio
+			state,
+			money,
+			valid_money,
+			win_lose)
+	    VALUES(#{snid},
+			#{mid},
+			now(),
+			#{number},
+			#{type},
+			#{league},
+			#{team_h},
+			#{team_c},
+			#{bet},
+			#{score},
+			#{bet_type},
+			#{interval},
+			#{ior_type},
+			#{ior_ratio}
+			#{state},
+			#{money},
+			#{valid_money},
+			#{win_lose})
+	</insert>
+	
+	<!-- 20180508在线存款与在线取款-->
+	<insert id="addFundRecord" parameterType="com.springboot.lottery.entity.MemberFundRecord">
+		INSERT INTO 
+			fund_record(frid,
+			mid,
+			time,
+			number,
+			type,
+			money,
+			remark)
+	    VALUES(#{frid},
+			#{mid},
+			now(),
+			#{number},
+			#{type},
+			#{money},
+			#{remark})
+	</insert>
+	
+	<!-- 20180509根据资金流水表id删除信息 -->
+	<delete id="deleteFundRecord" parameterType="java.lang.String">
+		DELETE
+		FROM
+			fund_record
+		WHERE
+		    frid = #{frid}
+	</delete>
+	
+	<!-- 20180504根据snid删除注单 -->
+	<delete id="deleteSingleNote" parameterType="java.lang.String">
+		DELETE
+		FROM
+			single_note
+		WHERE
+		    snid = #{snid}
+	</delete>
+	
+	<!-- 20180503根据mid修改余额 -->
+	<update id="updateSum" parameterType="java.util.Map">
+		UPDATE
+			member m
+		SET
+		   m.sum = #{sum} 
+		WHERE
+		    m.mid = #{mid}
+	</update>
+	
+	<!-- 20180503注单结算 -->
+	<update id="singleNoteAccount" parameterType="java.util.Map">
+		UPDATE 
+			single_note
+		SET
+		  	state = #{state},
+		  	win_lose = #{winLose}
+	   	WHERE
+			snid = #{snid}
+	</update>
+	
+	<!-- 20180503获取余额 -->
+	<select id="getMemberByMoney" resultType="com.springboot.lottery.entity.Member" parameterType="java.lang.String">
+		SELECT 
+			m.sum,
+			m.name 
+		FROM 
+			member m 
+		WHERE 
+			mid = #{mid}
+	</select>
+	
+	<!-- 20180428会员登录 -->
+	<select id="loginMember" resultType="com.springboot.lottery.entity.Member" parameterType="java.util.Map">
+		SELECT
+			m.mid,
+			m.name,
+			m.password,
+			m.phone,
+			m.address,
+			m.sum,
+			m.real_name,
+			m.bank_password,
+			m.bank_name,
+			m.bank_number
+		FROM 
+			member m 
+		WHERE 
+			`name`= #{name}
+	</select>
+	
+	<!-- 20180507查询注单DTO -->
+	<select id="querySingleNoteDTO" resultType="com.springboot.lottery.dto.SingleNoteDTO" parameterType="java.util.Map">
+		SELECT 
+			sn.snid,
+			sn.mid,
+			sn.bet_time,
+			sn.number,
+			sn.type,
+			sn.league,
+			sn.team_h,
+			sn.team_c,
+			sn.bet,
+			sn.bet_type,
+			sn.state,
+			sn.money,
+			sn.valid_money,
+			sn.win_lose,
+			m.sum
+		FROM
+			member m 
+		RIGHT JOIN
+			single_note sn 
+		ON 
+			m.mid = sn.mid 
+		WHERE 1 = 1
+		<if test="state != null and state != ''">
+			AND state = #{state}
+		</if>
+		<if test="betTime != null and betTime != ''">
+			AND bet_time LIKE CONCAT(#{betTime},'%')
+		</if>
+	</select>
+	
+	<!-- 20180509 查询资金流水记录-->
+	<select id="listFundRecord" resultType="com.springboot.lottery.dto.FundRecordDTO" parameterType="java.util.Map">
+		SELECT
+			fr.frid,
+			fr.mid,
+			fr.time,
+			fr.number,
+			fr.type,
+			fr.money,
+			fr.state,
+			fr.remark,
+			m.bank_number
+		FROM
+			member m 
+		RIGHT JOIN
+			fund_record fr 
+		ON 
+			m.mid = fr.mid 
+		WHERE 1 = 1
+		<if test="mid != null and mid != ''">
+			AND fr.mid = #{mid}
+		</if>
+		<if test="type != null and type != ''">
+			AND fr.type = #{type}
+		</if>
+		<if test="state != null and state != ''">
+			AND fr.state = #{state}
+		</if>
+		<if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+			AND #{beginTime} <![CDATA[ <= ]]> fr.time <![CDATA[ <= ]]> #{endTime}
+		</if>
+	</select>
+	<select id="loadFundRecordTotal" resultType="java.lang.Integer">
+		SELECT
+			m.count(*)
+		FROM
+			member m 
+	</select>
+</mapper>
