@@ -128,19 +128,19 @@ function analysis(datas) {
                     default:
                         knobble = " - ";
                 };
-                timeabout = '<div class="halftimes"><div >' + knobble + '</div></div><div>' + (item[withdraws('scoreH')]||0) + ' - ' + (item[withdraws('scoreC')]||0) + '</div>';
+                timeabout = '<div class="halftimes"><div >' + knobble + '</div></div><div>' + (item[withdraws('scoreH')] || 0) + ' - ' + (item[withdraws('scoreC')] || 0) + '</div>';
             }
             html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="H">' +
                 '<td rowspan="2">' + timeabout + '</td>' +
                 '<td class="coal" rowspan="2">' + item[withdraws('team_h')] + '<br>' + item[withdraws('team_c')] + '</td>' +
                 '<td><a href="javascript:void(0);" class="canclick" vi="ior_MH">' + item[withdraws('ior_MH')] + '</a></td>' +
-                '<td class="t_right" fronts="'+ (item[withdraws('strong')] == 'H' ? 'ratio' : '') +'">' + (item[withdraws('strong')] == 'H' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RH">' + item[withdraws('ior_RH')] + '</a></td>' +
+                '<td class="t_right" fonts="' + (item[withdraws('strong')] == 'H' ? 'ratio' : '') + '">' + (item[withdraws('strong')] == 'H' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RH">' + item[withdraws('ior_RH')] + '</a></td>' +
                 '<td fonts="ratio_o">' + item[withdraws('ratio_o')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUC">' + item[withdraws('ior_OUC')] + '</a></td>' +
                 '<td class="t_right bgFCF9E7" fonts="ratio_ouho">' + item[withdraws('ratio_ouho')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUHO">' + item[withdraws('ior_OUHO')] + '</a></td>' +
                 '<td class="t_right bgFCF9E7" fonts="ratio_ouhu">' + item[withdraws('ratio_ouhu')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUHU">' + item[withdraws('ior_OUHU')] + '</a></td>' +
                 '</tr>';
             html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="C"><td><a href="javascript:void(0);" class="canclick" vi="ior_MC">' + item[withdraws('ior_MC')] + '</a></td>' +
-                '<td class="t_right" fronts="'+ (item[withdraws('strong')] == 'C' ? 'ratio' : '') +'">' + (item[withdraws('strong')] == 'C' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RC">' + item[withdraws('ior_RC')] + '</a></td>' +
+                '<td class="t_right" fronts="' + (item[withdraws('strong')] == 'C' ? 'ratio' : '') + '">' + (item[withdraws('strong')] == 'C' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RC">' + item[withdraws('ior_RC')] + '</a></td>' +
                 '<td fonts="ratio_u">' + item[withdraws('ratio_u')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUH">' + item[withdraws('ior_OUH')] + '</a></td>' +
                 '<td class="t_right bgECE3C4" fonts="ratio_ouco">' + item[withdraws('ratio_ouco')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUCO">' + item[withdraws('ior_OUCO')] + '</a></td>' +
                 '<td class="t_right bgECE3C4" fonts="ratio_oucu">' + item[withdraws('ratio_oucu')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUCU">' + item[withdraws('ior_OUCU')] + '</a></td>' +
@@ -157,8 +157,8 @@ function analysis(datas) {
     html += '</table></div>';
     $('#datalists').html(html);
     $('.canclick').on('click', function() {
-        var me = $(this);
-        tgid = me.parents('tr').attr('gid'),
+        var me = $(this),
+            tgid = me.parents('tr').attr('gid'),
             tmtype = me.parents('tr').attr('tmtype'),
             fonts = me.parents('td').attr('fonts'),
             finfo = JSON.parse(me.parents('tr').siblings('tr[fgid="f' + tgid + '"]').attr('finfo').replace(/'/g, '"')),
@@ -188,7 +188,7 @@ function analysis(datas) {
             betType: 'BK',
             ratioData: parseFloat(me.text()).toFixed(2),
         };
-        if(fonts) {
+        if (fonts) {
             dsinfojson.iorRatio = fonts;
         }
         var dsinfo = JSON.stringify(dsinfojson).replace(/"/g, '\'');
@@ -277,18 +277,22 @@ function sureDeal(datastr) {
             }, 2000);
         } else if (data.code == '1116') {
             $('.dealingTicket').html('<div class="dtitle">交易单</div><div class="noDeal"><div>赛事已经关闭</div><button onclick="common.cancelDeal();">确定</button></div>');
+        } else if (data.code == '1106') {
+            layer.msg("赔率已更新，请重新下单", {
+                icon: 2,
+                time: 2000
+            });
         } else {
-            layer.msg("网络连接失败，请稍后再试", {
+            layer.msg("数据获取失败", {
                 icon: 2,
                 time: 2000
             });
         }
     }, function(e) {
-        layer.msg("数据获取失败", {
+        layer.msg("网络连接失败，请稍后再试", {
             icon: 2,
             time: 2000
         });
-        console.log(e);
     });
 }
 

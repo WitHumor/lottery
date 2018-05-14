@@ -164,8 +164,8 @@ function analysis(datas) {
     html += '</table></div>';
     $('#datalists').html(html);
     $('.canclick').on('click', function() {
-        var me = $(this);
-        tgid = me.parents('tr').attr('gid'),
+        var me = $(this),
+            tgid = me.parents('tr').attr('gid'),
             tmtype = me.parents('tr').attr('tmtype'),
             fonts = me.parents('td').attr('fonts'),
             finfo = JSON.parse(me.parents('tr').siblings('tr[fgid="f' + tgid + '"]').attr('finfo').replace(/'/g, '"')),
@@ -283,18 +283,22 @@ function sureDeal(datastr) {
             }, 2000);
         } else if (data.code == '1116') {
             $('.dealingTicket').html('<div class="dtitle">交易单</div><div class="noDeal"><div>赛事已经关闭</div><button onclick="common.cancelDeal();">确定</button></div>');
+        } else if (data.code == '1106') {
+            layer.msg("赔率已更新，请重新下单", {
+                icon: 2,
+                time: 2000
+            });
         } else {
-            layer.msg("网络连接失败，请稍后再试", {
+            layer.msg("数据获取失败", {
                 icon: 2,
                 time: 2000
             });
         }
     }, function(e) {
-        layer.msg("数据获取失败", {
+        layer.msg("网络连接失败，请稍后再试", {
             icon: 2,
             time: 2000
         });
-        console.log(e);
     });
 }
 
