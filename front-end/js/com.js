@@ -1,4 +1,4 @@
-var ServerUrl = 'http://192.168.31.254:8080';
+var ServerUrl = 'http://192.168.43.20:8080'; //192.168.31.254
 var HttpService = function() {
     this.MAX_VALUE = 100000;
     var TYPE = {
@@ -7,7 +7,6 @@ var HttpService = function() {
     };
 
     var _ajax = function(type, url, data, succ, failed) {
-        console.log(type,url,data);
         var userinfo = sessionStorage.getItem("userinfo");
         var token = null;
         if (userinfo) {
@@ -27,11 +26,6 @@ var HttpService = function() {
             contentType: "application/x-www-form-urlencoded",
             data: data,
             success: function(data) {
-                if (typeof(succ) == "function") {
-                    return succ(data);
-                } else {
-                    console.log("the method is no a function!");
-                }
                 if (data.code == '1109') {
                     parent.layer.msg('登录超时，请重新登陆', {
                         time: 2000,
@@ -40,8 +34,10 @@ var HttpService = function() {
                     sessionStorage.setItem('userinfo', '');
                     sessionStorage.setItem('token', '');
                     common.openlayer('L');
-                } else {
+                } else if (typeof(succ) == "function") {
                     return succ(data);
+                } else {
+                    console.log("the method is no a function!");
                 }
             },
             error: function(error) {
@@ -162,26 +158,7 @@ var common = {
                 "name": logName,
                 "password": logPass
             };
-            // $.ajax({
-            //     type: 'post',
-            //     "headers": {
-            //         "content-type": "application/x-www-form-urlencoded",
-            //         "token": sessionStorage.getItem('token')
-            //     },
-            //     url: ServerUrl + '/member/login-member',
-            //     data: reqData,
-            //     // async: true,
-            //     // dataType: "json",
-            //     contentType: "application/x-www-form-urlencoded",
-            //     success: function(data) {
-            //         console.log(data);
-            //     },
-            //     error: function(e) {
-            //         console.log(e);
-            //     }
-            // });
             this.ajax.post('/member/login-member', reqData, function(data) {
-                console.log(typeof(data));
                 if (data.code == '2018') {
                     sessionStorage.setItem('userinfo', JSON.stringify(data.result));
                     sessionStorage.setItem('token', data.result.token);
@@ -215,7 +192,6 @@ var common = {
             url: 'http://freegeoip.net/json/',
             async: false,
             success: function(data) {
-                console.log(data);
                 cip = data.ip;
             },
             type: 'GET',
@@ -235,7 +211,6 @@ var common = {
                 bank_password: withpass,
                 address: cip
             };
-            console.log(reqData);
             this.ajax.post('/member/add-member', reqData, function(data) {
                 if (data.code == '2018') {
                     sessionStorage.setItem('userinfo', JSON.stringify(data.result));
@@ -375,6 +350,8 @@ var common = {
             }, 500);
         });
 
+
+
         // 在线咨询
         $('body').append('<script>var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?bdcca757f17f3439b840ebb0a44084a2";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();</script>');
     },
@@ -419,9 +396,7 @@ var common = {
     },
 
     getANS: function() {
-        this.ajax.get('/member/member-money', {
-            mid: JSON.parse(sessionStorage.getItem('userinfo')).mid
-        }, function(data) {
+        this.ajax.get('/member/member-money', {}, function(data) {
             if (data.code == '2018') {
                 $('#myAccount').text(data.result.name);
                 $('#remainSum').text(data.result.sum);

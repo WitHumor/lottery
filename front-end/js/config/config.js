@@ -95,21 +95,19 @@ var config = {
         select: '<option value="" selected>全部</option><option value="0">等待处理</option><option value="9">处理中</option><option value="1">等待支付</option><option value="2">支付完成</option><option value="-1,-2">已取消</option><option value="-3">审批拒绝</option>',
         cols: [
             [{
-                field: 'applyTime',
+                field: 'time',
                 title: '申请时间',
-                sort: true,
             }, {
-                field: 'orderNumber',
+                field: 'number',
                 title: '提现单号',
             }, {
-                field: 'bankCard',
+                field: 'bankNumber',
                 title: '提现银行卡',
             }, {
                 field: 'money',
                 title: '提现金额',
-                sort: true
             }, {
-                field: 'status',
+                field: 'state',
                 title: '状态',
             }, {
                 field: 'operate',

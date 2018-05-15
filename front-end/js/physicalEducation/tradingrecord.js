@@ -146,7 +146,7 @@ $(function() {
     TD.initPage();
     $('.filtrate .czjl').hide();
     $('#withdrawStatus').html(config.czjl.select);
-    TD.loadList(config.txjl.cols, datas1, {type: '1'});
+    TD.loadList(config.txjl.cols, datas1, {record: '1'});
 });
 
 var TD = {
@@ -155,14 +155,15 @@ var TD = {
             elem: '#startTime',
             type: 'datetime',
             format: 'yyyy-MM-dd HH:mm',
-            theme: 'grid'
+            theme: 'grid',
+            range: true
         });
-        laydate.render({
-            elem: '#endTime',
-            type: 'datetime',
-            format: 'yyyy-MM-dd HH:mm',
-            theme: 'grid'
-        });
+        // laydate.render({
+        //     elem: '#endTime',
+        //     type: 'datetime',
+        //     format: 'yyyy-MM-dd HH:mm',
+        //     theme: 'grid'
+        // });
         $('.recordtype li').on('click', function() {
             $(this).addClass('active').siblings().removeClass('active');
             var litype = $(this).attr('litype');
@@ -171,11 +172,11 @@ var TD = {
             if (litype == '1') {
                 $('.filtrate .czjl').hide();
                 $('#withdrawStatus').html(config.txjl.select);
-                TD.loadList(config.txjl.cols, datas1, {type: '1'});
+                TD.loadList(config.txjl.cols, datas1, {record: '1'});
             } else {
                 $('.filtrate .czjl').show();
                 $('#withdrawStatus').html(config.czjl.select);
-                TD.loadList(config.czjl.cols, datas2, {type: '0'});
+                TD.loadList(config.czjl.cols, datas2, {record: '0'});
             }
         });
         $('#all-search').on('click', function() {
@@ -185,13 +186,13 @@ var TD = {
               withdrawType = $('#withdrawType').val(),
               withdrawStatus = $('#withdrawStatus').val();
           var param = {
-            type: litype,
-            startTime: startTime,
+            record: litype,
+            beginTime: startTime,
             endTime: endTime,
-            withdrawStatus: withdrawStatus
+            state: withdrawStatus
           };
           if(litype == '0') {
-            param.withdrawType = withdrawType;
+            param.type = withdrawType;
           }
           var cols = litype == '1' ? config.txjl.cols : config.czjl.cols;
           var data = litype == '1' ? datas1 : datas2;
@@ -203,28 +204,33 @@ var TD = {
             var table = layui.table;
             table.render({
                 elem: '#deal-list',
-                // url: 'test.json',
-                // where: param,
-                // request: {
-                //     pageName: 'pageNo', //页码的参数名称，默认：page
-                //     limitName: 'pageSize' //每页数据量的参数名，默认：limit
-                // },
-                // response: {
-                //     statusName: 'code', //数据状态的字段名称，默认：code
-                //     statusCode: 2018, //成功的状态码，默认：0
-                //     //msgName: 'hint', //状态信息的字段名称，默认：msg
-                //     countName: 'total', //数据总数的字段名称，默认：count
-                //     dataName: 'result', //数据列表的字段名称，默认：data
-                // },
-                // headers: {
-                //     "content-type": "application/x-www-form-urlencoded",
-                //     "admintoken": sessionStorage.getItem('token')
-                // },
+                url: ServerUrl + '/member/member-record',
+                method: 'post',
+                where: param,
+                request: {
+                    pageName: 'pageNo', //页码的参数名称，默认：page
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+
+                response: {
+                    statusName: 'code', //数据状态的字段名称，默认：code
+                    statusCode: 2018, //成功的状态码，默认：0
+                    //msgName: 'hint', //状态信息的字段名称，默认：msg
+                    countName: 'total', //数据总数的字段名称，默认：count
+                    dataName: 'rows', //数据列表的字段名称，默认：data
+                },
+                headers: {
+                    "content-type": "application/x-www-form-urlencoded",
+                    "token": sessionStorage.getItem('token')
+                },
                 limits: [5, 10, 30, 60],
                 loading: true,
                 page: true, //开启分页
-                data: data,
-                cols: cols
+                // data: data,
+                cols: cols,
+                done: function(res, curr, count){
+                    console.log(res);
+                }
             });
         });
     }

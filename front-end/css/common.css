@@ -54,7 +54,7 @@ a {
 }
 
 .text-center {
-  text-align: center;
+    text-align: center;
 }
 
 .c_red {
@@ -697,20 +697,42 @@ input.btn-submit {
 }
 
 .halftimes {
-  border: 1px solid #C8B187;
+    border: 1px solid #C8B187;
 }
 
 .halftimes > * {
-  padding: 2px 1px;
+    padding: 2px 1px;
 }
 
 .halftimes > div:first-child {
-  background-color: #557A30;
-  color: #FFCE39;
+    background-color: #557A30;
+    color: #FFCE39;
 }
 
+
 /*在线客服*/
+
 #newBridge .icon-right-bottom {
     right: 100px !important;
     bottom: 20px !important;
+}
+
+#guidebook {
+    display: block;
+    position: fixed;
+    top: 160px;
+    right: 0;
+    z-index: 4;
+    width: 25px;
+    text-align: center;
+    padding: 5px 0;
+    background-color: #C39C5C;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#guidebook span {
+    display: block;
+    width: 20px;
+    margin: 0 auto;
 }
