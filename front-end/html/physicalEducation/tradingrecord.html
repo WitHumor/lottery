@@ -26,14 +26,12 @@
         <div class="thislist">
             <div class="filtrate">
                 <label>日期范围</label>
-                <input id="startTime" type="text" readonly class="input-group" placeholder="开始时间" style="width: 280px;" />
-                <label>至</label>
-                <input id="endTime" type="text" readonly class="input-group" placeholder="开始时间" />
+                <input id="allTime" type="text" readonly class="input-group" placeholder="开始时间&nbsp;&nbsp;至&nbsp;&nbsp;结束时间" style="width: 270px;text-align: center;" />
                 <div class="czjl" style="display: none;">
-                    <label>类型</label>
+                    <label>充值类型</label>
                     <div class="input-group">
-                        <select id="withdrawType" class="form-control">
-                            <option value="1">比特币支付</option>
+                        <select id="withdrawType" class="form-control all-coin" style="width: 160px;">
+                            <option value="" selected>所有类型（ALL）</option>
                         </select>
                     </div>
                 </div>

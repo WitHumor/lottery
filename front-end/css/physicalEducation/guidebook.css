@@ -1,0 +1,12 @@
+.guide-content {
+    height: 100%;
+    margin: 20px 20px 20px 220px;
+    background-color: #fff;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 15px;
+}
+
+.guide-content > div {
+  padding: 20px;
+}

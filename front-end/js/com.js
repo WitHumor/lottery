@@ -335,6 +335,12 @@ var common = {
             $('#navType').append('<li><a href="javascript:void(0);" class="' + (item.name == "今日赛事" ? "active" : "") + '" tabType="' + item.tabtype + '" countType="' + item.countType + '">' + item.name + '</a></li>');
         });
 
+        var coinhtml = '';
+        $.each(config.coin, function(i, item) {
+            coinhtml += '<option value="'+ item.value +'">'+ item.name +'（'+ item.value +'）</option>';
+        });
+        $('.all-coin').append(coinhtml);
+
         // 回到顶部
         $('body').prepend('<div id="return-to-top"><img src="../../img/float-top-white.png"/></div>');
         $(window).scroll(function() {
@@ -349,8 +355,6 @@ var common = {
                 scrollTop: 0
             }, 500);
         });
-
-
 
         // 在线咨询
         $('body').append('<script>var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?bdcca757f17f3439b840ebb0a44084a2";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();</script>');

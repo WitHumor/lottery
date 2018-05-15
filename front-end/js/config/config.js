@@ -91,56 +91,24 @@ var config = {
             langx: 'zh-cn',
         }
     },
-    txjl: {
-        select: '<option value="" selected>全部</option><option value="0">等待处理</option><option value="9">处理中</option><option value="1">等待支付</option><option value="2">支付完成</option><option value="-1,-2">已取消</option><option value="-3">审批拒绝</option>',
-        cols: [
-            [{
-                field: 'time',
-                title: '申请时间',
-            }, {
-                field: 'number',
-                title: '提现单号',
-            }, {
-                field: 'bankNumber',
-                title: '提现银行卡',
-            }, {
-                field: 'money',
-                title: '提现金额',
-            }, {
-                field: 'state',
-                title: '状态',
-            }, {
-                field: 'operate',
-                title: '操作',
-            }, {
-                field: 'remark',
-                title: '备注',
-            }]
-        ],
-
-    },
-    czjl: {
-        select: '<option value="" selected>全部</option><option value="1">等待</option><option value="0">成功</option><option value="-1">失败</option>',
-        cols: [
-            [{
-                field: 'applyTime',
-                title: '申请时间',
-                sort: true,
-            }, {
-                field: 'orderNumber',
-                title: '充值单号',
-            }, {
-                field: 'money',
-                title: '充值金额',
-                sort: true
-            }, {
-                field: 'type',
-                title: '充值类型',
-            }, {
-                field: 'status',
-                title: '状态',
-            }]
-        ],
-    }
-    // }
+    coin: [{
+            name: '比特币',
+            value: 'BTC',
+        }, {
+            name: '柚子币',
+            value: 'EOS',
+        }, {
+            name: '以太币',
+            value: 'ETH',
+        }, {
+            name: '瑞波币',
+            value: 'XRP',
+        }, {
+            name: '莱特币',
+            value: 'LTC',
+        }, {
+            name: '量子币',
+            value: 'QTVM',
+        }]
+        // }
 }
