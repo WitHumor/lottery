@@ -42,9 +42,9 @@
 			bet,
 			score,
 			bet_type,
-			interval,
+			occasion,
 			ior_type,
-			ior_ratio
+			ior_ratio,
 			state,
 			money,
 			valid_money,
@@ -60,9 +60,9 @@
 			#{bet},
 			#{score},
 			#{bet_type},
-			#{interval},
+			#{occasion},
 			#{ior_type},
-			#{ior_ratio}
+			#{ior_ratio},
 			#{state},
 			#{money},
 			#{valid_money},
@@ -78,6 +78,8 @@
 			number,
 			type,
 			money,
+			discounts,
+			state,
 			remark)
 	    VALUES(#{frid},
 			#{mid},
@@ -85,6 +87,8 @@
 			#{number},
 			#{type},
 			#{money},
+			#{discounts},
+			#{state},
 			#{remark})
 	</insert>
 	
@@ -169,7 +173,11 @@
 			sn.team_h,
 			sn.team_c,
 			sn.bet,
+			sn.score,
 			sn.bet_type,
+			sn.occasion,
+			sn.ior_type,
+			sn.ior_ratio,
 			sn.state,
 			sn.money,
 			sn.valid_money,
