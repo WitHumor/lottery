@@ -11,7 +11,7 @@ public class MessageUtil {
 	public final static String NETWORK_CONNECTION = "1101";
 	// 未找到匹配的数据
 	public final static String DATA_NOT_FOUND = "1102";
-	// 下注金额超过自己的余额
+	// 超过自己的余额
 	public final static String MONEY_EXCEED = "1103";
 	// 未找到数据
 	public final static String DATA_NOT = "1104";
@@ -33,7 +33,7 @@ public class MessageUtil {
 	public final static String UPDATE_ERROR = "1112";
 	// 参数错误
 	public final static String PARAMETER_ERROR = "1113";
-	// 空对象
+	// 空值
 	public final static String NULL_ERROR = "1114";
 	// 用户名已存在
 	public final static String NAME_EXIST = "1115";

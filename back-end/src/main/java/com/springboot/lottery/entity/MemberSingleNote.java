@@ -35,7 +35,7 @@ public class MemberSingleNote implements Serializable {
 	// 下注类型
 	private String bet_type;
 	// 下注间隔 --- 全场 |半场
-	private String interval;
+	private String occasion;
 	// 比率类型--独赢|让球|大|小|单|双
 	private String ior_type;
 	// 比率
@@ -101,12 +101,12 @@ public class MemberSingleNote implements Serializable {
 		return team_h;
 	}
 
-	public String getInterval() {
-		return interval;
+	public String getOccasion() {
+		return occasion;
 	}
 
-	public void setInterval(String interval) {
-		this.interval = interval;
+	public void setOccasion(String occasion) {
+		this.occasion = occasion;
 	}
 
 	public String getIor_type() {

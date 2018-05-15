@@ -78,7 +78,10 @@ public class JsoupUtil {
 		String s = "121.5";
 		
 		System.out.println(s.contains("."));
-		
+		List<String> hrList= new ArrayList<String>();
+		Map<String, List<String>> map = new HashMap<String, List<String>>();
+		map.put("hrList", hrList);
+		System.out.println(map.get("hrList"));
 		// List<Map<String, String>> list = listFieldAndData(
 		// "https://www.ylg56789.com/app/member/FT_browse/body_var?uid=41E1C90D347A90C6A60811350&rtype=r&langx=zh-cn&mtype=3&page_no=0&league_id=&hot_game=");
 		// for (Map<String, String> map : list) {
@@ -162,23 +165,30 @@ public class JsoupUtil {
 			// System.out.println("-----------");
 			// continue;
 			// }
-			if(singleNote.getInterval().equals("全场")) {
+			
+			if(singleNote.getOccasion().equals("全场")) {
 				// 获取客场全场比分
 				fullOrHrFirst = map.get("fullFirst");
 				// 获取主场全场比分
-			}else if(singleNote.getInterval().equals("上半场")) {
+				fullOrHrLast = map.get("fullLast");
+			}else if(singleNote.getOccasion().equals("半场")) {
 				// 获取客场上半场比分
 				fullOrHrFirst = map.get("hrFirst");
 				// 获取主场上半场比分
 				fullOrHrLast = map.get("hrLast");
 			}
+			// 判断比分是否有结果
+			if (StringUtils.isBlank(fullOrHrFirst) || StringUtils.isBlank(fullOrHrLast)) {
+				System.out.println(teamh + "VS" + teamc + "还在比赛中，目前没有结果。。");
+				continue;
+			}
 			scorec = Integer.parseInt(fullOrHrFirst);
 			scoreh = Integer.parseInt(fullOrHrLast);
-			// 获取比分
-			String getScore = singleNote.getScore();
-			String[] split = getScore.split(" - ");
 			// 判断是否是滚球
 			if (singleNote.getBet_type().equals("REFT") || singleNote.getBet_type().equals("REBK")) {
+				// 获取比分
+				String getScore = singleNote.getScore();
+				String[] split = getScore.split(" - ");
 				scoreh = scoreh - Integer.valueOf(split[0]);
 				scorec = scorec - Integer.valueOf(split[1]);
 			}
@@ -187,11 +197,7 @@ public class JsoupUtil {
 				listResult.add(bet);
 				return listResult;
 			}
-			// 判断比分是否有结果
-			if (StringUtils.isBlank(fullOrHrFirst) || StringUtils.isBlank(fullOrHrLast)) {
-				System.out.println(teamh + "VS" + teamc + "还在比赛中，目前没有结果。。");
-				continue;
-			}
+			
 			// 比较主客场比分返回结果
 			if (scorec > scoreh) {
 				System.out.println(map.get("teamc") + "赢得整场比赛");
@@ -417,19 +423,27 @@ public class JsoupUtil {
 		List<String> hrList= new ArrayList<String>();
 		Map<String, List<String>> map = new HashMap<String, List<String>>();
 		String[] fieldArray = JsoupUtil.getField(stringAll, FIELD_BEGIN_STRING, FIELD_END_STRING);
-		// 循环查找半场索引，赋值给count
-		for( int i = 0;i<fieldArray.length;i++) {
-			if(fieldArray[i].equals("hgid")) {
-				count = i;
-				break;
-			}
-		}
-		// 循环添加到两个不同的list中
-		for( int i = 0;i<fieldArray.length;i++) {
-			if(i >= count) {
-				hrList.add(fieldArray[i]);
-			}else {
+		// 判断是否存在hgid
+		if(!stringAll.contains("hgid")) {
+			// 循环查找半场索引，赋值给count
+			for( int i = 0;i<fieldArray.length;i++) {
 				fullList.add(fieldArray[i]);
+			}
+		}else {
+			// 循环查找半场索引，赋值给count
+			for( int i = 0;i<fieldArray.length;i++) {
+				if(fieldArray[i].equals("hgid")) {
+					count = i;
+					break;
+				}
+			}
+			// 循环添加到两个不同的list中
+			for( int i = 0;i<fieldArray.length;i++) {
+				if(i >= count) {
+					hrList.add(fieldArray[i]);
+				}else {
+					fullList.add(fieldArray[i]);
+				}
 			}
 		}
 		// 将list添加到map中
@@ -438,7 +452,7 @@ public class JsoupUtil {
 		return map;
 	}
 	
-	public static Map<String, String> betType(){
+	public static Map<String, String> ratioType(){
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("ior_RH", "让球");
 		map.put("ior_RC", "让球");
@@ -456,6 +470,10 @@ public class JsoupUtil {
 		map.put("ior_HMH", "独赢");
 		map.put("ior_HMC", "独赢");
 		map.put("ior_HMN", "独赢");
+		map.put("ior_OUHO", "大");
+		map.put("ior_OUHU", "小");
+		map.put("ior_OUCO", "大");
+		map.put("ior_OUCU", "小");
 		return map;
 	}
 	

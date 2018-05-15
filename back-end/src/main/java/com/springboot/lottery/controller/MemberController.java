@@ -62,6 +62,7 @@ public class MemberController {
 		member.setSum("0");// 余额默认设置为0
 		int addMember = memberService.addMember(member);
 		if (addMember <= 0) {
+			// 修改失败
 			result.setCode(MessageUtil.UPDATE_ERROR);
 			return result;
 		}
@@ -89,6 +90,7 @@ public class MemberController {
 		List<Member> list = memberService.loginMember(map);
 		// 判断否存在数据
 		if (list.size() > 0) {
+			// 用户名已存在
 			result.setCode(MessageUtil.NAME_EXIST);
 			return result;
 		}
@@ -117,17 +119,20 @@ public class MemberController {
 		List<Member> list = memberService.loginMember(map);
 		// 判断list对象是否为空
 		if (list == null) {
+			// 会员不存在
 			result.setCode(MessageUtil.MEMBER_NOT);
 			return result;
 		}
 		// 判断list集合中是否只有一条数据
 		if (list.size() != 1) {
+			// 数据库出现多条数据
 			result.setCode(MessageUtil.DATABASE_DADA_ERROR);
 			return result;
 		}
 		// 获取数据匹配密码
 		member = list.get(0);
 		if (!member.getPassword().equals(password)) {
+			// 密码错误
 			result.setCode(MessageUtil.PASSWORD_ERROR);
 			return result;
 		}
@@ -204,11 +209,13 @@ public class MemberController {
 		Cache cache = getCache();
 		// 判断token是否为空
 		if (StringUtils.isBlank(token)) {
+			// 空值
 			result.setCode(MessageUtil.NULL_ERROR);
 			return result;
 		}
 		// 判断token是否过期
 		if (cache.get(token) == null) {
+			// token过期
 			result.setCode(MessageUtil.TOKEN_OVERDUE);
 			return result;
 		}
@@ -221,6 +228,7 @@ public class MemberController {
 		String sum = memberByMoney.getSum();
 		// 判断余额是否足够
 		if (Float.parseFloat(sum) > Float.parseFloat(money)) {
+			// 超过自己的余额
 			result.setCode(MessageUtil.MONEY_EXCEED);
 			return result;
 		}
@@ -236,6 +244,7 @@ public class MemberController {
 		int addFundRecord = memberService.addFundRecord(memberFundRecord);
 		// 判断是否添加成功
 		if (addFundRecord <= 0) {
+			// 添加失败
 			result.setCode(MessageUtil.INSERT_ERROR);
 			return result;
 		}
@@ -250,6 +259,7 @@ public class MemberController {
 		if (updateSum <= 0) {
 			// 根据id删除资金记录
 			memberService.deleteFundRecord(memberFundRecord.getFrid());
+			// 修改失败
 			result.setCode(MessageUtil.UPDATE_ERROR);
 			return result;
 		}
@@ -270,11 +280,13 @@ public class MemberController {
 		Cache cache = getCache();
 		// 判断token是否为空
 		if (StringUtils.isBlank(token)) {
+			// 空值
 			result.setCode(MessageUtil.NULL_ERROR);
 			return result;
 		}
 		// 判断token是否过期
 		if (cache.get(token) == null) {
+			// token过期
 			result.setCode(MessageUtil.TOKEN_OVERDUE);
 			return result;
 		}
@@ -285,7 +297,7 @@ public class MemberController {
 		// 添加资金交易记录
 		MemberFundRecord memberFundRecord = new MemberFundRecord();
 		memberFundRecord.setFrid(BeanLoad.getId());// 资金交易id
-		memberFundRecord.setMid(mid);// 会员id
+		memberFundRecord.setMid("cb1524637860880");// 会员id
 		memberFundRecord.setNumber(BeanLoad.getimeMillis());// 编号
 		memberFundRecord.setType("存款");// 类型
 		memberFundRecord.setMoney(money);// 交易金额
@@ -295,6 +307,7 @@ public class MemberController {
 		int addFundRecord = memberService.addFundRecord(memberFundRecord);
 		// 判断是否添加成功
 		if (addFundRecord <= 0) {
+			// 添加失败
 			result.setCode(MessageUtil.INSERT_ERROR);
 			return result;
 		}
@@ -316,11 +329,13 @@ public class MemberController {
 		Cache cache = getCache();
 		// 判断token是否为空
 		if (StringUtils.isBlank(token)) {
+			// 空值
 			result.setCode(MessageUtil.NULL_ERROR);
 			return result;
 		}
 		// 判断token是否过期
 		if (cache.get(token) == null) {
+			// token过期
 			result.setCode(MessageUtil.TOKEN_OVERDUE);
 			return result;
 		}
@@ -340,10 +355,13 @@ public class MemberController {
 		map.put("record", record);
 		Page<Map<String, Object>> page = memberService.listFundRecord(map);
 		if (page == null) {
+			// 未找到数据
 			result.setCode(MessageUtil.DATA_NOT);
+			return result;
 		}
 		// 0表示充值记录，1表示提现记录
 		if (record.equals("0") || record.equals("1")) {
+			// 参数错误
 			result.setCode(MessageUtil.PARAMETER_ERROR);
 			return result;
 		}
@@ -359,17 +377,19 @@ public class MemberController {
 	@RequestMapping(value = "bet-member", method = RequestMethod.POST)
 	@ResponseBody
 	public ObjectResult betMember(String url, String gid, String ratio, String ratioData, String money, String bet,
-			String betType) {
+			String betType, String iorRatio) {
 		String token = request.getHeader("token");
 		ObjectResult result = new ObjectResult();
 		Cache cache = getCache();
 		// 判断token是否为空
 		if (StringUtils.isBlank(token)) {
+			// 空值
 			result.setCode(MessageUtil.NULL_ERROR);
 			return result;
 		}
 		// 判断token是否过期
 		if (cache.get(token) == null) {
+			// token过期
 			result.setCode(MessageUtil.TOKEN_OVERDUE);
 			return result;
 		}
@@ -380,61 +400,83 @@ public class MemberController {
 		// 根据url地址获取所有数据
 		String stringAll = JsoupUtil.getStringAll(url);
 		if (StringUtils.isBlank(stringAll)) {
+			// 网络连接失败
 			result.setCode(MessageUtil.NETWORK_CONNECTION);
 			return result;
 		}
 		// 根据所有数据进行切割获取数据
 		List<Map<String, String>> list = JsoupUtil.listFieldAndData(stringAll);
 		if (list == null) {
-			result.setCode(MessageUtil.NETWORK_CONNECTION);
+			// 空值
+			result.setCode(MessageUtil.NULL_ERROR);
 			return result;
 		}
 		// 获取地址中与gid匹配的数据
 		Map<String, String> mapData = JsoupUtil.getMapData(list, gid);
 		if (mapData == null) {
+			// 赛事结束不能下注
 			result.setCode(MessageUtil.LEAGUE_END);
 			return result;
 		}
 		// 查找数据判断赔率是否为空
 		String mapRatio = mapData.get(ratio);
 		if (StringUtils.isBlank(mapRatio)) {
+			// 未找到匹配的数据
 			result.setCode(MessageUtil.DATA_NOT_FOUND);
 			return result;
 		}
 		// 根据查找的赔率判断误差，误差不能超过正负0.1
 		Float margin = Float.parseFloat(mapRatio) - Float.parseFloat(ratioData);
 		if (margin > 0.1 || margin < (-0.1)) {
+			// 赔率误差过大
 			result.setCode(MessageUtil.DATA_ERROR_OVERSIZE);
 			return result;
 		}
 		// 查询会员余额是否够下注
 		Member memberByMoney = memberService.getMemberByMoney(mid);
 		if (Float.parseFloat(memberByMoney.getSum()) < Float.parseFloat(money)) {
+			// 超过自己的余额
 			result.setCode(MessageUtil.MONEY_EXCEED);
 			return result;
 		}
+		
 		Map<String, List<String>> fieldExplain = JsoupUtil.getFieldExplain(stringAll);
 		// 定义场次与比分
-		String fullOrHr = "", score = "";
+		String occasion = null, score = null;
 		// 判断是否是全场
 		if (fieldExplain.get("fullList").contains(ratio)) {
-			fullOrHr = "全场";
+			occasion = "全场";
 		} else if (fieldExplain.get("hrList").contains(ratio)) {
-			fullOrHr = "半场";
+			occasion = "半场";
 		}
+		
 		// 判断是否是滚球
 		if (betType.equals("FT")) {
 			betType = url.contains("rtype=re") ? "REFT" : "RFT";
-			score = betType.equals("REFT") ? mapData.get("score_h")+" - "+mapData.get("score_c") : "";
+			score = betType.equals("REFT") ? mapData.get("score_h")+" - "+mapData.get("score_c") : null;
 		} else if (betType.equals("BK")) {
 			betType = url.contains("rtype=re") ? "REBK" : "RBK";
-			score = betType.equals("REBK") ? mapData.get("score_h")+" - "+mapData.get("score_c") : "";
+			score = betType.equals("REBK") ? mapData.get("score_h")+" - "+mapData.get("score_c") : null;
+			// 判断是否有比分，有则是滚球
+			if(StringUtils.isNotBlank(mapData.get("score_h")) || StringUtils.isNotBlank(mapData.get("scoreH"))) {
+				occasion = "半场";
+			}
 		} else{
+			// 参数错误
 			result.setCode(MessageUtil.PARAMETER_ERROR);
-			return  result;
+			return result;
 		}
+		String ratioType = JsoupUtil.ratioType().get(ratio);
 		// 计算有效金额
 		float validMoney = Integer.parseInt(money) * Float.parseFloat(ratioData);
+		//获取比率
+		if(StringUtils.isBlank(iorRatio) || mapData.get(iorRatio).equals("单") || mapData.get(iorRatio).equals("双")) {
+			iorRatio = null;
+		} else {
+			iorRatio = mapData.get(iorRatio);
+			iorRatio = iorRatio.contains("O") ? iorRatio.replace("O", "") : iorRatio;
+			iorRatio = iorRatio.contains("U") ? iorRatio.replace("U", "") : iorRatio;
+		}
 		String league = mapData.get("league");// 获取数据的赛事
 		String teamh = mapData.get("team_h");// 获取数据的主场
 		String teamc = mapData.get("team_c");// 获取数据的客场
@@ -446,19 +488,21 @@ public class MemberController {
 		memberSingleNote.setType("体育");// 设置类型
 		memberSingleNote.setTeam_h(teamh);// 设置主场
 		memberSingleNote.setTeam_c(teamc);// 设置客场
-		memberSingleNote.setInterval(fullOrHr);// 设置场次
-		memberSingleNote.setIor_type(JsoupUtil.betType().get(ratio));// 设置比率类型
-		memberSingleNote.setIor_ratio(score);// 设置比率
+		memberSingleNote.setScore(score); //设置比分
+		memberSingleNote.setOccasion(occasion);// 设置场次
+		memberSingleNote.setIor_type(ratioType);// 设置比率类型
+		memberSingleNote.setIor_ratio(iorRatio);// 设置比率
 		memberSingleNote.setBet(bet);// 设置下注对象
 		memberSingleNote.setBet_type(betType);// 设置下注类型
 		memberSingleNote.setLeague(league);// 设置联赛
 		memberSingleNote.setState("未结算");// 设置状态
 		memberSingleNote.setMoney(money);// 设置下注金额
-		memberSingleNote.setValid_money(String.valueOf(validMoney));// 设置有效金额
+		memberSingleNote.setValid_money(String.format("%.2f", validMoney));// 设置有效金额
 		memberSingleNote.setWin_lose("--");// 设置输赢
 		int betMember = memberService.betMember(memberSingleNote);
 		// 判断数据是否添加成功
 		if (betMember <= 0) {
+			// 添加失败
 			result.setCode(MessageUtil.INSERT_ERROR);
 			return result;
 		}
@@ -471,6 +515,7 @@ public class MemberController {
 		int updateSum = memberService.updateSum(map);
 		// 判断余额是否修改成功，如果不成功则删除添加的下注订单
 		if (updateSum <= 0) {
+			// 修改失败
 			result.setCode(MessageUtil.UPDATE_ERROR);
 			memberService.deleteSingleNote(snid);
 			return result;
@@ -490,7 +535,7 @@ public class MemberController {
 		// 将时间类型转换为字符串类型
 		String date = format.format(new Date());
 		// 指定时间查询
-		String sj = "2018-05-10";
+		String sj = "2018-05-14";
 		// 将字符串转换为date类型
 		Date parse = format.parse(sj);
 		// 创建map对象
