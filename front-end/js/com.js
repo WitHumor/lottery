@@ -198,7 +198,6 @@ var common = {
             type: 'GET',
             dataType: 'JSON'
         });
-        console.log(cip);
         var regname = $('#regname').val(),
             regpass = $('#regpass').val(),
             truename = $('#truename').val(),
@@ -392,7 +391,7 @@ var common = {
     },
 
     mine: function() {
-        $('body').prepend('<div class="mine"><div class="myinfos"><img src="../../img/icon_user_o_lg.png"><p>账户：<label id="myAccount" class="fwb">-</label></p><p>余额：<label id="remainSum" class="fwb">0.00</label> 点</p><p><button class="refresh-credit" onclick="common.getANS();"><i class="iconfont icon-msnui-refresh-circle alignmid"></i> 刷新额度</button></p><div onclick="window.location.href=\'tradingrecord.html\'">资金交易记录<i class="iconfont icon-more fr f20"></i></div><a href="javascript:void(0);" onclick="common.loginout();"><i class="iconfont icon-tuichu alignmid"></i> 安全退出</a></div></div>');
+        $('body').prepend('<div class="mine"><div class="myinfos"><img src="../../img/icon_user_o_lg.png"><p>账户：<label id="myAccount" class="fwb">-</label></p><p>余额：<label id="remainSum" class="fwb">0.00</label> 点</p><p><button class="refresh-credit" onclick="common.getANS();"><i class="iconfont icon-msnui-refresh-circle alignmid"></i> 刷新额度</button></p><div class="milist"><div onclick="window.location.href=\'tradingrecord.html\'">资金交易记录<i class="iconfont icon-more fr f20"></i></div><div>获取代理邀请码<i class="iconfont icon-more fr f20"></i></div></div><a href="javascript:void(0);" onclick="common.loginout();"><i class="iconfont icon-tuichu alignmid"></i> 安全退出</a></div></div>');
         $('.mine').click(function(e) {
             var o = e.target;
             if ($(o).closest('.myinfos').length == 0) //不是特定区域

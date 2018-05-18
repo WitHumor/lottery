@@ -123,7 +123,7 @@ function analysis(datas) {
                     if (strArr[1].indexOf('半场') > -1) {
                         timeabout = '<div class="halftimes"><div>半场</div></div><div>' + (item[withdraws('score_h')] || 0) + ' - ' + (item[withdraws('score_c')] || 0) + '</div>';
                     } else {
-                        var hingf = strArr[1] < '46:00' ? '上半场' : '下半场';
+                        var hingf = item[withdraws('timer')] < '46' ? '上半场' : '下半场';
                         timeabout = '<div class="halftimes"><div >' + hingf + '</div><div>' + strArr[1] + '\'</div></div><div>' + (item[withdraws('score_h')] || 0) + ' - ' + (item[withdraws('score_c')] || 0) + '</div>';
                     }
                 }

@@ -58,17 +58,15 @@ var DE = {
         });
     },
     checks: function() {
-        var btb = $('#rechargebtb').val();
+        var btbrmb = $('#btb-rmb').val().replace(' 点', '');
         var rdata = {
             type: false
         };
-        if (!btb) {
+        if (!btbrmb) {
             rdata.value = '请输入充值金额';
-        } else if (btb > 200) {
-            rdata.value = '单笔充值最高金额 200 个数字货币';
-        } else if (btb < 0.1) {
-            rdata.value = '单笔充值最低金额 0.1 个数字货币';
-        } else if (!regs.test(btb)) {
+        } else if (btbrmb < 50) {
+            rdata.value = '单笔充值最低金额 50点';
+        } else if (!regs.test(btbrmb)) {
             rdata.value = '请输入正确的充值金额';
         } else {
             rdata.type = true;

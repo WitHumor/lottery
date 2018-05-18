@@ -269,3 +269,37 @@ button:disabled, .form-group .btn-submit.disabled {
     color: #d1601a;
     margin-top: 20px;
 }
+
+.purse-tips {
+    position: relative;
+    width: 380px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+    border: 1px solid #2481BA;
+    /*#d1601a*/
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    color: #d1601a;
+    margin-top: 10px;
+}
+
+@media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) {
+    .purse-tips {
+        background-image: -webkit-linear-gradient(left, #2481BA, #071D32 25%, #2481BA 50%, #071D32 75%, #2481BA);
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+        -webkit-background-size: 200% 100%;
+        -webkit-animation: masked-animation 4s infinite linear;
+    }
+}
+
+@-webkit-keyframes masked-animation {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}

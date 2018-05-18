@@ -160,8 +160,8 @@ var DW = {
                 rdata.value = '请输入' + text[item.attr('inpt')];
             } else {
                 if (item[0] == $('#rechargebtb')[0]) {
-                    if (itemval < 1000) {
-                        rdata.value = '单笔取款最低金额 1000 点';
+                    if (itemval < 100) {
+                        rdata.value = '单笔取款最低金额 100 点';
                     } else if (!regs.test(itemval)) {
                         rdata.value = '请输入正确的' + text[item.attr('inpt')];
                     } else {
