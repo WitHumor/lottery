@@ -8,32 +8,33 @@ var HttpService = function() {
 
     var _ajax = function(type, url, data, succ, failed) {
         var userinfo = sessionStorage.getItem("userinfo");
-        var token = null;
+        var toid = null;
         if (userinfo) {
-            token = JSON.parse(userinfo).token
+            toid = JSON.parse(userinfo).token
         }
 
         $.ajax({
             headers: {
                 "content-type": "application/x-www-form-urlencoded",
-                "token": token,
+                "token": toid,
                 "accept": "application/json, text/javascript, */*; q=0.01"
             },
             type: type,
             url: ServerUrl + url,
-            async: true,
             dataType: "json",
             contentType: "application/x-www-form-urlencoded",
             data: data,
             success: function(data) {
-                if (data.code == '1109') {
-                    parent.layer.msg('登录超时，请重新登陆', {
+                if (data.code == '1109' || data.code == '1114') {
+                    layer.msg('登录超时，请重新登陆', {
                         time: 2000,
                         icon: 2
                     });
                     sessionStorage.setItem('userinfo', '');
-                    sessionStorage.setItem('token', '');
-                    common.openlayer('L');
+                    sessionStorage.setItem('toid', '');
+                    setTimeout(function() {
+                        window.location.href = 'home.html';
+                    }, 2000);
                 } else if (typeof(succ) == "function") {
                     return succ(data);
                 } else {
@@ -161,7 +162,7 @@ var common = {
             this.ajax.post('/member/login-member', reqData, function(data) {
                 if (data.code == '2018') {
                     sessionStorage.setItem('userinfo', JSON.stringify(data.result));
-                    sessionStorage.setItem('token', data.result.token);
+                    sessionStorage.setItem('toid', data.result.token);
                     layer.msg('登录成功', {
                         time: 2000,
                         icon: 1
@@ -214,7 +215,7 @@ var common = {
             this.ajax.post('/member/add-member', reqData, function(data) {
                 if (data.code == '2018') {
                     sessionStorage.setItem('userinfo', JSON.stringify(data.result));
-                    sessionStorage.setItem('token', data.result.token);
+                    sessionStorage.setItem('toid', data.result.token);
                     layer.msg('注册成功', {
                         time: 2000,
                         icon: 1
@@ -314,18 +315,19 @@ var common = {
         if ($('#thisisheader').length == 0) {
             var html = '';
             // var html = '<button type="button" onclick="window.location.href=\'onlinedeposit.html\'">线上存款</button><button type="button" onclick="window.location.href=\'onlinedraw.html\'">线上取款</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '') + '<i class="iconfont icon-yonghu" onclick="common.mine();"></i>';
-            if (sessionStorage.getItem('token')) {
+            if (sessionStorage.getItem('toid')) {
                 html = '<button type="button" onclick="window.location.href=\'onlinedeposit.html\'">线上存款</button><button type="button" onclick="window.location.href=\'onlinedraw.html\'">线上取款</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '') + '<i class="iconfont icon-yonghu" onclick="common.mine();"></i>';
 
             } else {
                 html = '<button type="button" onclick="common.openlayer(\'L\');">登录</button><button type="button" onclick="common.openlayer(\'R\');">注册</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '');
 
             }
-            $('body').prepend('<div id="thisisheader" class="header"><span class="wel">* 欢迎光临,精彩尽在此 *</span><div class="baseinfo fr">' + html + '</div></div>');
+            // <div>精彩赛事，尽在永利高</div>
+            $('body').prepend('<div id="thisisheader" class="header"><img src="../../img/homelogo.png" style="vertical-align: middle;" width="90" height="80"><div class="slogan"><span class="wel">永利高</span></div><i class="iconfont icon-icon_xinyongguiji"></i><div class="credit"><span>老品牌 值得信赖</span><div>精彩赛事，尽在永利高</div></div><div class="baseinfo fr">' + html + '</div></div>');
         }
 
         if ($('#thisisfooter').length == 0) {
-            $('body').append('<div id="thisisfooter" class="footer"><div class="fl"><img src="../../img/2018sjb.png"></div><div class="fl footinfo"><div class="article-menu"><a href="javascript:void(0)">关于我們</a>｜ <a href="javascript:void(0)">联系我们</a>｜ <a href="javascript:void(0)">合作代理</a>｜ <a href="javascript:void(0)">存款帮助</a>｜ <a href="javascript:void(0)">取款帮助</a>｜ <a href="javascript:void(0)">常见问题</a></div><div class="fo-text">永利高所提供的产品和服务，是由菲律宾政府卡格扬河经济特区<br>First Cagayan leisure and Resort Corporation.<br> 授权和监管 我们将不余遗力的为您提供优质的服务和可靠的资金保障。</div><div class="footer-Infomation"><div class="copyright fl">Copyright © 永利高 Reserved&nbsp; <span class="footer-info"><!-- 邮箱：980127777@qq.com&nbsp;&nbsp;QQ：980127777 --></span></div></div></div></div>');
+            $('body').append('<div id="thisisfooter" class="footer"><div class="fl"><img src="../../img/2018sjb.png"></div><div class="fl footinfo"><div class="article-menu"><a href="footerinfo.html?type=aboutus">关于我們</a>｜ <a href="javascript:void(0)" onclick="$(\'.nb-icon-inner-wrap\').click();">联系我们</a>｜ <a href="javascript:void(0)">合作代理</a>｜ <a href="footerinfo.html?type=desposit">存款帮助</a>｜ <a href="footerinfo.html?type=teller">取款帮助</a><!-- ｜ <a href="javascript:void(0)">常见问题</a> --></div><div class="fo-text">永利高所提供的产品和服务，是由菲律宾政府卡格扬河经济特区<br>First Cagayan leisure and Resort Corporation.<br> 授权和监管 我们将不余遗力的为您提供优质的服务和可靠的资金保障。</div><div class="footer-Infomation"><div class="copyright fl">Copyright © 永利高 Reserved&nbsp; <span class="footer-info"><!-- 邮箱：980127777@qq.com&nbsp;&nbsp;QQ：980127777 --></span></div></div></div></div>');
         }
 
         setInterval(function() {
@@ -337,7 +339,7 @@ var common = {
 
         var coinhtml = '';
         $.each(config.coin, function(i, item) {
-            coinhtml += '<option value="'+ item.value +'">'+ item.name +'（'+ item.value +'）</option>';
+            coinhtml += '<option value="' + item.value + '">' + item.name + '（' + item.value + '）</option>';
         });
         $('.all-coin').append(coinhtml);
 
@@ -370,7 +372,7 @@ var common = {
         this.ajax.post('/member/exit-member', {}, function(data) {
             if (data.code == '2018') {
                 sessionStorage.setItem('userinfo', '');
-                sessionStorage.setItem('token', '');
+                sessionStorage.setItem('toid', '');
                 // layer.msg('安全退出', {
                 //     time: 2000,
                 //     icon: 1

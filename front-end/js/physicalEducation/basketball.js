@@ -2,7 +2,7 @@ var CDS = 3;
 $(function() {
     init();
     getAllDatas(config.today_BK);
-    // countDown();
+    countDown();
 });
 
 var positions = {},
@@ -219,13 +219,12 @@ function searchSubStr(str, strArray, keys) {
 }
 
 function countWinGold() {
-    // var money = $('#money').val();
     $('#canwin').text(($('#money').val() * $('#ioradio_id').text()).toFixed(2));
 }
 
 function sureDeal(datastr) {
     var re = /^[1-9]\d*$/;
-    if (!sessionStorage.getItem('token')) {
+    if (!sessionStorage.getItem('toid')) {
         layer.msg("请登录再下注", {
             time: 2000
         });
@@ -267,15 +266,22 @@ function sureDeal(datastr) {
             setTimeout(function() {
                 common.cancelDeal();
             }, 2000);
-        } else if (data.code == '1109' || data.code == '1114') {
-            layer.msg("用户登录过期，请重新登录", {
+        } else if (data.code == '1103') {
+            layer.msg("钱包余额不足", {
                 icon: 2,
                 time: 2000
             });
-            setTimeout(function() {
-                common.openlayer('L');
-            }, 2000);
-        } else if (data.code == '1116') {
+        }
+        // else if (data.code == '1109' || data.code == '1114') {
+        //     layer.msg("用户登录过期，请重新登录", {
+        //         icon: 2,
+        //         time: 2000
+        //     });
+        //     setTimeout(function() {
+        //         common.openlayer('L');
+        //     }, 2000);
+        // }
+        else if (data.code == '1116') {
             $('.dealingTicket').html('<div class="dtitle">交易单</div><div class="noDeal"><div>赛事已经关闭</div><button onclick="common.cancelDeal();">确定</button></div>');
         } else if (data.code == '1106') {
             layer.msg("赔率已更新，请重新下单", {
@@ -283,7 +289,7 @@ function sureDeal(datastr) {
                 time: 2000
             });
         } else {
-            layer.msg("数据获取失败", {
+            layer.msg("下注失败", {
                 icon: 2,
                 time: 2000
             });
@@ -310,5 +316,4 @@ function countDown() {
     setTimeout(function() {
         countDown();
     }, 1000);
-    // setInterval(function() {countDown();}, 1000);
 }

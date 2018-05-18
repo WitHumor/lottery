@@ -18,20 +18,22 @@
 <body>
     <div class="thiscontent">
         <ul class="recordtype">
-            <li class="active" litype="1">
+            <li litype="1">
                 提现记录</li>
             <li litype="0">
                 充值记录</li>
+            <li litype="2">
+                下注记录</li>
         </ul>
         <div class="thislist">
             <div class="filtrate">
                 <label>日期范围</label>
                 <input id="allTime" type="text" readonly class="input-group" placeholder="开始时间&nbsp;&nbsp;至&nbsp;&nbsp;结束时间" style="width: 270px;text-align: center;" />
                 <div class="czjl" style="display: none;">
-                    <label>充值类型</label>
+                    <label>类型</label>
                     <div class="input-group">
                         <select id="withdrawType" class="form-control all-coin" style="width: 160px;">
-                            <option value="" selected>所有类型（ALL）</option>
+                            <option value="" selected>所有类型</option>
                         </select>
                     </div>
                 </div>
@@ -40,6 +42,19 @@
                     <select id="withdrawStatus" class="form-control">
                         <option value="" selected>全部</option>
                     </select>
+                </div>
+                <div class="xzjl" style="display: none;">
+                    <!-- <label>盈亏</label>
+                    <div class="input-group">
+                        <select id="withdrawStatus" class="form-control">
+                            <option value="" selected>全部</option>
+                            <option value="1">盈利</option>
+                            <option value="-1">亏损</option>
+                            <option value="0">和盘</option>
+                        </select>
+                    </div> -->
+                    <label>名称</label>
+                    <input id="keyword" type="text" class="input-group" placeholder="联赛名称/球队名称" />
                 </div>
                 <button class="btn btn-orange" id="all-search"><i class="iconfont icon-search f14"></i> 查询</button>
             </div>

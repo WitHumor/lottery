@@ -341,19 +341,54 @@ table .col-12 {
     position: fixed;
     top: 0;
     left: 0;
-    height: 60px;
+    height: 85px;
+    /*height: 150px;*/
     width: 100%;
     background-color: #071D32;
     border-bottom: 2px solid #054B64;
     color: #fff;
     padding: 0 20px 0 40px;
-    z-index: 999999999998;
+    z-index: 999998;
 }
 
+.header i.icon-icon_xinyongguiji {
+    display: inline-block;
+    margin-left: 50px;
+    font-size: 50px;
+    color: #EBDCBE;
+    /*line-height: 85px;
+    height: 85px;*/
+    vertical-align: middle;
+}
+
+.slogan, .credit {
+    display: inline-block;
+    height: 85px;
+    margin-left: 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.credit {
+    padding-top: 15px;
+}
+
+.credit > span {
+    letter-spacing: 3px;
+    font-size: 22px;
+    color: #FEFABD;
+}
+
+.credit > div {
+    font-size: 14x;
+    color: #ABABA9;
+ }
+
 .wel {
-    font-size: 24px;
-    line-height: 60px;
+    font-size: 45px;
+    line-height: 85px;
     font-weight: bold;
+    letter-spacing: 10px;
     /*background: linear-gradient(to right, red, blue);
     -webkit-background-clip: text;
     color: transparent;*/
@@ -380,25 +415,29 @@ table .col-12 {
 
 .baseinfo {
     position: relative;
-    line-height: 60px;
+    /*line-height: 60px;*/
+    line-height: 85px;
 }
 
 .baseinfo button {
-    height: 30px;
+    /*height: 30px;*/
+    height: 40px;
     width: 100px;
     padding: 5px;
     margin-right: 5px;
-    font-size: 14px;
+    /*font-size: 14px;*/
+    font-size: 18px;
     background-color: #288DCA;
-    border-radius: 20px;
+    /*border-radius: 20px;*/
+    border-radius: 5px;
     border: 1px solid #054B64;
     opacity: .9;
     color: #fff;
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 .baseinfo .icon-yonghu {
-    font-size: 26px;
+    font-size: 32px;
     vertical-align: middle;
     color: #fff;
     /*font-weight: bold;*/
@@ -415,7 +454,7 @@ table .col-12 {
 }
 
 .distop {
-    margin-top: 62px !important;
+    margin-top: 87px !important;
 }
 
 .footer {
@@ -593,12 +632,12 @@ input.btn-submit {
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, .4);
-    z-index: 9999;
+    z-index: 2147483699;
 }
 
 .myinfos {
     position: absolute;
-    top: 58px;
+    top: 65px;
     right: 0;
     width: 260px;
     background-color: #fff;
@@ -768,4 +807,8 @@ input.btn-submit {
     display: block;
     width: 20px;
     margin: 0 auto;
+}
+
+#newBridge {
+    z-index: 9999 !important;
 }

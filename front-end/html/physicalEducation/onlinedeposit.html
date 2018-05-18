@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit">
-    <title>永利高 - 线上取款</title>
+    <title>永利高 - 线上存款</title>
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link rel="Shortcut Icon" href="../../favicon.ico">
@@ -30,13 +30,13 @@
                     <div class="form-group">
                         <label class="col-2 control-label"></label>
                         <div class="col-10 yelCol">
-                            当前汇率：1 <span>比特币</span> = <span class="cny-btc-rate">61359.78</span> 点
+                            当前汇率：1 <span class="coin-name">比特币</span> = <span class="cny-btc-rate">-</span> 点
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-2 control-label">充值币种：</label>
                         <div class="col-7">
-                            <select class="form-control all-coin">
+                            <select id="coin-type" class="form-control all-coin">
                             </select>
                         </div>
                         <div class="col-3 btnA btnYel">
@@ -70,8 +70,8 @@
                             </a>
                         </div>
                     </div>
-                    <div class="error-tip btc-tip"></div>
-                    <div class="form-group">
+                    <div class="error-tip btc-tip dis-before"></div>
+                    <!-- <div class="form-group">
                         <label class="col-2 control-label">首存特惠：</label>
                         <div class="col-7">
                             <input id="discounts" type="text" class="form-control" readonly placeholder="首存即送 188 点">
@@ -81,7 +81,7 @@
                                 <span class="hongb">188</span>点
                             </a>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label class="col-2 control-label">充值优惠：</label>
                         <div class="col-7">
@@ -108,7 +108,7 @@
                     <div class="form-group">
                         <div class="col-2"></div>
                         <div class="col-10 mt15">
-                            <a class="btn-submit btn-next">下一步</a>
+                            <button class="btn-submit btn-next">下一步</button>
                         </div>
                     </div>
                 </div>
@@ -116,21 +116,21 @@
                     <div class="form-group">
                         <label class="col-2 control-label">可得优惠：</label>
                         <div class="col-10">
-                            <input id="can-dis" type="text" class="form-control next-part" readonly value="61359.78 点">
+                            <input id="can-dis" type="text" class="form-control next-part" readonly>
                         </div>
                     </div>
                     <div class="error-tip" style="display: block;">优惠将在充值到账后，30分钟内自动添加</div>
                     <div class="form-group">
                         <label class="col-2 control-label">订单号：</label>
                         <div class="col-10">
-                            <input id="order-num" type="text" class="form-control next-part" readonly value="VC18050818384865">
+                            <input id="order-num" type="text" class="form-control next-part" readonly>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-2 control-label">充值金额：</label>
                         <div class="col-10">
-                            <input id="re-amount" type="text" class="form-control next-part" readonly value="1 比特币">
-                            <span class="form-control-right">（15195.66点）</span>
+                            <input id="re-amount" type="text" class="form-control next-part" readonly>
+                            <span class="form-control-right">（<span id="pay-rmb"></span>）</span>
                             <a id="btn-copy-amount" data-clipboard-text="1" class="btn btn-copy btn-orange">复制</a>
                         </div>
                     </div>

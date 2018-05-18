@@ -1,5 +1,5 @@
 .thiscontent {
-    margin: 80px 300px 20px;
+    margin: 100px 300px 20px;
     border: 1px solid #B4B4B4;
 }
 
@@ -180,6 +180,7 @@
     border-radius: 3px;
     height: 38px;
     line-height: 38px;
+    border: none;
     padding: 0;
     opacity: .9;
 }
@@ -188,7 +189,7 @@
     opacity: 1;
 }
 
-.form-group .btn-submit.disabled {
+button:disabled, .form-group .btn-submit.disabled {
     background-color: #ccc !important;
 }
 

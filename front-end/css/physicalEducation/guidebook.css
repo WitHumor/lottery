@@ -8,5 +8,27 @@
 }
 
 .guide-content > div {
-  padding: 20px;
+    padding: 20px;
+}
+
+.gtabs * {
+    margin-bottom: 15px;
+}
+
+.gtabs h3 {
+    color: #ab894f;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: 15px;
+}
+
+a {
+  color: #333;
+}
+
+.thishref {
+  color: #0057F2;
+  font-size: 18px;
+  text-decoration: underline;
 }
