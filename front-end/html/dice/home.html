@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="Shortcut Icon" href="../../favicon.ico">
+	<style type="text/css">
+		body,div,figure,p { margin:0;padding:0;}
+		body 
+		{
+			font-size:12px;
+			line-height:12px;
+			background-color: #250A00;
+			    line-height: 1.6;
+		}
+
+
+@media screen and (min-width:320px){html{font-size:21.33px}
+    body{font-size:12px}
+}
+@media screen and (min-width:360px){html{font-size:24px}
+    body{font-size:12px}
+}
+@media screen and (min-width:375px){html{font-size:25px}
+    body{font-size:12px}
+}
+@media screen and (min-width:384px){html{font-size:25.6px}
+    body{font-size:14px}
+}
+@media screen and (min-width:400px){html{font-size:26.67px}
+    body{font-size:14px}
+}
+@media screen and (min-width:414px){html{font-size:27.6px}
+    body{font-size:14px}
+}
+@media screen and (min-width:424px){html{font-size:28.27px}
+    body{font-size:14px}
+}
+@media screen and (min-width:480px){html{font-size:32px}
+    body{font-size:15.36px}
+}
+@media screen and (min-width:540px){html{font-size:36px}
+    body{font-size:17.28px}
+}
+@media screen and (min-width:720px){html{font-size:48px}
+    body{font-size:23.04px}
+}
+@media screen and (min-width:750px){html{font-size:50px}
+    body{font-size:24px}
+	.container {max-width: 750px;}
+}
+
+
+
+
+	.container {
+		margin-right: auto;
+		margin-left: auto;
+	}
+	header{
+	    background: url(../../img/dice/bg.jpg) no-repeat;
+		background-size: cover;
+	}
+	.topInfo {
+		text-align: center;
+		background-image: radial-gradient(circle at 60% 48%, #3D3459, #10112F);
+		margin: 5px 0;
+		color: #fff;
+		letter-spacing: 1px;
+		box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.2), inset 0 2px 0 hsla(0,0%,100%,.1), inset 0 1.2em 0 hsla(0,0%,100%,0.1), inset 0 -0.2em 0 hsla(0,0%,100%,.1), inset 0 -0.2em 0 hsla(0,0%,0%,.25), 0 0.25em 0.2em hsla(0,0%,0%,.05);
+	}
+
+	.weui-flex {
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: flex;
+	}
+
+	.weui-flex__item {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+	 margin-bottom: 10px;
+
+}
+
+.weui-flex__item {
+    margin: 10px;
+}
+
+
+
+.dice {
+    width: 90px;
+    height: 90px;
+    background: url(../../img/dice/dice.png) no-repeat;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    border-radius: 25px;
+}
+
+.dice_4 {
+    background-position: -5px -317px;
+}
+
+.wrap {
+    width: 90px;
+    height: 90px;
+    margin: 60px auto 40px auto;
+}
+
+.top-a {
+    text-decoration: none;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 10px 10px;
+    font-size: 12px;
+    display: inline-block;
+    margin-top: -20px;
+    letter-spacing: 1px;
+    background-color: rgba(61, 52, 89, 0.3);
+    box-shadow: 0 0 5px 0 rgba(61, 52, 89, 0.3);
+}
+img, input {
+    vertical-align: middle;
+}
+
+img {
+    border: 0;
+    max-width: 100%;
+}
+.text {
+    z-index: 10;
+}
+.text {
+    /*height: 30px;*/
+    width: 320px;
+    overflow: hidden;
+    margin: 0 auto;
+    position: absolute;
+    z-index: 999;
+    top: 17px;
+    left: 45px;
+    color: #E4C468;
+}
+.text li, .text {
+    width: 100%;
+    left: 0;
+    text-align: center;
+}
+
+.text li a {
+    color: #E4C468;
+}
+
+a {
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.sliderbox {
+    position: relative;
+}
+
+li, ol, ul {
+    list-style: none;
+}
+
+        .wrap-a-bigAndSmall{
+            text-align: center;
+            width: 100%;
+            font-size: 18px;
+            margin: 8px;
+            background-color: #999;
+            background-image: -webkit-linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.1));
+            background-image:    -moz-linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.1));
+            background-image:     -ms-linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.1));
+            background-image:      -o-linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.1));
+            background-image:         linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.1));
+            border: none;
+            border-radius: .5em;
+            box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.2),
+            inset 0 2px 0 hsla(0,0%,100%,.1),
+            inset 0 1.2em 0 hsla(0,0%,100%,0.1),
+            inset 0 -.2em 0 hsla(0,0%,100%,.1),
+            inset 0 -.25em 0 hsla(0,0%,0%,.25),
+            0 .25em .25em hsla(0,0%,0%,.05);
+            color: #444;
+            cursor: pointer;
+            display: inline-block;
+            font-family: sans-serif;
+            font-size: 1em;
+            font-weight: bold;
+            line-height: 1.5;
+            margin: 0 .5em 1em;
+            padding: 40px 0;
+            position: relative;
+            text-decoration: none;
+            text-shadow: 0 1px 1px hsla(0,0%,100%,.25);
+            vertical-align: middle;
+            background-image: radial-gradient(circle at 60% 48%, #3D3459, #10112F);
+            color: #fff;
+            font-weight: bold;
+        }
+
+		.bigAndSmall{
+            display: inline-block;
+            text-decoration: none;
+            color: #E4C468;
+
+            border-radius: 5px;
+            width: 100%;
+        }
+
+		        .wrap-a-span{
+            font-weight: bold;
+            font-size:30px;
+            text-align: center;
+            color: #E4C468;
+        }
+
+.weui-tabbar {
+    display: flex;
+    position: fixed;
+    z-index: 9999;
+    bottom: 0;
+    width: 100%;
+    background-color: #eee;
+}
+
+.weui-tabbar:before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 1px;
+    border-top: 1px solid #C0BFC4;
+    color: #fff;
+    transform-origin: 0 0;
+    transform: scaleY(0.5);
+}
+
+.weui-tabbar__item {
+    display: block;
+    flex: 1;
+    padding: 5px 0 0;
+    font-size: 0;
+    color: #999999;
+    text-align: center;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    outline: none;
+}
+
+i.weui-tabbar__icon, .weui-tabbar__icon > i {
+    font-size: 20px;
+    color: #999999;
+}
+
+i.weui-tabbar__icon {
+    display: block;
+    width: 100%;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    margin: 0 auto;
+}
+i.weui-tabbar__icon, .weui-tabbar__icon > i {
+    font-size: 20px;
+    color: #999999;
+}
+.dice-icon-2 {
+    background: url(../../img/dice/dice-icon-2.png) no-repeat;
+}
+
+.weui-tabbar__label {
+    text-align: center;
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 10px;
+    line-height: 1.8;
+}
+
+.myShare-icon-1 {
+    background: url(../../img/dice/myShare-icon-1.png) no-repeat;
+}
+
+.personCenter-icon-1 {
+    background: url(../../img/dice/personCenter-icon-1.png) no-repeat;
+}
+	</style>
+  <title>永利高 - 骰子</title>
+ </head>
+ <body>
+	 <div class="container">
+		<header>
+			<div class='topInfo weui-flex'>
+				<div class="weui-flex__item" style="border-right: 1px solid rgba(153, 153, 153, 0.38);">
+					<p>距离开奖时间</p>
+					<p id="second_show" style="color:#FFC107;">5点,大</p>
+				</div>
+				<div class="weui-flex__item">
+					<p>上期开奖结果</p>
+					<p id="kjResult" style="color:#FFC107;">第283期:1点,小</p>
+				</div>
+			</div>
+			<div class="weui-flex">
+				<div class="weui-flex__item" style="margin: 10px auto;">
+					<div class="wrap">
+						<div class="dice dice_4" style="cursor: pointer;"></div>
+					</div>
+				</div>
+			</div>
+			<div class="weui-flex" style="text-align: center;margin-top: 15px;">
+				<div class="weui-flex__item"> <a href="/index.php?m=&amp;c=Index&amp;a=lishi" id="history" class="top-a">历史记录</a></div>
+				<div class="weui-flex__item">
+					<div class="top-a">
+						<div style="color:#fff">本次压注：<span class="type" id="show_number" style="color:#FFF201"> 无  </span></div>
+						<div style="color:#fff">筹码数：<span class="chouMaNum" id="show_money" style="color:#FFF201">0</span></div>
+					</div>
+				</div>
+				<div class="weui-flex__item"><span id="tips" class="top-a" onclick="shuoming();">游戏说明</span></div>
+			</div>
+
+		</header>
+		<section style="background-color:#250A00;height: auto;margin-bottom: 50px;position: relative;">
+			<figure><img src="../../img/dice/tree.png" style="width: 100%;"></figure>
+			<div class="content">
+				<div class="text" id="text-slideTo">
+					<ul class="sliderbox">
+						<li class="current" style="z-index: 2;"><a href="javascript:;">公告：请收藏游戏推广二维码，方便下次找到游戏入口</a></li>
+
+					</ul>
+				</div>
+			</div>
+			<div class="weui-flex">
+				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="select_num(7)" class="bigAndSmall" id="big" data-num="1"><span class="wrap-a-span">大</span><br><span class="fontSize">1赔1.9</span></span></div>
+				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="select_num(8)" class="bigAndSmall" id="small" data-num="1"><span class="wrap-a-span">小</span><br><span class="fontSize">1赔1.9</span></span></div>
+			</div>
+			<div class="forms">
+				<div class="weui-flex">
+					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="select_num(1)"> <span class="wrap-a-span">1</span><br><span class="fontSize">1赔5</span></div>
+					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="select_num(2)"> <span class="wrap-a-span">2</span><br><span class="fontSize">1赔5</span></div>
+					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="select_num(3)"> <span class="wrap-a-span">3</span><br><span class="fontSize">1赔5</span></div>
+				</div>
+				<div class="weui-flex">
+					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="select_num(4)"> <span class="wrap-a-span">4</span><br><span class="fontSize">1赔5</span></div>
+					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="select_num(5)"> <span class="wrap-a-span">5</span><br><span class="fontSize">1赔5</span></div>
+					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="select_num(6)"> <span class="wrap-a-span">6</span><br><span class="fontSize">1赔5</span></div>
+				</div>
+			</div>
+		</section>
+
+
+	 </div>
+
+		<nav>
+			<div class="weui-tabbar">
+				<!-- <a href="/Ssc/index.html" class="weui-tabbar__item">
+					<i class="my-bet-1 weui-tabbar__icon "></i>
+					<p class="weui-tabbar__label">时时彩</p>
+				</a> -->
+
+				<a href="/" class="weui-tabbar__item">
+					<i class="dice-icon-2 weui-tabbar__icon "></i>
+					<p class="weui-tabbar__label">猜大小</p>
+				</a>
+				<a href="/index.php?m=&amp;c=Index&amp;a=usercode" class="weui-tabbar__item">
+					<i class="myShare-icon-1 weui-tabbar__icon "></i>
+					<p class="weui-tabbar__label">分享赚钱</p>
+				</a>
+				<a href="/index.php?m=&amp;c=Index&amp;a=ucenter" class="weui-tabbar__item">
+					<i class="personCenter-icon-1 weui-tabbar__icon "></i>
+					<p class="weui-tabbar__label">个人中心</p>
+				</a>
+			</div>
+		</nav>
+ </body>
+</html>
