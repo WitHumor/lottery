@@ -24,12 +24,12 @@ public interface MemberDao {
 	int addMember(Member member);
 
 	/**
-	 * 会员登录
+	 * 查询会员信息
 	 * 
 	 * @param map
 	 * @return
 	 */
-	List<Member> loginMember(Map<String, Object> map);
+	List<Member> queryMember(Map<String, Object> map);
 
 	/**
 	 * 会员下注
@@ -40,19 +40,11 @@ public interface MemberDao {
 	int betMember(MemberSingleNote memberSingleNote);
 
 	/**
-	 * 根据会员id查询余额
-	 * 
-	 * @param mid
-	 * @return
-	 */
-	Member getMemberByMoney(String mid);
-
-	/**
 	 * 根据mid修改余额 
 	 * 
 	 * @param map
 	 */
-	int updateSum(Map<String, String> map);
+	int updateSum(Map<String, Object> map);
 
 	/**
 	 * 根据snid删除注单
@@ -68,7 +60,7 @@ public interface MemberDao {
 	 * @param map
 	 * @return
 	 */
-	int singleNoteAccount(Map<String, String> map);
+	int singleNoteAccount(Map<String, Object> map);
 
 	/**
 	 * 查询注单DTO
@@ -76,7 +68,7 @@ public interface MemberDao {
 	 * @param map
 	 * @return
 	 */
-	List<SingleNoteDTO> querySingleNoteDTO(Map<String, String> map);
+	List<SingleNoteDTO> querySingleNoteDTO(Map<String, Object> map);
 	
 	/**
 	 * 在线存款与在线取款
@@ -93,7 +85,8 @@ public interface MemberDao {
 	int deleteFundRecord(String frid);
 	
 	/**
-	 * 查询资金流水记录
+	 * 查询存取款记录
+	 * 
 	 * @param map
 	 * @return
 	 */
@@ -103,5 +96,35 @@ public interface MemberDao {
 	 * 查询资金流水记录总条数
 	 * @return
 	 */
-	int loadFundRecordTotal();
+	int loadFundRecordTotal(Map<String, Object> map);
+	
+	/**
+	 * 资金流水记录状态修改
+	 * 
+	 * @param map
+	 * @return
+	 */
+	int updateFundRecord(Map<String, Object> map);
+	
+	/**
+	 * 查询资金流水记录
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<MemberFundRecord> queryFundRecord(Map<String, Object> map);
+	
+	/**
+	 * 查询注单记录
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<MemberSingleNote> querySingleNote(Map<String, Object> map);
+	
+	/**
+	 * 查询注单记录总条数
+	 * @return
+	 */
+	int loadSingleNoteTotal(Map<String, Object> map);
 }

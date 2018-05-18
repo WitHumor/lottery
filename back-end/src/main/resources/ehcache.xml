@@ -21,11 +21,11 @@
  <cache
    name = "memberCache"
    eternal = "false"
-   maxElementsInMemory = "100"
-   overflowToDisk = "false"
-   diskPersistent = "false"
-   timeToIdleSeconds = "12000"
-   timeToLiveSeconds = "18000"
+   maxElementsInMemory = "10000"
+   overflowToDisk = "true"
+   diskPersistent = "true"
+   timeToIdleSeconds = "86400"
+   timeToLiveSeconds = "86400"
    memoryStoreEvictionPolicy = "LRU"/>
 
  <!-- maxElementsInMemory 内存中最大缓存对象数，看着自己的heap大小来搞 -->

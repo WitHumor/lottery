@@ -39,4 +39,6 @@ public class MessageUtil {
 	public final static String NAME_EXIST = "1115";
 	// 赛事结束不能下注
 	public final static String LEAGUE_END = "1116";
+	// 时间超时
+	public final static String TIME_OVERTIME = "1117";
 }

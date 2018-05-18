@@ -18,7 +18,7 @@ public class TimedTask {
 	
 	@Autowired
 	private MemberController memberController;
-	
+//	
 //	@Scheduled(fixedDelay = 5000)
 //	public void singleNote() {
 //		System.out.println(Thread.currentThread().getName() + "定时任务启动");
