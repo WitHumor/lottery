@@ -87,9 +87,9 @@ var DW = {
     },
     withdrawal: function() {
         var param = {
-            money: $('#btb-rmb').val().split(' 个')[0],
+            currencyCount: $('#btb-rmb').val().split(' 个')[0],
             currency: $('#bitype').val(),
-            currencyCount: $('#rechargebtb').val(),
+            money: $('#rechargebtb').val(),
             phone: $('#telphone').val(),
             address: $('#purseaddress').val(),
             password: $('#withpass').val()
