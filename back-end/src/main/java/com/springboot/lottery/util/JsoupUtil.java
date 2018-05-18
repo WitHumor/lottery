@@ -58,45 +58,6 @@ public class JsoupUtil {
 	
 	private static final String EXCHANGE_PRICE = "div[class].box p[class].price";// 获取全场篮球比分
 
-	public static void main(String[] args) {
-		// String url =
-		// "https://www.ylg56789.com/app/member/FT_Result?game_type=FT&today1=2018-05-10&uid=&langx=zh-cn";
-		// String url2 =
-		// "https://www.ylg56789.com/app/member/BK_Result?game_type=BK&today1=2018-05-10&uid=&langx=zh-cn";
-		// List<Map<String, String>> gameResult = getGameResult(url, LEG_BAR, TEAM_C_FT,
-		// TEAM_H_FT,HR_MAIN_FT,FULL_MAIN_FT, "印度I联赛乙组");
-		// List<Map<String, String>> gameResult = getGameResult(url, LEG_BAR, TEAM_C,
-		// TEAM_H, HR_MAIN_FIRST, HR_MAIN_LAST,
-		// FULL_MAIN_FIRST, FULL_MAIN_LAST,
-		// "哥斯达黎加甲组联赛-附加赛");
-		String url = "https://www.ylg56789.com/app/member/FT_browse/body_var?uid=41E1C90D347A90C6A60811350&rtype=r&langx=zh-cn&mtype=3&page_no=0&league_id=&hot_game=";
-		// List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-		// for (Map<String, String> map : gameResult) {
-		// System.out.println(map);
-		// }
-		// for (Map<String, String> map : list) {
-		// System.out.println(map);
-		// }
-
-		String stringAll = getStringAll(url);
-		getFieldExplain(stringAll);
-
-		String s = "121.5";
-
-		System.out.println(s.contains("."));
-		List<String> hrList = new ArrayList<String>();
-		Map<String, List<String>> map = new HashMap<String, List<String>>();
-		map.put("hrList", hrList);
-		System.out.println(map.get("hrList"));
-		// List<Map<String, String>> list = listFieldAndData(
-		// "https://www.ylg56789.com/app/member/FT_browse/body_var?uid=41E1C90D347A90C6A60811350&rtype=r&langx=zh-cn&mtype=3&page_no=0&league_id=&hot_game=");
-		// for (Map<String, String> map : list) {
-		// System.out.println(map);
-		// }
-		String exchange = getExchange("eos");
-		System.out.println(exchange);
-	}
-
 	/**
 	 * 根据赛事名称进行匹配-足球
 	 * 
