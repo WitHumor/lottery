@@ -46,6 +46,8 @@ public class MemberSingleNote implements Serializable {
 	private String money;
 	// 有效投注额
 	private String valid_money;
+	// 交易金额
+	private String deal_money;
 	// 输赢
 	private String win_lose;
 
@@ -175,6 +177,14 @@ public class MemberSingleNote implements Serializable {
 
 	public void setValid_money(String valid_money) {
 		this.valid_money = valid_money;
+	}
+	
+	public String getDeal_money() {
+		return deal_money;
+	}
+
+	public void setDeal_money(String deal_money) {
+		this.deal_money = deal_money;
 	}
 
 	public String getWin_lose() {

@@ -40,6 +40,8 @@ public class SingleNoteDTO implements Serializable {
 	private String money;
 	// 有效投注额
 	private String valid_money;
+	// 交易金额
+	private String deal_money;
 	// 输赢
 	private String win_lose;
 	// 登录名
@@ -275,5 +277,13 @@ public class SingleNoteDTO implements Serializable {
 
 	public void setScore(String score) {
 		this.score = score;
+	}
+
+	public String getDeal_money() {
+		return deal_money;
+	}
+
+	public void setDeal_money(String deal_money) {
+		this.deal_money = deal_money;
 	}
 }

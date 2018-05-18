@@ -21,10 +21,18 @@ public class MemberFundRecord implements Serializable {
 	private Date time;
 	// 编号
 	private String number;
-	// 类型
-	private String type;
+	// 电话
+	private String phone_code;
+	// 钱包地址
+	private String money_address;
+	// 货币
+	private String currency;
+	// 货币数量
+	private String currency_count;
 	// 金额
 	private String money;
+	// 记录
+	private String record;
 	// 优惠金额
 	private String discounts;
 	// 状态
@@ -63,13 +71,21 @@ public class MemberFundRecord implements Serializable {
 	public void setNumber(String number) {
 		this.number = number;
 	}
-
-	public String getType() {
-		return type;
+	
+	public String getCurrency() {
+		return currency;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
+	public String getCurrency_count() {
+		return currency_count;
+	}
+
+	public void setCurrency_count(String currency_count) {
+		this.currency_count = currency_count;
 	}
 
 	public String getMoney() {
@@ -79,7 +95,7 @@ public class MemberFundRecord implements Serializable {
 	public void setMoney(String money) {
 		this.money = money;
 	}
-	
+
 	public String getDiscounts() {
 		return discounts;
 	}
@@ -104,4 +120,27 @@ public class MemberFundRecord implements Serializable {
 		this.remark = remark;
 	}
 
+	public String getRecord() {
+		return record;
+	}
+
+	public void setRecord(String record) {
+		this.record = record;
+	}
+
+	public String getPhone_code() {
+		return phone_code;
+	}
+
+	public void setPhone_code(String phone_code) {
+		this.phone_code = phone_code;
+	}
+
+	public String getMoney_address() {
+		return money_address;
+	}
+
+	public void setMoney_address(String money_address) {
+		this.money_address = money_address;
+	}
 }

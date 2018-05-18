@@ -3,8 +3,8 @@ package com.springboot.lottery.dto;
 import java.io.Serializable;
 import java.util.Date;
 
-public class FundRecordDTO implements Serializable{
-	
+public class FundRecordDTO implements Serializable {
+
 	private static final long serialVersionUID = -6949818367309917483L;
 	// 主键id
 	private String frid;
@@ -14,10 +14,18 @@ public class FundRecordDTO implements Serializable{
 	private Date time;
 	// 编号
 	private String number;
-	// 类型
-	private String type;
+	// 电话
+	private String phone_code;
+	// 钱包地址
+	private String money_address;
+	// 货币
+	private String currency;
+	// 货币数量
+	private String currency_count;
 	// 金额
 	private String money;
+	// 记录
+	private String record;
 	// 优惠金额
 	private String discounts;
 	// 状态
@@ -70,9 +78,25 @@ public class FundRecordDTO implements Serializable{
 	public String getAddress() {
 		return address;
 	}
-
+	
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	
+	public String getPhone_code() {
+		return phone_code;
+	}
+
+	public void setPhone_code(String phone_code) {
+		this.phone_code = phone_code;
+	}
+
+	public String getMoney_address() {
+		return money_address;
+	}
+
+	public void setMoney_address(String money_address) {
+		this.money_address = money_address;
 	}
 
 	public String getSum() {
@@ -89,6 +113,13 @@ public class FundRecordDTO implements Serializable{
 
 	public void setReal_name(String real_name) {
 		this.real_name = real_name;
+	}
+	public String getRecord() {
+		return record;
+	}
+
+	public void setRecord(String record) {
+		this.record = record;
 	}
 
 	public String getBank_password() {
@@ -155,12 +186,20 @@ public class FundRecordDTO implements Serializable{
 		this.number = number;
 	}
 
-	public String getType() {
-		return type;
+	public String getCurrency() {
+		return currency;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
+	public String getCurrency_count() {
+		return currency_count;
+	}
+
+	public void setCurrency_count(String currency_count) {
+		this.currency_count = currency_count;
 	}
 
 	public String getMoney() {
@@ -170,7 +209,7 @@ public class FundRecordDTO implements Serializable{
 	public void setMoney(String money) {
 		this.money = money;
 	}
-	
+
 	public String getDiscounts() {
 		return discounts;
 	}
