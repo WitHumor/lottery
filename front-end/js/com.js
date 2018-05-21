@@ -9,6 +9,7 @@ var HttpService = function() {
     var _ajax = function(type, url, data, succ, failed) {
         var userinfo = sessionStorage.getItem("userinfo");
         var toid = null;
+        var index = '';
         if (userinfo) {
             toid = JSON.parse(userinfo).token
         }
@@ -25,7 +26,7 @@ var HttpService = function() {
             contentType: "application/x-www-form-urlencoded",
             data: data,
             beforeSend: function() {
-                var index = layer.load(0, {
+                index = layer.load(0, {
                     shade: 0.1
                 });
             },
@@ -54,7 +55,7 @@ var HttpService = function() {
                 }
             },
             complete: function() {
-                layer.closeAll();
+                layer.close(index);
             }
         });
     };
