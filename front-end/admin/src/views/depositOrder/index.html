@@ -1,32 +1,229 @@
-
-<title>存款单</title>
-
+<title>
+    存款单</title>
 <div class="layui-card layadmin-header">
-  <div class="layui-breadcrumb" lay-filter="breadcrumb">
-    <a lay-href="">主页</a>
-    <a><cite>存款单</cite></a>
-  </div>
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">主页</a>
+        <a>
+            <cite>存款单</cite>
+        </a>
+    </div>
 </div>
-
-<style>
-/* 这段样式只是用于演示 */
-.layadmin-trailer{position: absolute; left: 0; top: 0; height: 100%; width: 100%; padding: 15px; display: flex; justify-content: center; flex-direction: column; text-align: center; box-sizing: border-box; font-size: 20px; font-weight: 300; color: #ccc;}
-</style>
-
-<div class="layadmin-trailer">
-  <div style="width: 280px; margin: 0 auto;">
-    正在整理
-  </a>
+<div class="layui-fluid">
+    <div class="layui-form">
+        <div class="layui-inline">
+            <input id="allTime" type="text" readonly placeholder="申请时间区间" class="layui-input" style="width: 270px;" />
+        </div>
+        <div class="layui-inline">
+            <select id="withdrawType">
+                <option value="">存款货币类型</option>
+                <option value="BTC">比特币（BTC）</option>
+                <option value="EOS">柚子币（EOS）</option>
+                <option value="ETH">以太币（ETH）</option>
+                <option value="XRP">瑞波币（XRP）</option>
+                <option value="LTC">莱特币（LTC）</option>
+                <option value="QTVM">量子币（QTVM）</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <select id="withdrawStatus">
+                <option value="">存款状态</option>
+                <option value="0">等待支付</option>
+                <option value="1">支付成功</option>
+                <option value="2">充值成功</option>
+                <option value="-2">充值失败</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <input type="text" placeholder="存款单号/用户名" class="layui-input" style="width: 270px;" />
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn">查询</button>
+        </div>
+    </div>
+    <table class="layui-hide" id="datalist"></table>
 </div>
-
+<script type="text/html" id="operateBar">
+    <a class="layui-btn layui-btn-sm" lay-event="audit">审核</a>
+</script>
 <script>
-layui.use(['admin'], function(){
-  var $ = layui.$
-  ,admin = layui.admin
-  ,element = layui.element
-  ,router = layui.router();
+layui.use(['admin', 'table', 'laydate', 'common'], function() {
+    var $ = layui.$,
+        admin = layui.admin,
+        element = layui.element,
+        laydate = layui.laydate,
+        table = layui.table,
+        form = layui.form,
+        router = layui.router();
+    element.render();
 
-
-
+    form.render();
+    laydate.render({
+        elem: '#allTime',
+        type: 'datetime',
+        format: 'yyyy-MM-dd HH:mm',
+        theme: 'grid',
+        range: '至'
+    });
+    table.render({
+        elem: '#datalist',
+        url: 'http://192.168.43.20:8080/member/member-record',
+        method: 'post',
+        where: {
+            record: '0'
+        },
+        request: {
+            pageName: 'pageNo', //页码的参数名称，默认：page
+            limitName: 'pageSize' //每页数据量的参数名，默认：limit
+        },
+        response: {
+            statusName: 'code', //数据状态的字段名称，默认：code
+            statusCode: "2018", //成功的状态码，默认：0
+            countName: 'total', //数据总数的字段名称，默认：count
+            dataName: 'result', //数据列表的字段名称，默认：data
+        },
+        headers: {
+            "content-type": "application/x-www-form-urlencoded",
+            // "token": sessionStorage.getItem('toid')
+        },
+        cellMinWidth: 80,
+        page: true,
+        limits: [10, 30, 60, 90],
+        cols: [
+                [{
+                    field: 'time',
+                    title: '申请时间',
+                }, {
+                    field: 'number',
+                    title: '充值单号',
+                }, {
+                    field: 'name',
+                    title: '用户名',
+                }, {
+                    field: 'money',
+                    title: '充值金额',
+                }, {
+                    field: 'type',
+                    title: '充值类型',
+                    // templet: function(data) {
+                    //     var types = '-';
+                    //     $.each(config.coin, function(i, item) {
+                    //         if (item.value == data.type) {
+                    //             types = item.name;
+                    //             return false;
+                    //         }
+                    //     });
+                    //     return types;
+                    // }
+                }, {
+                    field: 'state',
+                    title: '状态',
+                    // width: '100',
+                    templet: function(data) {
+                        var st = '';
+                        switch (data.state) {
+                            case '0':
+                                st = '等待支付';
+                                break;
+                            case '1':
+                                st = '支付成功';
+                                break;
+                            case '2':
+                                st = '充值成功';
+                                break;
+                            case '-2':
+                                st = '充值失败';
+                                break;
+                            default:
+                                st = '-';
+                        }
+                        return st;
+                    }
+                }, {
+                    title: '操作',
+                    fixed: 'right',
+                    width: 80,
+                    align: 'center',
+                    toolbar: '#operateBar'
+                }]
+            ]
+            // [
+            //     [{
+            //         field: 'id',
+            //         title: 'ID',
+            //     }, {
+            //         field: 'username',
+            //         title: '用户名'
+            //     }, {
+            //         field: 'sex',
+            //         title: '性别',
+            //     }, {
+            //         field: 'city',
+            //         title: '城市'
+            //     }, {
+            //         field: 'sign',
+            //         title: '签名',
+            //         width: '30%',
+            //         minWidth: 100
+            //     }, {
+            //         title: '操作',
+            //         fixed: 'right',
+            //         width: 80,
+            //         align: 'center',
+            //         toolbar: '#operateBar'
+            //     }]
+            // ]
+            ,
+        // data: [{
+        //     id: 'wew',
+        //     username: 'sfsfdsfsd',
+        //     sex: '男',
+        //     city: '重庆',
+        //     sign: '这是前面'
+        // }, {
+        //     id: 'wew',
+        //     username: 'sfsfdsfsd',
+        //     sex: '男',
+        //     city: '重庆',
+        //     sign: '这是前面'
+        // }, {
+        //     id: 'wew',
+        //     username: 'sfsfdsfsd',
+        //     sex: '男',
+        //     city: '重庆',
+        //     sign: '这是前面'
+        // }, {
+        //     id: 'wew',
+        //     username: 'sfsfdsfsd',
+        //     sex: '男',
+        //     city: '重庆',
+        //     sign: '这是前面'
+        // }, {
+        //     id: 'wew',
+        //     username: 'sfsfdsfsd',
+        //     sex: '男',
+        //     city: '重庆',
+        //     sign: '这是前面'
+        // }, {
+        //     id: 'wew',
+        //     username: 'sfsfdsfsd',
+        //     sex: '男',
+        //     city: '重庆',
+        //     sign: '这是前面'
+        // }]
+        done: function(res, curr, count) {
+            console.log(res);
+            // if (res.code == '1109' || res.code == '1114') {
+            //     layer.msg('登录超时，请重新登陆', {
+            //         time: 2000,
+            //         icon: 2
+            //     });
+            //     sessionStorage.setItem('userinfo', '');
+            //     sessionStorage.setItem('toid', '');
+            //     setTimeout(function() {
+            //         window.location.href = 'home.html';
+            //     }, 2000);
+            // }
+        }
+    });
 });
 </script>

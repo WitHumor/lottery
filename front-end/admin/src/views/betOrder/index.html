@@ -10,54 +10,89 @@
 </div>
 <style>
 </style>
-<table class="layui-hide" id="test"></table>
-
-<script type="text/html" id="barDemo">
-  <a class="layui-btn layui-btn-normal layui-btn-sm" lay-event="cancel">取消</a>
+<div class="layui-fluid">
+    <div class="layui-form">
+        <div class="layui-inline">
+            <input id="allTime" type="text" readonly placeholder="下注时间区间" class="layui-input" style="width: 270px;" />
+        </div>
+        <div class="layui-inline">
+            <select>
+                <option value="">比赛类型</option>
+                <option value="RFT">足球</option>
+                <option value="REFT">滚球-足球</option>
+                <option value="RBK">篮球</option>
+                <option value="REBK">滚球-篮球</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <select>
+                <option value="">结算与否</option>
+                <option value="0">未结算</option>
+                <option value="1">已结算</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <input type="text" placeholder="联赛名称/球队名称/下注单号/用户名" class="layui-input" style="width: 270px;" />
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn">查询</button>
+        </div>
+    </div>
+    <table class="layui-hide" id="datalist"></table>
+</div>
+<script type="text/html" id="operateBar">
+    <a class="layui-btn layui-btn-sm" lay-event="cancel">取消</a>
 </script>
-
 <script>
-layui.use(['admin', 'table'], function() {
+layui.use(['admin', 'table', 'laydate'], function() {
     var $ = layui.$,
         admin = layui.admin,
         element = layui.element,
+        laydate = layui.laydate,
+        table = layui.table,
+        form = layui.form,
         router = layui.router();
     element.render();
 
-    var table = layui.table;
-
+    form.render();
+    laydate.render({
+        elem: '#allTime',
+        type: 'datetime',
+        format: 'yyyy-MM-dd HH:mm',
+        theme: 'grid',
+        range: '至'
+    });
     table.render({
-        elem: '#test',
+        elem: '#datalist',
         // url: '/demo/table/user/',
         cellMinWidth: 80,
         page: true,
-        limits: [10,30,60,90],
+        limits: [10, 30, 60, 90],
         cols: [
             [{
-                    field: 'id',
-                    title: 'ID',
-                }, {
-                    field: 'username',
-                    title: '用户名'
-                }, {
-                    field: 'sex',
-                    title: '性别',
-                }, {
-                    field: 'city',
-                    title: '城市'
-                }, {
-                    field: 'sign',
-                    title: '签名',
-                    width: '30%',
-                    minWidth: 100
-                }, {
-                  title: '操作',
-                  fixed: 'right',
-                  width: 80,
-                  align:'center',
-                  toolbar: '#barDemo'
-                }
-            ]
+                field: 'id',
+                title: 'ID',
+            }, {
+                field: 'username',
+                title: '用户名'
+            }, {
+                field: 'sex',
+                title: '性别',
+            }, {
+                field: 'city',
+                title: '城市'
+            }, {
+                field: 'sign',
+                title: '签名',
+                width: '30%',
+                minWidth: 100
+            }, {
+                title: '操作',
+                fixed: 'right',
+                width: 80,
+                align: 'center',
+                toolbar: '#operateBar'
+            }]
         ],
         data: [{
             id: 'wew',

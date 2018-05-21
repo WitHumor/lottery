@@ -2,7 +2,7 @@
   "code": 0
   ,"msg": ""
   ,"data": {
-    "username": "贤心"
+    "username": "admin"
     ,"sex": "男"
     ,"role": 1
   }

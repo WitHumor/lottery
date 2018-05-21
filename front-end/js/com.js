@@ -327,12 +327,12 @@ var common = {
         //页面共同代码
         if ($('#thisisheader').length == 0) {
             var html = '';
-            // var html = '<button type="button" onclick="window.location.href=\'onlinedeposit.html\'">线上存款</button><button type="button" onclick="window.location.href=\'onlinedraw.html\'">线上取款</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '') + '<i class="iconfont icon-yonghu" onclick="common.mine();"></i>';
-            if (sessionStorage.getItem('toid')) {
-                html = '<button type="button" onclick="window.location.href=\'onlinedeposit.html\'">线上存款</button><button type="button" onclick="window.location.href=\'onlinedraw.html\'">线上取款</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '') + '<i class="iconfont icon-yonghu" onclick="common.mine();"></i>';
-            } else {
-                html = '<button type="button" onclick="common.openlayer(\'L\');">登录</button><button type="button" onclick="common.openlayer(\'R\');">注册</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '');
-            }
+            var html = '<button type="button" onclick="window.location.href=\'onlinedeposit.html\'">线上存款</button><button type="button" onclick="window.location.href=\'onlinedraw.html\'">线上取款</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '') + '<i class="iconfont icon-yonghu" onclick="common.mine();"></i>';
+            // if (sessionStorage.getItem('toid')) {
+            //     html = '<button type="button" onclick="window.location.href=\'onlinedeposit.html\'">线上存款</button><button type="button" onclick="window.location.href=\'onlinedraw.html\'">线上取款</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '') + '<i class="iconfont icon-yonghu" onclick="common.mine();"></i>';
+            // } else {
+            //     html = '<button type="button" onclick="common.openlayer(\'L\');">登录</button><button type="button" onclick="common.openlayer(\'R\');">注册</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '');
+            // }
             $('body').prepend('<div id="thisisheader" class="header"><img src="../../img/homelogo.png" style="vertical-align: middle;" width="90" height="80"><div class="slogan"><span class="wel">永利高</span></div><i class="iconfont icon-icon_xinyongguiji"></i><div class="credit"><span>老品牌 值得信赖</span><div>精彩赛事，尽在永利高</div></div><div class="baseinfo fr">' + html + '</div></div>');
         }
 

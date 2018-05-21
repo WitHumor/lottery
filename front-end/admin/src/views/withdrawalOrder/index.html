@@ -1,31 +1,127 @@
-
-<title>取款单</title>
-
+<title>
+    取款单</title>
 <div class="layui-card layadmin-header">
-  <div class="layui-breadcrumb" lay-filter="breadcrumb">
-    <a lay-href="">主页</a>
-    <a><cite>取款单</cite></a>
-  </div>
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">主页</a>
+        <a>
+            <cite>取款单</cite>
+        </a>
+    </div>
 </div>
-
-<style>
-/* 这段样式只是用于演示 */
-.layadmin-trailer{position: absolute; left: 0; top: 0; height: 100%; width: 100%; padding: 15px; display: flex; justify-content: center; flex-direction: column; text-align: center; box-sizing: border-box; font-size: 20px; font-weight: 300; color: #ccc;}
-</style>
-
-<div class="layadmin-trailer">
-  即将开放
+<div class="layui-fluid">
+    <div class="layui-form">
+        <div class="layui-inline">
+            <input id="allTime" type="text" readonly placeholder="申请时间区间" class="layui-input" style="width: 270px;" />
+        </div>
+        <div class="layui-inline">
+            <select id="withdrawStatus">
+                <option value="">取款状态</option>
+                <option value="0">等待处理</option>
+                <option value="1">等待支付</option>
+                <option value="2">支付完成</option>
+                <option value="-2">审批拒绝</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <input type="text" placeholder="取款单号/用户名" class="layui-input" style="width: 270px;" />
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn">查询</button>
+        </div>
+    </div>
+    <table class="layui-hide" id="datalist"></table>
 </div>
-
+<script type="text/html" id="operateBar">
+    <a class="layui-btn layui-btn-sm" lay-event="audit">审核</a>
+</script>
 <script>
-layui.use(['admin'], function(){
-  var $ = layui.$
-  ,admin = layui.admin
-  ,element = layui.element
-  ,router = layui.router();
+layui.use(['admin', 'table', 'laydate'], function() {
+    var $ = layui.$,
+        admin = layui.admin,
+        element = layui.element,
+        laydate = layui.laydate,
+        table = layui.table,
+        form = layui.form,
+        router = layui.router();
+    element.render();
 
-  element.render();
-
-
+    form.render();
+    laydate.render({
+        elem: '#allTime',
+        type: 'datetime',
+        format: 'yyyy-MM-dd HH:mm',
+        theme: 'grid',
+        range: '至'
+    });
+    table.render({
+        elem: '#datalist',
+        // url: '/demo/table/user/',
+        cellMinWidth: 80,
+        page: true,
+        limits: [10, 30, 60, 90],
+        cols: [
+            [{
+                field: 'id',
+                title: 'ID',
+            }, {
+                field: 'username',
+                title: '用户名'
+            }, {
+                field: 'sex',
+                title: '性别',
+            }, {
+                field: 'city',
+                title: '城市'
+            }, {
+                field: 'sign',
+                title: '签名',
+                width: '30%',
+                minWidth: 100
+            }, {
+                title: '操作',
+                fixed: 'right',
+                width: 80,
+                align: 'center',
+                toolbar: '#operateBar'
+            }]
+        ],
+        data: [{
+            id: 'wew',
+            username: 'sfsfdsfsd',
+            sex: '男',
+            city: '重庆',
+            sign: '这是前面'
+        }, {
+            id: 'wew',
+            username: 'sfsfdsfsd',
+            sex: '男',
+            city: '重庆',
+            sign: '这是前面'
+        }, {
+            id: 'wew',
+            username: 'sfsfdsfsd',
+            sex: '男',
+            city: '重庆',
+            sign: '这是前面'
+        }, {
+            id: 'wew',
+            username: 'sfsfdsfsd',
+            sex: '男',
+            city: '重庆',
+            sign: '这是前面'
+        }, {
+            id: 'wew',
+            username: 'sfsfdsfsd',
+            sex: '男',
+            city: '重庆',
+            sign: '这是前面'
+        }, {
+            id: 'wew',
+            username: 'sfsfdsfsd',
+            sex: '男',
+            city: '重庆',
+            sign: '这是前面'
+        }]
+    });
 });
 </script>
