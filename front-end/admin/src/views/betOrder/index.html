@@ -1,31 +1,101 @@
-
-<title>下注单</title>
-
+<title>
+    下注单</title>
 <div class="layui-card layadmin-header">
-  <div class="layui-breadcrumb" lay-filter="breadcrumb">
-    <a lay-href="">主页</a>
-    <a><cite>下注单</cite></a>
-  </div>
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">主页</a>
+        <a>
+            <cite>下注单</cite>
+        </a>
+    </div>
 </div>
-
 <style>
-/* 这段样式只是用于演示 */
-.layadmin-trailer{position: absolute; left: 0; top: 0; height: 100%; width: 100%; padding: 15px; display: flex; justify-content: center; flex-direction: column; text-align: center; box-sizing: border-box; font-size: 20px; font-weight: 300; color: #ccc;}
 </style>
+<table class="layui-hide" id="test"></table>
 
-<div class="layadmin-trailer">
-  即将开放
-</div>
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-normal layui-btn-sm" lay-event="cancel">取消</a>
+</script>
 
 <script>
-layui.use(['admin'], function(){
-  var $ = layui.$
-  ,admin = layui.admin
-  ,element = layui.element
-  ,router = layui.router();
+layui.use(['admin', 'table'], function() {
+    var $ = layui.$,
+        admin = layui.admin,
+        element = layui.element,
+        router = layui.router();
+    element.render();
 
-  element.render();
+    var table = layui.table;
 
-
+    table.render({
+        elem: '#test',
+        // url: '/demo/table/user/',
+        cellMinWidth: 80,
+        page: true,
+        limits: [10,30,60,90],
+        cols: [
+            [{
+                    field: 'id',
+                    title: 'ID',
+                }, {
+                    field: 'username',
+                    title: '用户名'
+                }, {
+                    field: 'sex',
+                    title: '性别',
+                }, {
+                    field: 'city',
+                    title: '城市'
+                }, {
+                    field: 'sign',
+                    title: '签名',
+                    width: '30%',
+                    minWidth: 100
+                }, {
+                  title: '操作',
+                  fixed: 'right',
+                  width: 80,
+                  align:'center',
+                  toolbar: '#barDemo'
+                }
+            ]
+        ],
+        data: [{
+            id: 'wew',
+            username: 'sfsfdsfsd',
+            sex: '男',
+            city: '重庆',
+            sign: '这是前面'
+        }, {
+            id: 'wew',
+            username: 'sfsfdsfsd',
+            sex: '男',
+            city: '重庆',
+            sign: '这是前面'
+        }, {
+            id: 'wew',
+            username: 'sfsfdsfsd',
+            sex: '男',
+            city: '重庆',
+            sign: '这是前面'
+        }, {
+            id: 'wew',
+            username: 'sfsfdsfsd',
+            sex: '男',
+            city: '重庆',
+            sign: '这是前面'
+        }, {
+            id: 'wew',
+            username: 'sfsfdsfsd',
+            sex: '男',
+            city: '重庆',
+            sign: '这是前面'
+        }, {
+            id: 'wew',
+            username: 'sfsfdsfsd',
+            sex: '男',
+            city: '重庆',
+            sign: '这是前面'
+        }]
+    });
 });
 </script>

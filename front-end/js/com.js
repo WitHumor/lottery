@@ -24,6 +24,11 @@ var HttpService = function() {
             dataType: "json",
             contentType: "application/x-www-form-urlencoded",
             data: data,
+            beforeSend: function() {
+                var index = layer.load(0, {
+                    shade: 0.1
+                });
+            },
             success: function(data) {
                 if (data.code == '1109' || data.code == '1114') {
                     layer.msg('登录超时，请重新登陆', {
@@ -47,6 +52,9 @@ var HttpService = function() {
                 } else {
                     console.log("the method is no a function!");
                 }
+            },
+            complete: function() {
+                layer.closeAll();
             }
         });
     };
@@ -99,7 +107,7 @@ var common = {
     },
     openlayer: function(types) {
         var log = {
-                tt: '&nbsp;&nbsp;&nbsp;登&nbsp;录',
+                tt: '<div class="lorcss">&nbsp;&nbsp;&nbsp;登&nbsp;录</div>',
                 ar: ['350px', '320px'],
                 co: '<div class="mbody">' +
                     '<div class="fgroup">' +
@@ -114,8 +122,8 @@ var common = {
                     '<div class="last-group f12"><a class="btn-forget-password fl hide">忘记密码？</a><span class="fr">没有账号？<a class="btn-sign-up" onclick="layer.closeAll();common.openlayer(\'R\');">在此注册</a></span></div></div>'
             },
             reg = {
-                tt: '&nbsp;&nbsp;&nbsp;注&nbsp;册',
-                ar: ['480px', '550px'],
+                tt: '<div class="lorcss">&nbsp;&nbsp;&nbsp;注&nbsp;册</div>',
+                ar: ['480px', '590px'],
                 co: '<div class="mbody">' +
                     '<div class="fgroup">' +
                     '<div class="input-group">' +
@@ -128,6 +136,7 @@ var common = {
                     '<div class="fgroup"><div class="input-group"><input id="verpass" type="password" placeholder="请确认密码" maxlength="12" iType="r_spassword" iStr="密码确认"/><span class="icon-pass"></span></div><label class="verPassVer-error tip vh"></label></div>' +
                     '<div class="fgroup"><div class="input-group"><input id="truename" type="text" placeholder="真实姓名，需与银行帐户名称相同，否则不能出款" iType="r_tname" iStr="真实姓名"/><span class="icon-tname"></span></div><label class="trueName-error tip vh"></label></div>' +
                     '<div class="fgroup"><div class="input-group"><input id="withpass" type="text" placeholder=" 4 位数字取款密码，提款认证必须，请务必记住" maxlength="4"  iType="r_wpassword" iStr="取款密码"/><span class="icon-wpass"></span></div><label class="withPass-error tip vh"></label></div>' +
+                    '<div class="fgroup" style="margin-bottom: 15px;"><div class="input-group"><input id="yaoqingma" type="text" placeholder="代理邀请码，非必填" maxlength="10"  iType="r_yaoqingma" iStr="邀请码"/><span class="icon-yaoqingma"></span></div></div>' +
                     '<div class="fgroup f12" style="margin: 5px 0;color: gray;"><input type="checkbox" checked disabled style="vertical-align:middle;">&nbsp;我已届满合法博彩年龄﹐且同意各项开户条约。</div>' +
                     '<div class="fgroup"><div class="input-group"><input type="button" class="btn-submit" value="注册" onclick="common.register();"/></div></div>' +
                     '<div class="last-group f12"><a class="btn-forget-password fl hide">忘记密码？</a><span class="fr">已有账号？<a class="btn-sign-up" onclick="layer.closeAll();common.openlayer(\'L\');">在此登录</a></span></div></div>'
@@ -202,6 +211,7 @@ var common = {
             regpass = $('#regpass').val(),
             truename = $('#truename').val(),
             withpass = $('#withpass').val(),
+            yaoqingma = $('#yaoqingma').val(),
             thisArr = [$('#regname'), $('#regpass'), $('#verpass'), $('#truename'), $('#withpass')];
         if (common.checkinput(thisArr)) {
             var reqData = {
@@ -211,6 +221,9 @@ var common = {
                 bank_password: withpass,
                 address: cip
             };
+            if(yaoqingma) {
+                reqData.invitation_code = yaoqingma;
+            }
             this.ajax.post('/member/add-member', reqData, function(data) {
                 if (data.code == '2018') {
                     sessionStorage.setItem('userinfo', JSON.stringify(data.result));
@@ -316,17 +329,14 @@ var common = {
             // var html = '<button type="button" onclick="window.location.href=\'onlinedeposit.html\'">线上存款</button><button type="button" onclick="window.location.href=\'onlinedraw.html\'">线上取款</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '') + '<i class="iconfont icon-yonghu" onclick="common.mine();"></i>';
             if (sessionStorage.getItem('toid')) {
                 html = '<button type="button" onclick="window.location.href=\'onlinedeposit.html\'">线上存款</button><button type="button" onclick="window.location.href=\'onlinedraw.html\'">线上取款</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '') + '<i class="iconfont icon-yonghu" onclick="common.mine();"></i>';
-
             } else {
                 html = '<button type="button" onclick="common.openlayer(\'L\');">登录</button><button type="button" onclick="common.openlayer(\'R\');">注册</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '');
-
             }
-            // <div>精彩赛事，尽在永利高</div>
             $('body').prepend('<div id="thisisheader" class="header"><img src="../../img/homelogo.png" style="vertical-align: middle;" width="90" height="80"><div class="slogan"><span class="wel">永利高</span></div><i class="iconfont icon-icon_xinyongguiji"></i><div class="credit"><span>老品牌 值得信赖</span><div>精彩赛事，尽在永利高</div></div><div class="baseinfo fr">' + html + '</div></div>');
         }
 
         if ($('#thisisfooter').length == 0) {
-            $('body').append('<div id="thisisfooter" class="footer"><div class="fl"><img src="../../img/2018sjb.png"></div><div class="fl footinfo"><div class="article-menu"><a href="footerinfo.html?type=aboutus">关于我們</a>｜ <a href="javascript:void(0)" onclick="$(\'.nb-icon-inner-wrap\').click();">联系我们</a>｜ <a href="javascript:void(0)">合作代理</a>｜ <a href="footerinfo.html?type=desposit">存款帮助</a>｜ <a href="footerinfo.html?type=teller">取款帮助</a><!-- ｜ <a href="javascript:void(0)">常见问题</a> --></div><div class="fo-text">永利高所提供的产品和服务，是由菲律宾政府卡格扬河经济特区<br>First Cagayan leisure and Resort Corporation.<br> 授权和监管 我们将不余遗力的为您提供优质的服务和可靠的资金保障。</div><div class="footer-Infomation"><div class="copyright fl">Copyright © 永利高 Reserved&nbsp; <span class="footer-info"><!-- 邮箱：980127777@qq.com&nbsp;&nbsp;QQ：980127777 --></span></div></div></div></div>');
+            $('body').append('<div id="thisisfooter" class="footer"><div class="fl"><img src="../../img/2018sjb.png"></div><div class="fl footinfo"><div class="article-menu"><a href="footerinfo.html?type=aboutus">关于我們</a>｜ <a href="javascript:void(0)" onclick="$(\'.nb-icon-inner-wrap\').click();">联系我们</a>｜ <a href="javascript:void(0);" onclick="common.inviteCode();">合作代理</a>｜ <a href="footerinfo.html?type=desposit">存款帮助</a>｜ <a href="footerinfo.html?type=teller">取款帮助</a><!-- ｜ <a href="javascript:void(0)">常见问题</a> --></div><div class="fo-text">永利高所提供的产品和服务，是由菲律宾政府卡格扬河经济特区<br>First Cagayan leisure and Resort Corporation.<br> 授权和监管 我们将不余遗力的为您提供优质的服务和可靠的资金保障。</div><div class="footer-Infomation"><div class="copyright fl">Copyright © 永利高 Reserved&nbsp; <span class="footer-info"><!-- 邮箱：980127777@qq.com&nbsp;&nbsp;QQ：980127777 --></span></div></div></div></div>');
         }
 
         setInterval(function() {
@@ -361,6 +371,24 @@ var common = {
         $('body').append('<script>var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?bdcca757f17f3439b840ebb0a44084a2";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();</script>');
     },
 
+    inviteCode: function() {
+        $('.mine').remove();
+        layer.closeAll();
+        if(sessionStorage.getItem('toid') && sessionStorage.getItem('userinfo')) {
+            var h = '<div style="letter-spacing: 5px;font-size: 20px;text-align: center;color: #071D32;">'+ JSON.parse(sessionStorage.getItem('userinfo')).name +'</div>';
+        layer.alert(h, {
+            skin: 'layui-layer-molv',
+            title: '您的代理邀请码',
+            move: false,
+            closeBtn: 0,
+        });
+    } else {
+        sessionStorage.setItem('userinfo', '');
+        sessionStorage.setItem('toid', '');
+        common.openlayer('L');
+    }
+
+    },
 
     //取消订单
     cancelDeal: function() {
@@ -391,7 +419,7 @@ var common = {
     },
 
     mine: function() {
-        $('body').prepend('<div class="mine"><div class="myinfos"><img src="../../img/icon_user_o_lg.png"><p>账户：<label id="myAccount" class="fwb">-</label></p><p>余额：<label id="remainSum" class="fwb">0.00</label> 点</p><p><button class="refresh-credit" onclick="common.getANS();"><i class="iconfont icon-msnui-refresh-circle alignmid"></i> 刷新额度</button></p><div class="milist"><div onclick="window.location.href=\'tradingrecord.html\'">资金交易记录<i class="iconfont icon-more fr f20"></i></div><div>获取代理邀请码<i class="iconfont icon-more fr f20"></i></div></div><a href="javascript:void(0);" onclick="common.loginout();"><i class="iconfont icon-tuichu alignmid"></i> 安全退出</a></div></div>');
+        $('body').prepend('<div class="mine"><div class="myinfos"><img src="../../img/icon_user_o_lg.png"><p>账户：<label id="myAccount" class="fwb">-</label></p><p>余额：<label id="remainSum" class="fwb">0.00</label> 点</p><p><button class="refresh-credit" onclick="common.getANS();"><i class="iconfont icon-msnui-refresh-circle alignmid"></i> 刷新额度</button></p><div class="milist"><div onclick="window.location.href=\'tradingrecord.html\'">资金交易记录<i class="iconfont icon-more fr f20"></i></div><div onclick="common.inviteCode();">获取代理邀请码<i class="iconfont icon-more fr f20"></i></div></div><a href="javascript:void(0);" onclick="common.loginout();"><i class="iconfont icon-tuichu alignmid"></i> 安全退出</a></div></div>');
         $('.mine').click(function(e) {
             var o = e.target;
             if ($(o).closest('.myinfos').length == 0) //不是特定区域
@@ -405,17 +433,18 @@ var common = {
             if (data.code == '2018') {
                 $('#myAccount').text(data.result.name);
                 $('#remainSum').text(data.result.sum);
-            } else {
-                layer.msg('数据获取失败', {
-                    time: 2000,
-                    icon: 2
-                });
             }
+            // else {
+            //     layer.msg('数据获取失败', {
+            //         time: 2000,
+            //         icon: 2
+            //     });
+            // }
         }, function(e) {
-            layer.msg('数据获取失败', {
-                time: 2000,
-                icon: 2
-            });
+            // layer.msg('网络错误', {
+            //     time: 2000,
+            //     icon: 2
+            // });
             console.log(e);
         });
     },

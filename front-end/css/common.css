@@ -491,29 +491,19 @@ table .col-12 {
 
 
 /*弹出框CSS*/
-
 .layui-layer.layui-anim.layui-layer-page {
     background-color: #fff;
-    border-radius: 10px;
 }
 
-.layui-layer .layui-layer-title {
-    background-color: #fff;
+.lorcss {
     color: #554031;
     font-size: 22px;
     font-weight: bold;
     text-align: center;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom: none;
 }
 
 .mbody {
     padding: 30px 50px 20px;
-}
-
-.fgroup {
-    /*margin: 0 auto 15px;*/
 }
 
 .input-group {
@@ -583,7 +573,8 @@ input.btn-submit {
 .icon-user,
 .icon-pass,
 .icon-tname,
-.icon-wpass {
+.icon-wpass,
+.icon-yaoqingma {
     position: absolute;
     top: 0;
     left: 0;
@@ -619,6 +610,14 @@ input.btn-submit {
 
 .icon-wpass:before {
     content: "\e647";
+    font-size: 24px;
+    color: #cccccc;
+    margin: 0 10px;
+    font-family: "iconfont" !important;
+}
+
+.icon-yaoqingma:before {
+    content: "\e66f";
     font-size: 24px;
     color: #cccccc;
     margin: 0 10px;
