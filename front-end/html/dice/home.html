@@ -52,6 +52,8 @@
 @media screen and (min-width:750px){html{font-size:50px}
     body{font-size:24px}
 	.container {max-width: 750px;}
+	.nav {max-width: 750px;}
+	#bet{max-width: 750px;}
 }
 
 
@@ -104,9 +106,16 @@
     border-radius: 25px;
 }
 
-.dice_4 {
-    background-position: -5px -317px;
-}
+
+.dice_1{background-position:-5px -4px}
+.dice_2{background-position:-5px -107px}
+.dice_3{background-position:-5px -212px}
+.dice_4{background-position:-5px -317px}
+.dice_5{background-position:-5px -427px}
+.dice_6{background-position:-5px -535px}
+.dice_t{background-position:-5px -651px}
+.dice_s{background-position:-5px -763px}
+.dice_e{background-position:-5px -876px}
 
 .wrap {
     width: 90px;
@@ -285,7 +294,46 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
     font-size: 10px;
     line-height: 1.8;
 }
+.weui-btn {
+  position: relative;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 14px;
+  padding-right: 14px;
+  box-sizing: border-box;
+  font-size: 18px;
+  text-align: center;
+  text-decoration: none;
+  color: #FFFFFF;
+  line-height: 2.55555556;
+  border-radius: 5px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  overflow: hidden;
+}
+.weui-btn:after {
+  content: " ";
+  width: 200%;
+  height: 200%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  transform: scale(0.5);
+  transform-origin: 0 0;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+.weui-btn_primary {
+  background-color: #1AAD19;
+}
 
+.weui-btn_mini {
+  display: inline-block;
+  padding: 0 1.32em;
+  line-height: 2.3;
+  font-size: 13px;
+}
 .myShare-icon-1 {
     background: url(../../img/dice/myShare-icon-1.png) no-repeat;
 }
@@ -293,8 +341,11 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
 .personCenter-icon-1 {
     background: url(../../img/dice/personCenter-icon-1.png) no-repeat;
 }
+.bet-skin{
+	border-radius: 10px !important;
+}
 	</style>
-  <title>永利高 - 骰子</title>
+  <title>永利高 - 猜骰子</title>
  </head>
  <body>
 	 <div class="container">
@@ -302,17 +353,17 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
 			<div class='topInfo weui-flex'>
 				<div class="weui-flex__item" style="border-right: 1px solid rgba(153, 153, 153, 0.38);">
 					<p>距离开奖时间</p>
-					<p id="second_show" style="color:#FFC107;">5点,大</p>
+					<p id="second_show" style="color:#FFC107;"></p>
 				</div>
 				<div class="weui-flex__item">
 					<p>上期开奖结果</p>
-					<p id="kjResult" style="color:#FFC107;">第283期:1点,小</p>
+					<p id="kjResult" style="color:#FFC107;"></p>
 				</div>
 			</div>
 			<div class="weui-flex">
 				<div class="weui-flex__item" style="margin: 10px auto;">
 					<div class="wrap">
-						<div class="dice dice_4" style="cursor: pointer;"></div>
+						<div id="result_dice" class="dice dice_1" style="cursor: pointer;"></div>
 					</div>
 				</div>
 			</div>
@@ -339,28 +390,29 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
 				</div>
 			</div>
 			<div class="weui-flex">
-				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="select_num(7)" class="bigAndSmall" id="big" data-num="1"><span class="wrap-a-span">大</span><br><span class="fontSize">1赔1.9</span></span></div>
-				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="select_num(8)" class="bigAndSmall" id="small" data-num="1"><span class="wrap-a-span">小</span><br><span class="fontSize">1赔1.9</span></span></div>
+				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="dice.select_num(10,'大')" class="bigAndSmall" id="big" data-num="1"><span class="wrap-a-span">大</span><br><span class="fontSize">1赔1.9</span></span></div>
+				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="dice.select_num(9,'小')" class="bigAndSmall" id="small" data-num="1"><span class="wrap-a-span">小</span><br><span class="fontSize">1赔1.9</span></span></div>
+			</div>
+			<div class="weui-flex">
+				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="dice.select_num(7,'单')" class="bigAndSmall" id="big" data-num="1"><span class="wrap-a-span">单</span><br><span class="fontSize">1赔1.9</span></span></div>
+				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="dice.select_num(8,'双')" class="bigAndSmall" id="small" data-num="1"><span class="wrap-a-span">双</span><br><span class="fontSize">1赔1.9</span></span></div>
 			</div>
 			<div class="forms">
 				<div class="weui-flex">
-					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="select_num(1)"> <span class="wrap-a-span">1</span><br><span class="fontSize">1赔5</span></div>
-					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="select_num(2)"> <span class="wrap-a-span">2</span><br><span class="fontSize">1赔5</span></div>
-					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="select_num(3)"> <span class="wrap-a-span">3</span><br><span class="fontSize">1赔5</span></div>
+					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="dice.select_num(1, '1')"> <span class="wrap-a-span">1</span><br><span class="fontSize">1赔5</span></div>
+					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="dice.select_num(2, '2')"> <span class="wrap-a-span">2</span><br><span class="fontSize">1赔5</span></div>
+					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="dice.select_num(3, '3')"> <span class="wrap-a-span">3</span><br><span class="fontSize">1赔5</span></div>
 				</div>
 				<div class="weui-flex">
-					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="select_num(4)"> <span class="wrap-a-span">4</span><br><span class="fontSize">1赔5</span></div>
-					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="select_num(5)"> <span class="wrap-a-span">5</span><br><span class="fontSize">1赔5</span></div>
-					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="select_num(6)"> <span class="wrap-a-span">6</span><br><span class="fontSize">1赔5</span></div>
+					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="dice.select_num(4, '4')"> <span class="wrap-a-span">4</span><br><span class="fontSize">1赔5</span></div>
+					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="dice.select_num(5, '5')"> <span class="wrap-a-span">5</span><br><span class="fontSize">1赔5</span></div>
+					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="dice.select_num(6, '6')"> <span class="wrap-a-span">6</span><br><span class="fontSize">1赔5</span></div>
 				</div>
 			</div>
 		</section>
 
-
-	 </div>
-
 		<nav>
-			<div class="weui-tabbar">
+			<div class="weui-tabbar nav">
 				<!-- <a href="/Ssc/index.html" class="weui-tabbar__item">
 					<i class="my-bet-1 weui-tabbar__icon "></i>
 					<p class="weui-tabbar__label">时时彩</p>
@@ -380,5 +432,44 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
 				</a>
 			</div>
 		</nav>
+
+
+
+	 </div>
+
+
+		  <div id='bet' style='display:none;width:100%'>
+			<div style='background-color:rgba(0, 0, 0, 0.59);border-radius: 10px;'> 
+				<div style='color:#fff;margin:auto;text-align: center;  padding: 10px 0;'>
+					账户余额：<span id='account'></span> 本次押注：<span id='bet_name'></span>
+				</div>
+				<div class="weui-flex" id="img" style="">
+					<div class="weui-flex__item" onclick="dice.add_bet(10)">
+						<a href="javascript:void(0);" data-num="5"><img src="../../img/dice/jetton-10.png" data-num="10" class="jetton-img"></a></div>
+					<div class="weui-flex__item" onclick="dice.add_bet(20)">
+						<a href="javascript:void(0);" data-num="10"><img src="../../img/dice/jetton-20.png" data-num="20" class="jetton-img"></a></div>
+					<div class="weui-flex__item" onclick="dice.add_bet(50)"><a href="javascript:void(0);" data-num="20"><img src="../../img/dice/jetton-50.png" data-num="50" class="jetton-img"></a></div>
+					<div class="weui-flex__item" onclick="dice.add_bet(100)">
+						<a href="javascript:void(0);" data-num="50"><img src="../../img/dice/jetton-100.png" data-num="100" class="jetton-img"></a></div>
+				</div>
+				<div class="weui-flex">
+					
+					<div class="weui-flex__item" onclick="dice.add_bet(150)">
+						<a href="javascript:void(0);" data-num="150"><img src="../../img/dice/jetton-150.png" data-num="150" class="jetton-img"></a></div>
+					<div class="weui-flex__item" onclick="dice.add_bet(200)"><a href="javascript:void(0);" data-num="200"><img src="../../img/dice/jetton-200.png" data-num="200" class="jetton-img"></a></div>
+					<div class="weui-flex__item" onclick="dice.add_bet(500)"><a href="javascript:void(0);" data-num="500"><img src="../../img/dice/jetton-500.png" data-num="500" class="jetton-img"></a></div><div class="weui-flex__item" onclick="dice.add_bet(1000)"><a href="javascript:void(0);" data-num="1000"><img src="../../img/dice/jetton-1000.png" data-num="1000" class="jetton-img"></a></div>
+				</div>
+				<div style='color:#fff;margin:auto;text-align: center;  padding: 10px 0;'>
+					下注金额：<span id='bet_value'>0</span>
+				</div>
+				<div style="text-align: center;  padding: 10px 0;">
+					<a href="javascript:dice.add_bet(10);" class="weui-btn weui-btn_mini weui-btn_primary">+</a>&nbsp;<a href="javascript:dice.reduce_bet(10);" class="weui-btn weui-btn_mini weui-btn_primary">-</a> </div>
+				<div style="text-align: center;  padding: 10px 0;">
+					<a href="javascript:void(0);" class="weui-btn weui-btn_mini weui-btn_primary">确认</a>&nbsp;<a href="javascript:dice.exit_bet();" class="weui-btn weui-btn_mini weui-btn_primary">关闭</a> </div>
+			</div>
+		</div>
+	<script src="../../lib/jquery-3.3.1.min.js"></script>
+	 <script src="../../plugins/layer/layer.min.js"></script>
+	<script src="../../js/dice/home.js"></script>
  </body>
 </html>
