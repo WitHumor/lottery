@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.lottery.mybatis.DiceDao">
+	
+	<insert id="addDiceDraw" parameterType="com.springboot.lottery.entity.DiceDraw">
+		INSERT INTO 
+			dice_draw(current_term,
+			prize_pool,
+			start_time,
+			result,
+			end_time)
+	    VALUES(#{current_term},
+			#{prize_pool},
+			#{start_time},
+			#{result},
+			#{end_time})
+	</insert>
+	
+	<insert id="addDiceBet" parameterType="com.springboot.lottery.entity.DiceBet">
+		INSERT INTO 
+			dice_bet(mid,
+			term,
+			bet,
+			bet_value,
+			win)
+	    VALUES(#{mid},
+			#{term},
+			#{bet},
+			#{bet_value}
+			#{win})
+	</insert>
+		
+	<update id="updateDiceDraw" parameterType="java.util.Map">
+		UPDATE
+			dice_draw d
+		SET
+		   d.result = #{result}, d.end_time=#{end_time}
+		WHERE
+		    d.id = #{id}
+	</update>
+	
+	
+	<select id="queryDiceDraw" resultType="com.springboot.lottery.entity.DiceDraw" parameterType="java.util.Map">
+		SELECT * FROM 
+		dice_draw 
+		WHERE 1 = 1
+		<if test="current != null">
+			AND end_time is null
+		</if>
+		<if test="beginIndex != null and pageSize != null and pageSize != 0">
+			order by id desc limit ${beginIndex},${pageSize}
+		</if>
+	</select>
+	
+	<select id="queryDiceDrawResult" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT bet, sum(bet_value) as bet_value  FROM dice_bet
+		WHERE 1 = 1
+		<if test="term != null">
+			and term=${term}
+		</if>
+		group by bet
+	</select>	
+</mapper>
