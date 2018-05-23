@@ -18,7 +18,7 @@ layui.define(function(exports){
   //公共业务的逻辑处理可以写在此处，切换任何页面都会执行
   //……
 
-
+  // getTableList: function() {},
 
   //退出
   admin.events.logout = function(){

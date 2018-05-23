@@ -1,5 +1,5 @@
 {
-  "code": 0
+  "code": 2018
   ,"msg": "退出成功"
-  ,"data": null
+  ,"result": null
 }

@@ -19,11 +19,14 @@ var DW = {
         $('#bitype').change(function() {
             DW.currency();
         });
+        $('.i-tate').click(function() {
+            DW.currency();
+        });
         $('.btn-submit').click(function() {
             var bitname = $('#bitype option:checked').text(),
                 btb_rmb = $('#btb-rmb').val();
             if (DW.checks([$('#rechargebtb'), $('#telphone'), $('#purseaddress'), $('#withpass')])) {
-                if (btb_rmb == ('NaN 个' + bitname) || btb_rmb == '') {
+                if (btb_rmb == '') {
                     layer.msg('取款金额有误，请确认', {
                         time: 2000
                     });
@@ -48,46 +51,54 @@ var DW = {
             $('.cny-rate').text('-');
             $('#btb-rmb').val('');
         }
-        // $.ajaxSettings.async = false;
         this.ajax.post('/member/money-exchange', {
             record: '1',
             currency: ciontype.toLowerCase()
         }, function(data) {
-            console.log(data);
             if (data.code == '2018') {
                 var real = data.result.exchange.replace(' CNY', '').replace(/,/g, '');
                 if (!sign) {
                     $('.cny-rate').text(real || '-');
                     DW.allchanges($('#rechargebtb'));
                 } else {
-                    if (real == $('.cny-rate').text()) {
-                        DW.withdrawal();
-                    } else {
-                        layer.msg('汇率已发生变化，请重新提交', {
-                            time: 2000
-                        });
-                        $('.cny-rate').text(real || '-');
-                        DW.allchanges($('#rechargebtb'));
-                    }
+                    var index = layer.open({
+                        type: 1,
+                        title: false,
+                        closeBtn: false,
+                        area: '300px;',
+                        shade: 0.8,
+                        id: 'LAY_layuipro',
+                        btn: ['接受', '拒绝'],
+                        content: '<div style="padding: 30px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">汇率实时变化可能会导致充值的点数有所变化，您是否接受？</div>',
+                        yes: function() {
+                            layer.close(index);
+                            DW.createOrder();
+                        },
+                        cancel: function() {
+                            if (real != $('.cny-rate').text()) {
+                                $('.cny-rate').text(real || '-');
+                                DW.allchanges($('#rechargebtb'));
+                            }
+                        }
+                    });
                     DW.booltf = true;
                 }
             } else {
-                layer.msg('汇率异常，请稍后再试', {
+                layer.msg('汇率异常，请刷新后再试', {
                     time: 2000,
                     icon: 2
                 });
             }
         }, function(e) {
+            DW.booltf = true;
             layer.msg('网络错误', {
                 time: 2000,
                 icon: 2
             });
         });
-        // $.ajaxSettings.async = true;
     },
     withdrawal: function() {
         var param = {
-            currencyCount: $('#btb-rmb').val().split(' 个')[0],
             currency: $('#bitype').val(),
             money: $('#rechargebtb').val(),
             phone: $('#telphone').val(),
@@ -112,7 +123,7 @@ var DW = {
                     time: 2000,
                     icon: 2
                 });
-            } else if(data.code == '1108') {
+            } else if (data.code == '1108') {
                 layer.msg('取款密码错误', {
                     time: 2000,
                     icon: 2
@@ -132,13 +143,13 @@ var DW = {
     },
     allchanges: function(e) {
         if (e[0] == $('#rechargebtb')[0]) {
-            var current = 0,
+            var current = parseFloat($('#rechargebtb').val()),
                 btbrate = parseFloat($('.cny-rate').text());
-            // if (!$('#rechargebtb').val() || !regs.test($('#rechargebtb').val())) {
-            //     current = 0;
-            // } else {
-            current = parseFloat($('#rechargebtb').val());
-            // }
+            console.log(!regs.test(current),isNaN(btbrate));
+            if (!regs.test(current) || isNaN(btbrate)) {
+                $('#btb-rmb').val('');
+                return;
+            }
             var btb_rmb = parseFloat((current / btbrate).toFixed(10));
             $('#btb-rmb').val(btb_rmb.toFixed(10) + ' 个' + $('#bitype option:checked').text());
         }

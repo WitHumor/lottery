@@ -34,10 +34,10 @@
             </select>
         </div>
         <div class="layui-inline">
-            <input type="text" placeholder="存款单号/用户名" class="layui-input" style="width: 270px;" />
+            <input id="keyword" type="text" placeholder="存款单号/用户名" class="layui-input" style="width: 270px;" />
         </div>
         <div class="layui-inline">
-            <button class="layui-btn">查询</button>
+            <button id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i>查询</button>
         </div>
     </div>
     <table class="layui-hide" id="datalist"></table>
@@ -46,7 +46,7 @@
     <a class="layui-btn layui-btn-sm" lay-event="audit">审核</a>
 </script>
 <script>
-layui.use(['admin', 'table', 'laydate', 'common'], function() {
+layui.use(['admin', 'table', 'laydate'], function() {
     var $ = layui.$,
         admin = layui.admin,
         element = layui.element,
@@ -89,127 +89,88 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
         page: true,
         limits: [10, 30, 60, 90],
         cols: [
-                [{
-                    field: 'time',
-                    title: '申请时间',
-                }, {
-                    field: 'number',
-                    title: '充值单号',
-                }, {
-                    field: 'name',
-                    title: '用户名',
-                }, {
-                    field: 'money',
-                    title: '充值金额',
-                }, {
-                    field: 'type',
-                    title: '充值类型',
-                    // templet: function(data) {
-                    //     var types = '-';
-                    //     $.each(config.coin, function(i, item) {
-                    //         if (item.value == data.type) {
-                    //             types = item.name;
-                    //             return false;
-                    //         }
-                    //     });
-                    //     return types;
-                    // }
-                }, {
-                    field: 'state',
-                    title: '状态',
-                    // width: '100',
-                    templet: function(data) {
-                        var st = '';
-                        switch (data.state) {
-                            case '0':
-                                st = '等待支付';
-                                break;
-                            case '1':
-                                st = '支付成功';
-                                break;
-                            case '2':
-                                st = '充值成功';
-                                break;
-                            case '-2':
-                                st = '充值失败';
-                                break;
-                            default:
-                                st = '-';
-                        }
-                        return st;
+            [{
+                field: 'time',
+                title: '申请时间',
+            }, {
+                field: 'number',
+                title: '充值单号',
+            }, {
+                field: 'name',
+                title: '用户名',
+            }, {
+                field: 'money',
+                title: '充值金额',
+            }, {
+                field: 'type',
+                title: '充值类型',
+                // templet: function(data) {
+                //     var types = '-';
+                //     $.each(config.coin, function(i, item) {
+                //         if (item.value == data.type) {
+                //             types = item.name;
+                //             return false;
+                //         }
+                //     });
+                //     return types;
+                // }
+                templet: function(data) {
+                    var st = '';
+                    switch (data.type) {
+                        case 'BTC':
+                            st = '比特币';
+                            break;
+                        case 'EOS':
+                            st = '柚子币';
+                            break;
+                        case 'ETH':
+                            st = '以太币';
+                            break;
+                        case 'XRP':
+                            st = '瑞波币';
+                            break;
+                        case 'LTC':
+                            st = '莱特币';
+                            break;
+                        case 'QTUM':
+                            st = '量子币';
+                            break;
+                        default:
+                            st = '-';
                     }
-                }, {
-                    title: '操作',
-                    fixed: 'right',
-                    width: 80,
-                    align: 'center',
-                    toolbar: '#operateBar'
-                }]
-            ]
-            // [
-            //     [{
-            //         field: 'id',
-            //         title: 'ID',
-            //     }, {
-            //         field: 'username',
-            //         title: '用户名'
-            //     }, {
-            //         field: 'sex',
-            //         title: '性别',
-            //     }, {
-            //         field: 'city',
-            //         title: '城市'
-            //     }, {
-            //         field: 'sign',
-            //         title: '签名',
-            //         width: '30%',
-            //         minWidth: 100
-            //     }, {
-            //         title: '操作',
-            //         fixed: 'right',
-            //         width: 80,
-            //         align: 'center',
-            //         toolbar: '#operateBar'
-            //     }]
-            // ]
-            ,
-        // data: [{
-        //     id: 'wew',
-        //     username: 'sfsfdsfsd',
-        //     sex: '男',
-        //     city: '重庆',
-        //     sign: '这是前面'
-        // }, {
-        //     id: 'wew',
-        //     username: 'sfsfdsfsd',
-        //     sex: '男',
-        //     city: '重庆',
-        //     sign: '这是前面'
-        // }, {
-        //     id: 'wew',
-        //     username: 'sfsfdsfsd',
-        //     sex: '男',
-        //     city: '重庆',
-        //     sign: '这是前面'
-        // }, {
-        //     id: 'wew',
-        //     username: 'sfsfdsfsd',
-        //     sex: '男',
-        //     city: '重庆',
-        //     sign: '这是前面'
-        // }, {
-        //     id: 'wew',
-        //     username: 'sfsfdsfsd',
-        //     sex: '男',
-        //     city: '重庆',
-        //     sign: '这是前面'
-        // }, {
-        //     id: 'wew',
-        //     username: 'sfsfdsfsd',
-        //     sex: '男',
-        //     city: '重庆',
-        //     sign: '这是前面'
-        // }]
+                    return st;
+                }
+            }, {
+                field: 'state',
+                title: '状态',
+                templet: function(data) {
+                    var st = '';
+                    switch (data.state) {
+                        case '0':
+                            st = '等待支付';
+                            break;
+                        case '1':
+                            st = '支付成功';
+                            break;
+                        case '2':
+                            st = '充值成功';
+                            break;
+                        case '-2':
+                            st = '充值失败';
+                            break;
+                        default:
+                            st = '-';
+                    }
+                    return st;
+                }
+            }, {
+                title: '操作',
+                fixed: 'right',
+                width: 80,
+                align: 'center',
+                toolbar: '#operateBar'
+            }]
+        ],
         done: function(res, curr, count) {
             console.log(res);
             // if (res.code == '1109' || res.code == '1114') {
@@ -224,6 +185,23 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
             //     }, 2000);
             // }
         }
+    });
+    $('#search').click(function() {
+        var allTime = $('#allTime').val().split(' 至 '),
+            withdrawType = $('#withdrawType').val(),
+            withdrawStatus = $('#withdrawStatus').val(),
+            keyword = $('#keyword').val(),
+            param = {
+                record: '0',
+                beginTime: allTime[0] || "",
+                endTime: allTime[1] || "",
+                state: withdrawStatus,
+                type: withdrawType,
+                keyword: keyword
+            };
+        table.reload('idTest', {
+          where: param
+        });
     });
 });
 </script>

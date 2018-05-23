@@ -222,7 +222,7 @@ var common = {
                 bank_password: withpass,
                 address: cip
             };
-            if(yaoqingma) {
+            if (yaoqingma) {
                 reqData.invitation_code = yaoqingma;
             }
             this.ajax.post('/member/add-member', reqData, function(data) {
@@ -328,11 +328,11 @@ var common = {
         if ($('#thisisheader').length == 0) {
             var html = '';
             var html = '<button type="button" onclick="window.location.href=\'onlinedeposit.html\'">线上存款</button><button type="button" onclick="window.location.href=\'onlinedraw.html\'">线上取款</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '') + '<i class="iconfont icon-yonghu" onclick="common.mine();"></i>';
-            // if (sessionStorage.getItem('toid')) {
-            //     html = '<button type="button" onclick="window.location.href=\'onlinedeposit.html\'">线上存款</button><button type="button" onclick="window.location.href=\'onlinedraw.html\'">线上取款</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '') + '<i class="iconfont icon-yonghu" onclick="common.mine();"></i>';
-            // } else {
-            //     html = '<button type="button" onclick="common.openlayer(\'L\');">登录</button><button type="button" onclick="common.openlayer(\'R\');">注册</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '');
-            // }
+            if (sessionStorage.getItem('toid')) {
+                html = '<button type="button" onclick="window.location.href=\'onlinedeposit.html\'">线上存款</button><button type="button" onclick="window.location.href=\'onlinedraw.html\'">线上取款</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '') + '<i class="iconfont icon-yonghu" onclick="common.mine();"></i>';
+            } else {
+                html = '<button type="button" onclick="common.openlayer(\'L\');">登录</button><button type="button" onclick="common.openlayer(\'R\');">注册</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '');
+            }
             $('body').prepend('<div id="thisisheader" class="header"><img src="../../img/homelogo.png" style="vertical-align: middle;" width="90" height="80"><div class="slogan"><span class="wel">永利高</span></div><i class="iconfont icon-icon_xinyongguiji"></i><div class="credit"><span>老品牌 值得信赖</span><div>精彩赛事，尽在永利高</div></div><div class="baseinfo fr">' + html + '</div></div>');
         }
 
@@ -375,19 +375,19 @@ var common = {
     inviteCode: function() {
         $('.mine').remove();
         layer.closeAll();
-        if(sessionStorage.getItem('toid') && sessionStorage.getItem('userinfo')) {
-            var h = '<div style="letter-spacing: 5px;font-size: 20px;text-align: center;color: #071D32;">'+ JSON.parse(sessionStorage.getItem('userinfo')).name +'</div>';
-        layer.alert(h, {
-            skin: 'layui-layer-molv',
-            title: '您的代理邀请码',
-            move: false,
-            closeBtn: 0,
-        });
-    } else {
-        sessionStorage.setItem('userinfo', '');
-        sessionStorage.setItem('toid', '');
-        common.openlayer('L');
-    }
+        if (sessionStorage.getItem('toid') && sessionStorage.getItem('userinfo')) {
+            var h = '<div style="letter-spacing: 5px;font-size: 20px;text-align: center;color: #071D32;">' + JSON.parse(sessionStorage.getItem('userinfo')).name + '</div>';
+            layer.alert(h, {
+                skin: 'layui-layer-molv',
+                title: '您的代理邀请码',
+                move: false,
+                closeBtn: 0,
+            });
+        } else {
+            sessionStorage.setItem('userinfo', '');
+            sessionStorage.setItem('toid', '');
+            common.openlayer('L');
+        }
 
     },
 
@@ -449,6 +449,46 @@ var common = {
             console.log(e);
         });
     },
+
+    getPourList: function(obj) {
+        console.log(obj);
+        this.ajax.post('/member/single-note', obj, function(data) {
+            console.log(data);
+            if (data.code == '2018') {
+                if (data.result.length == 0) {
+                    $('.bottomPourList').html('<div class="noDeal fwb">暂时还没有下注单</div>');
+                } else {
+                    var html = '<div class="alllist">';
+                    $.each(data.result, function(i, item) {
+                        var btype = '-';
+                        switch (item.betType) {
+                            case 'RFT':
+                                btype = '足球';
+                                break;
+                            case 'REFT':
+                                btype = '滚球-足球';
+                                break;
+                            case 'RBK':
+                                btype = '篮球';
+                                break;
+                            case 'REBK':
+                                btype = '滚球-篮球';
+                                break;
+                            default:
+                                btype = '-';
+                        };
+                        html += '<div class="tinfo commons"><div class="dleague"><span>' + btype + '</span></div><p>' + item.league + '</p><p>下注时间：<span>' + item.betTime + '</span></p><div class="chsteam commons"><span class="tName">' + item.teamh + ' <font class="radio">vs</font> ' + item.teamc + '</span></div><div class="chsteam commons"><label class="c_red">' + (item.bet == 'H' ? item.teamh : item.teamc) + '</label> @ <strong class="light" id="ioradio_id">' + (item.ratio || '-') + '</strong></div><p>下注金额：<span class="pourMoney">' + (item.money || '0') + '</span></p></div>';
+                    });
+                    html += '</div>';
+                    $('.bottomPourList').html(html);
+                }
+            } else {
+                $('.bottomPourList').html('<div class="noDeal fwb">暂时还没有下注单</div>');
+            }
+        }, function(e) {
+            $('.bottomPourList').html('<div class="noDeal fwb">暂时还没有下注单</div>');
+        });
+    }
 };
 
 common.initPage();

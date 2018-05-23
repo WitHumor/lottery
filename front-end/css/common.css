@@ -824,3 +824,11 @@ input.btn-submit {
 #newBridge {
     z-index: 9999 !important;
 }
+
+.i-tate {
+    margin-left: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    vertical-align: middle;
+    cursor: pointer;
+}

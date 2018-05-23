@@ -25,7 +25,7 @@
 }
 
 .paytype li:hover {
-  opacity: 1;
+    opacity: 1;
 }
 
 .paytype li.active {
@@ -189,13 +189,32 @@
     opacity: 1;
 }
 
-button:disabled, .form-group .btn-submit.disabled {
+button:disabled,
+.form-group .btn-submit.disabled {
     background-color: #ccc !important;
 }
 
 .form-group .btn-finish {
     width: 380px;
     background-color: #be4822;
+}
+
+.limit-tip {
+    width: 460px;
+    text-align: left;
+    border: 1px dashed gray;
+    padding: 2px 20px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    color: gray;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.limit-tip span.active {
+    font-weight: bold;
+    color: #E9874B;
 }
 
 .error-tip {
@@ -226,11 +245,35 @@ button:disabled, .form-group .btn-submit.disabled {
     font-size: 14px;
 }
 
+.other-tip.transfer1 {
+    margin-left: 45px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.other-tip.transfer1 .icon-zhuyi {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    font-size: 30px;
+}
+
 .other-tip img {
     max-width: 300px;
     border-radius: 5px;
     border: 1px solid gray;
     padding: 10px;
+}
+
+.transfer2 {
+    color: #009F95;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.transfer3 {
+    color: #BE4822;
+    font-weight: bold;
 }
 
 .form-control + .form-control-right {

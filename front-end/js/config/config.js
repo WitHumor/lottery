@@ -108,7 +108,7 @@ var config = {
             value: 'LTC',
         }, {
             name: '量子币',
-            value: 'QTVM',
+            value: 'QTUM',
         }]
         // }
 }

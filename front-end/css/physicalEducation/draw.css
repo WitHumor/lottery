@@ -78,7 +78,7 @@
 }
 
 .form-group .btnYel2 {
-    background: rgba(0,0,0,.4);
+    background: rgba(0, 0, 0, .4);
 }
 
 .form-group .btnYel {
@@ -163,4 +163,11 @@
     position: relative;
     left: 200px;
     top: 5px;
+}
+
+.wdal-tip {
+    text-align: center;
+    font-size: 14px;
+    color: #be4822;
+    font-weight: bold;
 }

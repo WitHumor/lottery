@@ -1,4 +1,4 @@
-var CDS = 3;
+var CDS = 3, PCDS = 60;
 $(function() {
     init();
     getAllDatas(config.today_BK);
@@ -10,6 +10,7 @@ var positions = {},
     gCountObj = {},
     currentPage = 0,
     countdown = CDS,
+    countdown1 = PCDS,
     currentUrl = '';
 
 function init() {
@@ -19,6 +20,14 @@ function init() {
         currentPage = 0;
         getActiveTab();
     });
+
+    $('.pourRefreshBtn').click(function() {
+        common.getPourList({});
+        countdown1 = PCDS;
+    });
+
+    common.getPourList({});
+    countDown1();
 }
 
 function getActiveTab() {
@@ -201,7 +210,7 @@ function analysis(datas) {
             '<div class="chsteam commons"><label class="c_red">' + (tmtype == "H" ? finfo.team_h : finfo.team_c) + '</label> @ <strong class="light" id="ioradio_id">' + parseFloat(me.text()).toFixed(2) + '</strong></div><div class="fwb commons">' +
             '<input type="checkbox" checked/> 自动接收较佳赔率</div>' +
             '<div class="tranDetail commons"><p>交易金额：' +
-            '<input id="money" type="text" onkeyup="return countWinGold()" maxlength="10"/></p><p>可赢金额：<span id="canwin">0</span></p><p>单注最低：10</p><p>单注最高：10000000</p></div>' +
+            '<input id="money" type="text" onkeyup="return countWinGold()" maxlength="5"/></p><p>可赢金额：<span id="canwin">0</span></p><p>单注最低：10</p><p>单注最高：10000</p></div>' +
             '<div><button class="cancelDeal" onclick="common.cancelDeal()">取消</button>' +
             '<button class="sureDeal" onclick="sureDeal(' + dsinfo + ')">确定交易</button></div>';
 
@@ -252,6 +261,12 @@ function sureDeal(datastr) {
     }
     if (money < 10) {
         layer.msg("下注金额至少10元！", {
+            time: 2000
+        });
+        return;
+    }
+    if (money > 10000) {
+        layer.msg("下注金额至多10000元！", {
             time: 2000
         });
         return;
@@ -315,5 +330,18 @@ function countDown() {
     $('.refreshBtn').text('刷新（' + countdown + '）');
     setTimeout(function() {
         countDown();
+    }, 1000);
+}
+
+function countDown1() {
+    if (countdown1 == 0) {
+        common.getPourList({});
+        countdown1 = PCDS;
+    } else {
+        countdown1--;
+    }
+    $('.pourRefreshBtn').text('刷新（' + countdown1 + '）');
+    setTimeout(function() {
+        countDown1();
     }, 1000);
 }

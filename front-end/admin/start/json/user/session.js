@@ -1,7 +1,7 @@
 {
-  "code": 0
+  "code": 2018
   ,"msg": ""
-  ,"data": {
+  ,"result": {
     "username": "admin"
     ,"sex": "男"
     ,"role": 1

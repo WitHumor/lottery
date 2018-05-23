@@ -30,7 +30,8 @@
                     <div class="form-group">
                         <label class="col-2 control-label"></label>
                         <div class="col-10 yelCol">
-                            当前汇率：1 <span class="coin-name">比特币</span> = <span class="cny-btc-rate">-</span> 点
+                            当前汇率：1 <span class="coin-name">比特币（BTC）</span> = <span class="cny-btc-rate">-</span> 点
+                            <i title="刷新汇率" class="iconfont icon-msnui-refresh-circle i-tate"></i>
                         </div>
                     </div>
                     <div class="form-group">
@@ -47,9 +48,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-2 control-label">充值金额：</label>
+                        <label class="col-2 control-label">充值币额：</label>
                         <div class="col-7">
-                            <input id="rechargebtb" name="btc" type="text" class="form-control" placeholder="单笔充值金额最低50点">
+                            <input id="rechargebtb" name="btc" type="text" class="form-control" placeholder="请输入充值币额">
                         </div>
                         <div class="col-3 btnA btnYel">
                             <a class="pointer-link">
@@ -58,6 +59,7 @@
                             </a>
                         </div>
                     </div>
+                    <p class="limit-tip col-offset-2">最小充值限额：<span class="active" ctype="BTC">比特币为 0.003 个</span>，<span ctype="EOS">柚子币为 2 个</span>，<span ctype="ETH">以太币为 0.03 个</span>，<span ctype="XRP">瑞波币为 30 个</span>，<span ctype="LTC">莱特币为 0.2 个</span>，<span ctype="QTUM">量子币为 2 个</span>。</p>
                     <div class="form-group">
                         <label class="col-2 control-label"></label>
                         <div class="col-7">
@@ -71,17 +73,6 @@
                         </div>
                     </div>
                     <div class="error-tip btc-tip dis-before"></div>
-                    <!-- <div class="form-group">
-                        <label class="col-2 control-label">首存特惠：</label>
-                        <div class="col-7">
-                            <input id="discounts" type="text" class="form-control" readonly placeholder="首存即送 188 点">
-                        </div>
-                        <div class="col-3 btnA btnRed">
-                            <a class="pointer-link">
-                                <span class="hongb">188</span>点
-                            </a>
-                        </div>
-                    </div> -->
                     <div class="form-group">
                         <label class="col-2 control-label">充值优惠：</label>
                         <div class="col-7">
@@ -124,6 +115,7 @@
                         <label class="col-2 control-label">订单号：</label>
                         <div class="col-10">
                             <input id="order-num" type="text" class="form-control next-part" readonly>
+                            <a id="btn-copy-order" class="btn btn-copy btn-orange">复制</a>
                         </div>
                     </div>
                     <div class="form-group">
@@ -131,7 +123,6 @@
                         <div class="col-10">
                             <input id="re-amount" type="text" class="form-control next-part" readonly>
                             <span class="form-control-right">（<span id="pay-rmb"></span>）</span>
-                            <a id="btn-copy-amount" data-clipboard-text="1" class="btn btn-copy btn-orange">复制</a>
                         </div>
                     </div>
                     <div class="form-group">
@@ -143,6 +134,7 @@
                     </div>
                     <div class=" other-tip"><img src="../../img/ewm.jpg" /></div>
                     <div class="other-tip">您可通过复制或二维码扫描，以获得收款地址来进行充值。</div>
+                    <div class="other-tip transfer1"><i class="iconfont icon-zhuyi"></i>转账须知：转账时请务必在备注中填写您的订单号！！！</div>
                     <p class="purse-tips col-offset-2"><i class="iconfont icon-info"></i>&nbsp;如果您还没有属于自己的钱包，可以直接在场外交易平台（http://www.otcbtc.com/）或交易所购买数字币，并使用我们的上方的收款地址做为提币地址。</p>
                     <div class="form-group">
                         <div class="col-2"></div>

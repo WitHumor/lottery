@@ -1,7 +1,7 @@
 {
-  "code": 0
+  "code": 2018
   ,"msg": ""
-  ,"data": [{
+  ,"result": [{
     "title": "主页"
     ,"icon": "layui-icon-home"
     ,"jump": "/"
