@@ -27,7 +27,7 @@
 	    VALUES(#{mid},
 			#{term},
 			#{bet},
-			#{bet_value}
+			#{bet_value},
 			#{win})
 	</insert>
 		

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.springboot.lottery.entity.DiceBet;
 import com.springboot.lottery.entity.DiceDraw;
 import com.springboot.lottery.mybatis.DiceDao;
 import com.springboot.lottery.service.DiceService;
@@ -37,6 +38,10 @@ public class DiceServiceImpl implements DiceService {
 		return diceDao.queryDiceDrawResult(map);
 	}
 	
+	public int addDiceBet(DiceBet diceBet) {
+		
+		return diceDao.addDiceBet(diceBet);
+	}
 	@Transactional
 	public void genereateNewDiceDraw(DiceDraw current, int result, double win) {
 		

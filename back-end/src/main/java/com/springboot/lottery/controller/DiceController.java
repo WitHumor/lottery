@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.springboot.lottery.entity.DiceBet;
 import com.springboot.lottery.entity.DiceDraw;
 import com.springboot.lottery.service.DiceService;
 import com.springboot.lottery.util.DiceBetUtil;
@@ -41,15 +42,37 @@ public class DiceController {
 
 	
 	@CrossOrigin(origins = "*")
-	@RequestMapping(value = "dice-draw", method = RequestMethod.POST)
+	@RequestMapping(value = "dice-bet", method = RequestMethod.POST)
 	@ResponseBody
-	public ObjectResult addBet(int mid, int term, int bet, int bet_value) {
+	public ObjectResult addBet(int term, int bet, double bet_value) throws InterruptedException {
 		
 		ObjectResult result = new ObjectResult();
+		//check token
+		
 		//check user credit
 		
+		//
 		
+		while(DiceBetUtil.drawing) {
+			
+			Thread.sleep(1000);
+		}
+		//TODO
+		int mid = 111;
+		DiceBet db = new DiceBet();
+		db.setBet(bet);
+		db.setBet_value(bet_value);
+		db.setMid(mid);
+		db.setTerm(DiceBetUtil.current_term);
+		db.setWin(null);
+		diceService.addDiceBet(db);
 		
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("bet",db.getBet());
+		returnMap.put("bet_value", db.getBet_value());
+		returnMap.put("term",db.getTerm());
+		
+		result.setResult(returnMap);
 		return result;
 	}
 	
@@ -85,7 +108,7 @@ public class DiceController {
 						leftTime = DiceBetUtil.dice_draw_minutes * 60 - seconds;
 					}
 					returnMap.put("drawTime",leftTime);
-					
+					returnMap.put("currentTerm",current.getCurrent_term());
 				}else {
 					
 					
@@ -97,6 +120,7 @@ public class DiceController {
 			returnMap.put("lastTerm",DiceBetUtil.last_term);
 			returnMap.put("lastResult", DiceBetUtil.last_term_result);
 			returnMap.put("drawTime",0);
+			returnMap.put("currentTerm",DiceBetUtil.current_term);
 		}
 		result.setResult(returnMap);
 		
