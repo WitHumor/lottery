@@ -23,60 +23,89 @@
             </select>
         </div>
         <div class="layui-inline">
-            <input type="text" placeholder="取款单号/用户名" class="layui-input" style="width: 270px;" />
+            <input id="keyword" type="text" placeholder="取款单号/取款用户" class="layui-input" style="width: 270px;" />
         </div>
         <div class="layui-inline">
-            <button class="layui-btn"><i class="layui-icon">&#xe615;</i>查询</button>
+            <button id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i>查询</button>
         </div>
     </div>
     <table class="layui-hide" id="datalist"></table>
 </div>
 <script type="text/html" id="operateBar">
-    <a class="layui-btn layui-btn-sm" lay-event="audit">审核</a>
+    <a class="layui-btn layui-btn-xs" style="width: 50px;" lay-event="audit">审核</a>
 </script>
 <script>
-layui.use(['admin', 'table', 'laydate'], function() {
+layui.use(['admin', 'table', 'laydate', 'common'], function() {
     var $ = layui.$,
         admin = layui.admin,
         element = layui.element,
         laydate = layui.laydate,
         table = layui.table,
+        common = layui.common,
         form = layui.form,
         router = layui.router();
     element.render();
 
     form.render();
-    laydate.render({
-        elem: '#allTime',
-        type: 'datetime',
-        format: 'yyyy-MM-dd HH:mm',
-        theme: 'grid',
-        range: '至'
-    });
-    table.render({
+    common.dtimeInit('#allTime');
+    common.getList({
         elem: '#datalist',
-        // url: '/demo/table/user/',
-        cellMinWidth: 80,
-        page: true,
-        limits: [10, 30, 60, 90],
+        url: '/member/member-record',
+        param: {
+            record: '1'
+        },
         cols: [
             [{
-                field: 'id',
-                title: 'ID',
+                field: 'time',
+                minWidth: 150,
+                title: '申请时间',
             }, {
-                field: 'username',
-                title: '用户名'
+                field: 'number',
+                minWidth: 180,
+                title: '取款单号',
             }, {
-                field: 'sex',
-                title: '性别',
+                field: 'name',
+                minWidth: 120,
+                title: '取款用户',
             }, {
-                field: 'city',
-                title: '城市'
+                field: 'money',
+                title: '取款金额(点)',
             }, {
-                field: 'sign',
-                title: '签名',
-                width: '30%',
-                minWidth: 100
+                field: 'currencyCount',
+                title: '取款币额(个)',
+            }, {
+                field: 'moneyAddress',
+                minWidth: 260,
+                title: '钱包地址',
+            }, {
+                field: 'state',
+                title: '状态',
+                templet: function(data) {
+                    var st = '';
+                    switch (data.state) {
+                        case '0':
+                            st = '等待处理';
+                            break;
+                        case '1':
+                            st = '等待支付';
+                            break;
+                        case '2':
+                            st = '取款成功';
+                            break;
+                        case '-2':
+                            st = '取款失败';
+                            break;
+                        default:
+                            st = '-';
+                    }
+                    return st;
+                }
+            }, {
+                field: 'remark',
+                title: '备注',
+            }, {
+                field: 'resultRemark',
+                title: '审核建议',
             }, {
                 title: '操作',
                 fixed: 'right',
@@ -85,43 +114,22 @@ layui.use(['admin', 'table', 'laydate'], function() {
                 toolbar: '#operateBar'
             }]
         ],
-        data: [{
-            id: 'wew',
-            username: 'sfsfdsfsd',
-            sex: '男',
-            city: '重庆',
-            sign: '这是前面'
-        }, {
-            id: 'wew',
-            username: 'sfsfdsfsd',
-            sex: '男',
-            city: '重庆',
-            sign: '这是前面'
-        }, {
-            id: 'wew',
-            username: 'sfsfdsfsd',
-            sex: '男',
-            city: '重庆',
-            sign: '这是前面'
-        }, {
-            id: 'wew',
-            username: 'sfsfdsfsd',
-            sex: '男',
-            city: '重庆',
-            sign: '这是前面'
-        }, {
-            id: 'wew',
-            username: 'sfsfdsfsd',
-            sex: '男',
-            city: '重庆',
-            sign: '这是前面'
-        }, {
-            id: 'wew',
-            username: 'sfsfdsfsd',
-            sex: '男',
-            city: '重庆',
-            sign: '这是前面'
-        }]
+    });
+
+    $('#search').click(function() {
+        var allTime = $('#allTime').val().split(' 至 '),
+            withdrawStatus = $('#withdrawStatus').val(),
+            keyword = $('#keyword').val(),
+            param = {
+                record: '1',
+                beginTime: allTime[0] || "",
+                endTime: allTime[1] || "",
+                state: withdrawStatus,
+                keyword: keyword
+            };
+        table.reload('idAllTable', {
+            where: param
+        });
     });
 });
 </script>

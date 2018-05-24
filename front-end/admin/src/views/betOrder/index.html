@@ -9,14 +9,17 @@
     </div>
 </div>
 <style>
-</style>
+.operateBtn {
+    width: 100px;
+}
+</style>s
 <div class="layui-fluid">
     <div class="layui-form">
         <div class="layui-inline">
             <input id="allTime" type="text" readonly placeholder="下注时间区间" class="layui-input" style="width: 270px;" />
         </div>
         <div class="layui-inline">
-            <select>
+            <select id="betType">
                 <option value="">比赛类型</option>
                 <option value="RFT">足球</option>
                 <option value="REFT">滚球-足球</option>
@@ -25,112 +28,202 @@
             </select>
         </div>
         <div class="layui-inline">
-            <select>
+            <select id="betState">
                 <option value="">结算与否</option>
                 <option value="0">未结算</option>
                 <option value="1">已结算</option>
+                <option value="2">待结算</option>
             </select>
         </div>
         <div class="layui-inline">
-            <input type="text" placeholder="联赛名称/球队名称/下注单号/用户名" class="layui-input" style="width: 270px;" />
+            <input id="keyword" type="text" placeholder="联赛名称/球队名称/下注单号/下注用户" class="layui-input" style="width: 270px;" />
         </div>
         <div class="layui-inline">
-            <button class="layui-btn"><i class="layui-icon">&#xe615;</i>查询</button>
+            <button id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i>查询</button>
         </div>
     </div>
     <table class="layui-hide" id="datalist"></table>
 </div>
-<script type="text/html" id="operateBar">
-    <a class="layui-btn layui-btn-sm" lay-event="cancel">取消</a>
-</script>
+<!-- <script type="text/html" id="operateBar">
+    <a class="layui-btn layui-btn-sm" lay-event="cancel">取消注单</a>
+</script> -->
 <script>
-layui.use(['admin', 'table', 'laydate'], function() {
+layui.use(['admin', 'table', 'laydate', 'common'], function() {
     var $ = layui.$,
         admin = layui.admin,
         element = layui.element,
         laydate = layui.laydate,
         table = layui.table,
+        common = layui.common,
+        setter = layui.setter,
         form = layui.form,
         router = layui.router();
     element.render();
 
     form.render();
-    laydate.render({
-        elem: '#allTime',
-        type: 'datetime',
-        format: 'yyyy-MM-dd HH:mm',
-        theme: 'grid',
-        range: '至'
-    });
-    table.render({
+    common.dtimeInit('#allTime');
+    common.getList({
         elem: '#datalist',
-        // url: '/demo/table/user/',
-        cellMinWidth: 80,
-        page: true,
-        limits: [10, 30, 60, 90],
+        url: '/member/single-note',
         cols: [
             [{
-                field: 'id',
-                title: 'ID',
+                field: 'betTime',
+                minWidth: 150,
+                title: '下注时间',
             }, {
-                field: 'username',
-                title: '用户名'
+                field: 'number',
+                minWidth: 180,
+                title: '下注单号',
             }, {
-                field: 'sex',
-                title: '性别',
+                field: 'name',
+                minWidth: 120,
+                title: '下注用户',
             }, {
-                field: 'city',
-                title: '城市'
+                field: 'betType',
+                title: '比赛类型',
+                templet: function(data) {
+                    var st = '';
+                    switch (data.betType) {
+                        case 'RFT':
+                            st = '足球';
+                            break;
+                        case 'REFT':
+                            st = '滚球-足球';
+                            break;
+                        case 'RBK':
+                            st = '篮球';
+                            break;
+                        case 'REBK':
+                            st = '滚球-篮球';
+                            break;
+                        default:
+                            st = '-';
+                    }
+                    return st;
+                }
             }, {
-                field: 'sign',
-                title: '签名',
-                width: '30%',
-                minWidth: 100
+                field: 'league',
+                minWidth: 180,
+                title: '联赛名称',
+            }, {
+                field: 'teamh',
+                minWidth: 180,
+                title: '主场球队',
+            }, {
+                field: 'teamc',
+                minWidth: 180,
+                title: '客场球队',
+            }, {
+                field: 'money',
+                title: '下注金额',
+            }, {
+                field: 'state',
+                title: '类型',
+                templet: function(data) {
+                    var st = '';
+                    switch (data.state) {
+                        case '0':
+                            st = '未结算';
+                            break;
+                        case '1':
+                            st = '已结算';
+                            break;
+                        case '2':
+                            st = '待结算';
+                            break;
+                        default:
+                            st = '-';
+                    }
+                    return st;
+                }
+            }, {
+                field: 'resultRemark',
+                title: '审核建议',
             }, {
                 title: '操作',
                 fixed: 'right',
-                width: 80,
+                width: 130,
                 align: 'center',
-                toolbar: '#operateBar'
+                templet: function(data) {
+                    var html = '<a class="operateBtn layui-btn layui-btn-xs layui-btn-disabled">已结算</a>';
+                    if (data.state == '0') {
+                        html = '<a class="operateBtn layui-btn layui-btn-xs" lay-event="cancel">取消注单</a>';
+                    } else if (data.state == '2') {
+                        html = '<a class="operateBtn layui-btn layui-btn-xs" lay-event="handleClose">手动结算</a>';
+                    }
+                    return html;
+                },
             }]
         ],
-        data: [{
-            id: 'wew',
-            username: 'sfsfdsfsd',
-            sex: '男',
-            city: '重庆',
-            sign: '这是前面'
-        }, {
-            id: 'wew',
-            username: 'sfsfdsfsd',
-            sex: '男',
-            city: '重庆',
-            sign: '这是前面'
-        }, {
-            id: 'wew',
-            username: 'sfsfdsfsd',
-            sex: '男',
-            city: '重庆',
-            sign: '这是前面'
-        }, {
-            id: 'wew',
-            username: 'sfsfdsfsd',
-            sex: '男',
-            city: '重庆',
-            sign: '这是前面'
-        }, {
-            id: 'wew',
-            username: 'sfsfdsfsd',
-            sex: '男',
-            city: '重庆',
-            sign: '这是前面'
-        }, {
-            id: 'wew',
-            username: 'sfsfdsfsd',
-            sex: '男',
-            city: '重庆',
-            sign: '这是前面'
-        }]
+    });
+    $('#search').click(function() {
+        var allTime = $('#allTime').val().split(' 至 '),
+            betType = $('#betType').val(),
+            betState = $('#betState').val(),
+            keyword = $('#keyword').val();
+        table.reload('idAllTable', {
+            where: {
+                beginTime: allTime[0] || "",
+                endTime: allTime[1] || "",
+                betType: betType,
+                state: betState,
+                keyword: keyword
+            }
+        })
+    });
+
+    //监听工具条
+    table.on('tool()', function(obj) {
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+        if (layEvent === 'handleClose') { //手动结算
+
+        }
+        // else if (layEvent === 'del') { //删除
+        //     layer.confirm('真的删除行么', function(index) {
+        //         obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+        //         layer.close(index);
+        //         //向服务端发送删除指令
+        //     });
+        // }
+        else if (layEvent === 'cancel') { //取消注单
+            console.log(data);
+            layer.confirm('确定要取消此注单吗？', {title: '提示'}, function(index) {
+                layer.close(index);
+                admin.req({
+                    url: setter.serviceUrl + '/member/cancel/single-note',
+                    type: 'post',
+                    data: {
+                        number: data.number
+                    },
+                    done: function(res) {
+                        if (res.code == '2018') {
+                            layer.msg('注单取消成功', {
+                                offset: '15px',
+                                time: 2000,
+                                icon: 1
+                            });
+                            setTimeout(function() {
+                                $('#search').click();
+                            }, 2000);
+                        } else {
+                            layer.msg('注单取消失败', {
+                                offset: '15px',
+                                time: 2000,
+                                icon: 2
+                            });
+                        }
+                    }
+                });
+            });
+            //同步更新缓存对应的值
+            // obj.update({
+            //     username: '123',
+            //     title: 'xxx'
+            // });
+        }
     });
 });
 </script>

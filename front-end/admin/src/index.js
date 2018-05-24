@@ -161,7 +161,7 @@ layui.extend({
 
       //强制拦截未登入
       if(setter.interceptor){
-        var local = layui.data(setter.tableName);
+        var local = layui.sessionData(setter.tableName);
         if(!local[setter.request.tokenName]){
           return location.hash = '/user/login/redirect='+ encodeURIComponent(pathURL); //跳转到登入页
         }

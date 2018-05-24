@@ -45,14 +45,15 @@
         </a>
       </li> -->
       <li class="layui-nav-item" lay-unselect>
-        <script type="text/html" template lay-url="./json/user/session.js"
+        <script type="text/html" template lay-url=""
         lay-done="layui.element.render('nav', 'layadmin-layout-right');">
           <a href="javascript:;">
-            <cite>{{ d.result.username }}</cite>
+            <!-- d.result.username -->
+            <cite>{{ layui.sessionData('adminInfo').uinfo.name }}</cite>
           </a>
           <dl class="layui-nav-child">
-            <dd><a lay-href="set/user/info">基本资料</a></dd>
-            <dd><a lay-href="set/user/password">修改密码</a></dd>
+            <!-- <dd><a lay-href="set/user/info">基本资料</a></dd>
+            <dd><a lay-href="set/user/password">修改密码</a></dd> -->
             <hr>
             <dd layadmin-event="logout" style="text-align: center;"><a>退出</a></dd>
           </dl>
@@ -81,8 +82,7 @@
       lay-done="layui.element.render('nav', 'layadmin-system-side-menu');" id="TPL_layout">
 
         <div class="layui-logo" lay-href="">
-          <!-- {{ layui.setter.name || 'layuiAdmin' }} -->
-          <span style="font-style: italic;">yhm-backstage</span>
+          <span style="font-style: italic;">{{ layui.setter.name || 'yhm-backstage' }}</span>
         </div>
 
         <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">

@@ -22,11 +22,11 @@ function init() {
     });
 
     $('.pourRefreshBtn').click(function() {
-        common.getPourList({});
+        common.getPourList({betType: 'FT', state: '0'});
         countdown1 = PCDS;
     });
 
-    common.getPourList({});
+    common.getPourList({betType: 'FT', state: '0'});
     countDown1();
 }
 
@@ -318,7 +318,7 @@ function countDown() {
 
 function countDown1() {
     if (countdown1 == 0) {
-        common.getPourList({});
+        common.getPourList({betType: 'FT', state: '0'});
         countdown1 = PCDS;
     } else {
         countdown1--;

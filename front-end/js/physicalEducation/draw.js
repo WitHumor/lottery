@@ -150,8 +150,8 @@ var DW = {
                 $('#btb-rmb').val('');
                 return;
             }
-            var btb_rmb = parseFloat((current / btbrate).toFixed(10));
-            $('#btb-rmb').val(btb_rmb.toFixed(10) + ' 个' + $('#bitype option:checked').text());
+            var btb_rmb = parseFloat((current / btbrate).toFixed(3));
+            $('#btb-rmb').val(btb_rmb.toFixed(3) + ' 个' + $('#bitype option:checked').text());
         }
     },
     checks: function(checkArr) {

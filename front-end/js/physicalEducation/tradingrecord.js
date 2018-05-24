@@ -128,7 +128,7 @@ var TD = {
         ],
     },
     xzjl: {
-        select: '<option value="" selected>全部</option><option value="0">未结算</option><option value="1">已结算</option>',
+        select: '<option value="" selected>全部</option><option value="0">未结算</option><option value="1">已结算</option><option value="2">待结算</option>',
         types: '<option value="" selected>所有类型</option><option value="RFT">足球</option><option value="REFT">滚球-足球</option><option value="RBK">篮球</option><option value="REBK">滚球-篮球</option>',
         cols: [
             [{
@@ -180,6 +180,9 @@ var TD = {
                             break;
                         case '1':
                             st = '已结算';
+                            break;
+                        case '2':
+                            st = '待结算';
                             break;
                         default:
                             st = '-';

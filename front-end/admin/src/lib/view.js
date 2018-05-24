@@ -43,10 +43,11 @@ layui.define(['laytpl', 'layer'], function(exports) {
     //清除 token，并跳转到登入页
     view.exit = function() {
         //清空本地记录的 token
-        layui.data(setter.tableName, {
-            key: setter.request.tokenName,
-            remove: true
-        });
+        // layui.sessionData(setter.tableName, {
+        //     key: setter.request.tokenName,
+        //     remove: true
+        // });
+        layui.sessionData(setter.tableName, null);
 
         //跳转到登入页
         location.hash = '/user/login';
@@ -68,10 +69,10 @@ layui.define(['laytpl', 'layer'], function(exports) {
 
         if (request.tokenName) {
             //自动给参数传入默认 token
-            options.data[request.tokenName] = request.tokenName in options.data ? options.data[request.tokenName] : (layui.data(setter.tableName)[request.tokenName] || '');
+            options.data[request.tokenName] = request.tokenName in options.data ? options.data[request.tokenName] : (layui.sessionData(setter.tableName)[request.tokenName] || '');
 
             //自动给 Request Headers 传入 token
-            options.headers[request.tokenName] = request.tokenName in options.headers ? options.headers[request.tokenName] : (layui.data(setter.tableName)[request.tokenName] || '');
+            options.headers[request.tokenName] = request.tokenName in options.headers ? options.headers[request.tokenName] : (layui.sessionData(setter.tableName)[request.tokenName] || '');
         }
 
         // delete options.success;
@@ -81,6 +82,18 @@ layui.define(['laytpl', 'layer'], function(exports) {
             type: 'get',
             dataType: 'json',
             success: function(res) {
+                var statusCode = response.statusCode;
+                if (statusCode.logout.indexOf(res[response.statusName]) > -1) {
+                    layer.msg('登录超时，请重新登陆', {
+                        offset: '15px',
+                        time: 2000,
+                        icon: 2
+                    });
+                    setTimeout(function() {
+                        view.exit();
+                    }, 2000);
+                    return;
+                }
                 typeof options.done === 'function' && options.done(res);
                 //     var statusCode = response.statusCode;
 

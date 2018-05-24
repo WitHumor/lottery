@@ -29,12 +29,12 @@
                 <option value="">存款状态</option>
                 <option value="0">等待支付</option>
                 <option value="1">支付成功</option>
-                <option value="2">充值成功</option>
-                <option value="-2">充值失败</option>
+                <option value="2">存款成功</option>
+                <option value="-2">存款失败</option>
             </select>
         </div>
         <div class="layui-inline">
-            <input id="keyword" type="text" placeholder="存款单号/用户名" class="layui-input" style="width: 270px;" />
+            <input id="keyword" type="text" placeholder="存款单号/存款用户" class="layui-input" style="width: 270px;" />
         </div>
         <div class="layui-inline">
             <button id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i>查询</button>
@@ -43,67 +43,50 @@
     <table class="layui-hide" id="datalist"></table>
 </div>
 <script type="text/html" id="operateBar">
-    <a class="layui-btn layui-btn-sm" lay-event="audit">审核</a>
+    <a class="layui-btn layui-btn-xs" style="width: 50px;" lay-event="audit">审核</a>
 </script>
 <script>
-layui.use(['admin', 'table', 'laydate'], function() {
+layui.use(['admin', 'table', 'laydate', 'common'], function() {
     var $ = layui.$,
+        setter = layui.setter,
         admin = layui.admin,
         element = layui.element,
         laydate = layui.laydate,
         table = layui.table,
         form = layui.form,
+        common = layui.common,
         router = layui.router();
     element.render();
 
     form.render();
-    laydate.render({
-        elem: '#allTime',
-        type: 'datetime',
-        format: 'yyyy-MM-dd HH:mm',
-        theme: 'grid',
-        range: '至'
-    });
-    table.render({
+    common.dtimeInit('#allTime');
+    common.getList({
         elem: '#datalist',
-        url: 'http://192.168.43.20:8080/member/member-record',
-        method: 'post',
-        where: {
+        url: '/member/member-record',
+        param: {
             record: '0'
         },
-        request: {
-            pageName: 'pageNo', //页码的参数名称，默认：page
-            limitName: 'pageSize' //每页数据量的参数名，默认：limit
-        },
-        response: {
-            statusName: 'code', //数据状态的字段名称，默认：code
-            statusCode: "2018", //成功的状态码，默认：0
-            countName: 'total', //数据总数的字段名称，默认：count
-            dataName: 'result', //数据列表的字段名称，默认：data
-        },
-        headers: {
-            "content-type": "application/x-www-form-urlencoded",
-            // "token": sessionStorage.getItem('toid')
-        },
-        cellMinWidth: 80,
-        page: true,
-        limits: [10, 30, 60, 90],
         cols: [
             [{
                 field: 'time',
+                minWidth: 150,
                 title: '申请时间',
             }, {
                 field: 'number',
-                title: '充值单号',
+                minWidth: 180,
+                title: '存款单号',
             }, {
                 field: 'name',
-                title: '用户名',
+                minWidth: 120,
+                title: '存款用户',
             }, {
                 field: 'money',
-                title: '充值金额',
+                minWidth: 120,
+                title: '存款金额(点)',
             }, {
                 field: 'type',
-                title: '充值类型',
+                minWidth: 100,
+                title: '存款类型',
                 // templet: function(data) {
                 //     var types = '-';
                 //     $.each(config.coin, function(i, item) {
@@ -142,6 +125,7 @@ layui.use(['admin', 'table', 'laydate'], function() {
                 }
             }, {
                 field: 'state',
+                minWidth: 120,
                 title: '状态',
                 templet: function(data) {
                     var st = '';
@@ -153,16 +137,19 @@ layui.use(['admin', 'table', 'laydate'], function() {
                             st = '支付成功';
                             break;
                         case '2':
-                            st = '充值成功';
+                            st = '存款成功';
                             break;
                         case '-2':
-                            st = '充值失败';
+                            st = '存款失败';
                             break;
                         default:
                             st = '-';
                     }
                     return st;
                 }
+            }, {
+                field: 'resultRemark',
+                title: '审核建议',
             }, {
                 title: '操作',
                 fixed: 'right',
@@ -171,21 +158,8 @@ layui.use(['admin', 'table', 'laydate'], function() {
                 toolbar: '#operateBar'
             }]
         ],
-        done: function(res, curr, count) {
-            console.log(res);
-            // if (res.code == '1109' || res.code == '1114') {
-            //     layer.msg('登录超时，请重新登陆', {
-            //         time: 2000,
-            //         icon: 2
-            //     });
-            //     sessionStorage.setItem('userinfo', '');
-            //     sessionStorage.setItem('toid', '');
-            //     setTimeout(function() {
-            //         window.location.href = 'home.html';
-            //     }, 2000);
-            // }
-        }
     });
+
     $('#search').click(function() {
         var allTime = $('#allTime').val().split(' 至 '),
             withdrawType = $('#withdrawType').val(),
@@ -199,8 +173,8 @@ layui.use(['admin', 'table', 'laydate'], function() {
                 type: withdrawType,
                 keyword: keyword
             };
-        table.reload('idTest', {
-          where: param
+        table.reload('idAllTable', {
+            where: param
         });
     });
 });
