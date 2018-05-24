@@ -3,6 +3,7 @@ package com.springboot.lottery.util;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,17 +41,17 @@ public class JsoupUtil {
 
 	private static final String LEG_BAR = "span[class].leg_bar";// 获取足球/篮球联赛
 
-	private static final String TEAM_C_FT = "td[class].team_c_ft";// 获取足球第一个队伍
+	private static final String TEAM_C_FT = "td[class].team_c_ft";// 获取足球客场队伍
 
-	private static final String TEAM_H_FT = "td[class].team_h_ft";// 获取足球第二个队伍
+	private static final String TEAM_H_FT = "td[class].team_h_ft";// 获取足球队伍
 
 	private static final String HR_MAIN_FT = "td[class].hr_main_ft span";// 获取上半场足球比分
 
 	private static final String FULL_MAIN_FT = "td[class].full_main_ft span";// 获取全场足球比分
 
-	private static final String TEAM_C = "td[class].team_c";// 获取篮球第一个队伍
+	private static final String TEAM_C = "td[class].team_c";// 获取篮球客场队伍
 
-	private static final String TEAM_H = "td[class].team_h";// 获取篮球第二个队伍
+	private static final String TEAM_H = "td[class].team_h";// 获取篮球主场队伍
 
 	private static final String HR_MAIN = "td[class].hr_main";// 获取上半场篮球比分
 
@@ -58,6 +59,10 @@ public class JsoupUtil {
 	
 	private static final String EXCHANGE_PRICE = "div[class].box p[class].price";// 获取全场篮球比分
 
+	public static void main(String[] args) {
+
+	}
+	
 	/**
 	 * 根据赛事名称进行匹配-足球
 	 * 
@@ -75,9 +80,17 @@ public class JsoupUtil {
 		// 根据字段进行切割，并放入到list集合中
 		List<Map<String, String>> gameResult = getGameResult(url, LEG_BAR, TEAM_C_FT, TEAM_H_FT, HR_MAIN_FT,
 				FULL_MAIN_FT, league);
-		// 判断对象是否为空
-		if (gameResult == null) {
-			return null;
+		// 判断对象是否为空再根据前一天去查询
+		if (gameResult == null || gameResult.size() <= 0) {
+			String previousDay = previousDay(leagueDate);
+			url = "https://www.ylg56789.com/app/member/FT_Result?game_type=FT&today1=" + previousDay + "&uid=&langx=zh-cn";
+			// 根据字段进行切割，并放入到list集合中
+			gameResult = getGameResult(url, LEG_BAR, TEAM_C_FT, TEAM_H_FT, HR_MAIN_FT, FULL_MAIN_FT, league);
+			// 判断对象是否为空
+			if (gameResult == null || gameResult.size() <= 0) {
+				return null;
+			}
+			return gameResult;
 		}
 		return gameResult;
 	}
@@ -100,9 +113,17 @@ public class JsoupUtil {
 		url = "https://www.ylg56789.com/app/member/BK_Result?game_type=BK&today1=" + taday + "&uid=&langx=zh-cn";
 		// 根据字段进行切割，并放入到list集合中
 		List<Map<String, String>> gameResult = getGameResult(url, LEG_BAR, TEAM_C, TEAM_H, HR_MAIN, FULL_MAIN, league);
-		// 判断对象是否为空
-		if (gameResult == null) {
-			return null;
+		// 判断对象是否为空再根据前一天去查询
+		if (gameResult == null || gameResult.size() <= 0) {
+			String previousDay = previousDay(leagueDate);
+			url = "https://www.ylg56789.com/app/member/BK_Result?game_type=BK&today1=" + previousDay + "&uid=&langx=zh-cn";
+			// 根据字段进行切割，并放入到list集合中
+			gameResult = getGameResult(url, LEG_BAR, TEAM_C, TEAM_H, HR_MAIN, FULL_MAIN, league);
+			// 判断对象是否为空
+			if (gameResult == null || gameResult.size() <= 0) {
+				return null;
+			}
+			return gameResult;
 		}
 		return gameResult;
 	}
@@ -114,46 +135,43 @@ public class JsoupUtil {
 	 * @return
 	 */
 	public static List<Object> getGameMap(List<Map<String, String>> list, SingleNoteDTO singleNote) {
-		String bet = null, teamc = null, teamh = null, fullOrHrFirst = null, fullOrHrLast = null;
+		String bet = null, teamc = null, teamh = null, fullOrHrTeamc = null, fullOrHrTeamh = null;
 		Integer score = null, scorec = null, scoreh = null;
 		List<Object> listResult = new ArrayList<Object>();
 		// 使用迭代器遍历map数据
 		Iterator<Map<String, String>> iterator = list.iterator();
 		while (iterator.hasNext()) {
 			Map<String, String> map = iterator.next();
-			System.out.println(map);
 			// 根据key值获取数据进行匹配
 			teamc = map.get("teamc");// 获取客场
 			teamh = map.get("teamh");// 获取主场
-			System.out.println(teamc);
 			// 如果数据匹配不成功直接跳出当前循环
-			if (!teamc.equals(singleNote.getTeam_c()) || !teamh.equals(singleNote.getTeam_h())) {
-				System.out.println("-----------");
+			if (!teamh.equals(singleNote.getTeam_c()) && !teamh.equals(singleNote.getTeam_h())) {
 				continue;
 			}
-			// if (!teamc.contains(team_c) || !teamh.contains(team_h)) {
-			// System.out.println("-----------");
-			// continue;
-			// }
-
+			if (!teamc.equals(singleNote.getTeam_c()) && !teamc.equals(singleNote.getTeam_h())) {
+				continue;
+			}
+			// 判断比赛是否是全场
 			if (singleNote.getOccasion().equals("全场")) {
 				// 获取客场全场比分
-				fullOrHrFirst = map.get("fullFirst");
+				fullOrHrTeamc = map.get("fullTeamc");
 				// 获取主场全场比分
-				fullOrHrLast = map.get("fullLast");
+				fullOrHrTeamh = map.get("fullTeamh");
 			} else if (singleNote.getOccasion().equals("半场")) {
 				// 获取客场上半场比分
-				fullOrHrFirst = map.get("hrFirst");
+				fullOrHrTeamc = map.get("hrTeamc");
 				// 获取主场上半场比分
-				fullOrHrLast = map.get("hrLast");
+				fullOrHrTeamh = map.get("hrTeamh");
 			}
+			System.out.println(map);
 			// 判断比分是否有结果
-			if (StringUtils.isBlank(fullOrHrFirst) || StringUtils.isBlank(fullOrHrLast)) {
+			if (StringUtils.isBlank(fullOrHrTeamc) || StringUtils.isBlank(fullOrHrTeamh)) {
 				System.out.println(teamh + "VS" + teamc + "还在比赛中，目前没有结果。。");
 				continue;
 			}
-			scorec = Integer.parseInt(fullOrHrFirst);
-			scoreh = Integer.parseInt(fullOrHrLast);
+			scorec = Integer.parseInt(fullOrHrTeamc);
+			scoreh = Integer.parseInt(fullOrHrTeamh);
 			// 判断是否是滚球
 			if (singleNote.getBet_type().equals("REFT") || singleNote.getBet_type().equals("REBK")) {
 				// 获取比分
@@ -163,11 +181,10 @@ public class JsoupUtil {
 				scorec = scorec - Integer.valueOf(split[1]);
 			}
 			// 判断赛事是否腰斩
-			if (fullOrHrFirst.equals("赛事腰斩") || fullOrHrLast.equals("赛事腰斩")) {
+			if (fullOrHrTeamc.equals("赛事腰斩") || fullOrHrTeamh.equals("赛事腰斩")) {
 				listResult.add(bet);
 				return listResult;
 			}
-
 			// 比较主客场比分返回结果
 			if (scorec > scoreh) {
 				System.out.println(map.get("teamc") + "赢得整场比赛");
@@ -337,8 +354,8 @@ public class JsoupUtil {
 		List<Map<String, String>> listAll = new ArrayList<Map<String, String>>();
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		Map<String, String> listMap = null;
-		Elements legBar = null, teamh = null, teamc = null, hrFirst = null, hrLast = null, fullFirst = null,
-				fullLast = null;
+		Elements legBar = null, teamh = null, teamc = null, hrTeamc = null, hrTeamh = null, fullTeamc = null,
+				fullTeamh = null;
 		for (Element element : select) {
 			listMap = new HashMap<String, String>();
 			legBar = element.select(legBarSelect);// 获取联赛
@@ -346,22 +363,22 @@ public class JsoupUtil {
 			if (StringUtil.isBlank(getNonBlankStr(legBar.html()))) {
 				continue;
 			}
-			teamc = element.select(teamcSelect);// 获取第一个队伍
-			teamh = element.select(teamhSelect);// 获取第二个队伍
-			hrFirst = element.select(hrSelect).eq(0);// 获取上半场第一个比分
-			hrLast = element.select(hrSelect).eq(1);// 获取上半场第二个比分
-			fullFirst = element.select(fullSelect).eq(0);// 获取全场第一个比分
-			fullLast = element.select(fullSelect).eq(1);// 获取全场第二个比分
+			teamc = element.select(teamcSelect);// 获取客场队伍
+			teamh = element.select(teamhSelect);// 获取主场队伍
+			hrTeamc = element.select(hrSelect).eq(0);// 获取上半场客场比分
+			hrTeamh = element.select(hrSelect).eq(1);// 获取上半场主场比分
+			fullTeamc = element.select(fullSelect).eq(0);// 获取全场客场比分
+			fullTeamh = element.select(fullSelect).eq(1);// 获取全场主场比分
 
 			// 放入map集合
 			listMap.put("legBar", legBar == null ? "" : getNonBlankStr(legBar.html()));
 			listMap.put("teamc", teamc == null ? "" : getNonBlankStr(teamc.html()));
 			listMap.put("teamh", teamh == null ? "" : getNonBlankStr(teamh.html()));
 			// Element 需要判断是否为空，否则会空指针
-			listMap.put("hrFirst", hrFirst == null ? "" : getNonBlankStr(hrFirst.html()));
-			listMap.put("hrLast", hrLast == null ? "" : getNonBlankStr(hrLast.html()));
-			listMap.put("fullFirst", fullFirst == null ? "" : getNonBlankStr(fullFirst.html()));
-			listMap.put("fullLast", fullLast == null ? "" : getNonBlankStr(fullLast.html()));
+			listMap.put("hrTeamc", hrTeamc == null ? "" : getNonBlankStr(hrTeamc.html()));
+			listMap.put("hrTeamh", hrTeamh == null ? "" : getNonBlankStr(hrTeamh.html()));
+			listMap.put("fullTeamc", fullTeamc == null ? "" : getNonBlankStr(fullTeamc.html()));
+			listMap.put("fullTeamh", fullTeamh == null ? "" : getNonBlankStr(fullTeamh.html()));
 			// 放入list集合
 			listAll.add(listMap);
 		}
@@ -459,21 +476,6 @@ public class JsoupUtil {
 		return map;
 	}
 	/**
-	 * 比率类型，只参与结果比分运算
-	 * 
-	 * @return
-	 */
-	public static List<String> getParticipantType(){
-		List<String> list = new ArrayList<String>();
-		list.add("大");
-		list.add("小");
-		list.add("单");
-		list.add("双");
-		list.add("单大");
-		list.add("单小");
-		return list;
-	}
-	/**
 	 * 字符串去掉空格
 	 * 
 	 * @param str
@@ -524,5 +526,26 @@ public class JsoupUtil {
 			System.err.println("url地址连接失败！");
 			return null;
 		}
+	}
+	
+	/**
+	 * 根据时间获取前一天
+	 * @param date
+	 * @return
+	 */
+	private static String previousDay(Date date) {
+		// 得到日历
+		Calendar calendar = Calendar.getInstance();
+		// 把当前时间赋给日历
+		calendar.setTime(date);
+		// 设置为前一天
+		calendar.add(Calendar.DAY_OF_MONTH, -1);
+		// 得到前一天的时间
+		Date dBefore = calendar.getTime();
+		// 设置时间格式
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		// 格式化前一天
+		String previousDay = sdf.format(dBefore);
+		return previousDay;
 	}
 }

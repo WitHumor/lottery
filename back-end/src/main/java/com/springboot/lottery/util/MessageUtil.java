@@ -41,4 +41,10 @@ public class MessageUtil {
 	public final static String LEAGUE_END = "1116";
 	// 时间超时
 	public final static String TIME_OVERTIME = "1117";
+	// IP地址获取失败！
+	public final static String IP_ADDRESS = "1118";
+	// 注单结算错误
+	public final static String SINGLE_NOTE_ERROR = "1119";
+	// 注单结算错误
+//	public final static String SINGLE_NOTE_ERROR = "1119";
 }

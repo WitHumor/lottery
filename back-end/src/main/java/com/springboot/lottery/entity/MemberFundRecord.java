@@ -39,6 +39,8 @@ public class MemberFundRecord implements Serializable {
 	private String state;
 	// 备注
 	private String remark;
+	// 结果备注
+	private String result_remark;
 
 	public String getFrid() {
 		return frid;
@@ -142,5 +144,13 @@ public class MemberFundRecord implements Serializable {
 
 	public void setMoney_address(String money_address) {
 		this.money_address = money_address;
+	}
+
+	public String getResult_remark() {
+		return result_remark;
+	}
+
+	public void setResult_remark(String result_remark) {
+		this.result_remark = result_remark;
 	}
 }

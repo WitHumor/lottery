@@ -25,6 +25,13 @@ public interface MemberService {
 	 * @return
 	 */
 	List<Member> queryMember(Map<String, Object> map);
+	
+	/**
+	 * 会员名验证
+	 * @param name
+	 * @return
+	 */
+	String verifyMember(String name);
 
 	/**
 	 * 会员下注

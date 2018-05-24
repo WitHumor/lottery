@@ -32,16 +32,22 @@ public class FundRecordDTO implements Serializable {
 	private String state;
 	// 备注
 	private String remark;
+	// 结果备注
+	private String result_remark;
 	// 登录名
 	private String name;
 	// 登录密码
 	private String password;
+	// 权限
+	private String role;
 	// 手机号
 	private String phone;
 	// IP地址
 	private String address;
 	// 余额
 	private String sum;
+	// 邀请码
+	private String invitation_code;
 	// 真实姓名
 	private String real_name;
 	// 取款密码
@@ -193,6 +199,22 @@ public class FundRecordDTO implements Serializable {
 	public void setCurrency(String currency) {
 		this.currency = currency;
 	}
+	
+	public String getInvitation_code() {
+		return invitation_code;
+	}
+	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public void setInvitation_code(String invitation_code) {
+		this.invitation_code = invitation_code;
+	}
 
 	public String getCurrency_count() {
 		return currency_count;
@@ -224,5 +246,13 @@ public class FundRecordDTO implements Serializable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getResult_remark() {
+		return result_remark;
+	}
+
+	public void setResult_remark(String result_remark) {
+		this.result_remark = result_remark;
 	}
 }

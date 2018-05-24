@@ -34,6 +34,10 @@ public class SingleNoteDTO implements Serializable {
 	private String ior_type;
 	// 比率
 	private String ior_ratio;
+	// 赔率
+	private String ratio;
+	// 让球方
+	private String strong;
 	// 状态
 	private String state;
 	// 投注金额
@@ -48,12 +52,16 @@ public class SingleNoteDTO implements Serializable {
 	private String name;
 	// 登录密码
 	private String password;
+	// 权限
+	private String role;
 	// 手机号
 	private String phone;
 	// IP地址
 	private String address;
 	// 余额
 	private String sum;
+	// 邀请码
+	private String invitation_code;
 	// 真实姓名
 	private String real_name;
 	// 取款密码
@@ -234,6 +242,14 @@ public class SingleNoteDTO implements Serializable {
 	public void setIor_type(String ior_type) {
 		this.ior_type = ior_type;
 	}
+	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	public String getIor_ratio() {
 		return ior_ratio;
@@ -274,9 +290,25 @@ public class SingleNoteDTO implements Serializable {
 	public String getScore() {
 		return score;
 	}
+	
+	public String getStrong() {
+		return strong;
+	}
+
+	public void setStrong(String strong) {
+		this.strong = strong;
+	}
 
 	public void setScore(String score) {
 		this.score = score;
+	}
+
+	public String getInvitation_code() {
+		return invitation_code;
+	}
+
+	public void setInvitation_code(String invitation_code) {
+		this.invitation_code = invitation_code;
 	}
 
 	public String getDeal_money() {
@@ -285,5 +317,13 @@ public class SingleNoteDTO implements Serializable {
 
 	public void setDeal_money(String deal_money) {
 		this.deal_money = deal_money;
+	}
+
+	public String getRatio() {
+		return ratio;
+	}
+
+	public void setRatio(String ratio) {
+		this.ratio = ratio;
 	}
 }
