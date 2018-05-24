@@ -375,7 +375,7 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
 						<div style="color:#fff">筹码数：<span class="chouMaNum" id="show_money" style="color:#FFF201">0</span></div>
 					</div>
 				</div>
-				<div class="weui-flex__item"><span id="tips" class="top-a" onclick="shuoming();">游戏说明</span></div>
+				<div class="weui-flex__item"><a href='javascript:void(0)' onclick="dice.shuoming();" class="top-a">游戏说明</a></div>
 			</div>
 
 		</header>
@@ -465,8 +465,11 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
 				<div style="text-align: center;  padding: 10px 0;">
 					<a href="javascript:dice.add_bet(10);" class="weui-btn weui-btn_mini weui-btn_primary">+</a>&nbsp;<a href="javascript:dice.reduce_bet(10);" class="weui-btn weui-btn_mini weui-btn_primary">-</a> </div>
 				<div style="text-align: center;  padding: 10px 0;">
-					<a href="javascript:void(0);" class="weui-btn weui-btn_mini weui-btn_primary">确认</a>&nbsp;<a href="javascript:dice.exit_bet();" class="weui-btn weui-btn_mini weui-btn_primary">关闭</a> </div>
+					<a href="javascript:dice.save_bet();" class="weui-btn weui-btn_mini weui-btn_primary">确认</a>&nbsp;<a href="javascript:dice.exit_bet();" class="weui-btn weui-btn_mini weui-btn_primary">关闭</a> </div>
 			</div>
+		</div>
+		<div id='shuoming'>
+			<img src="../../img/dice/457684782019572638.jpg" border='0'> 
 		</div>
 	<script src="../../lib/jquery-3.3.1.min.js"></script>
 	 <script src="../../plugins/layer/layer.min.js"></script>
