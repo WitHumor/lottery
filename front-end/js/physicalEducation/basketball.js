@@ -279,6 +279,7 @@ function sureDeal(datastr) {
                 time: 2000
             });
             setTimeout(function() {
+                $('.pourRefreshBtn').click();
                 common.cancelDeal();
             }, 2000);
         } else if (data.code == '1103') {
