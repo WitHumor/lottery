@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.springboot.lottery.dto.FundRecordDTO;
 import com.springboot.lottery.dto.SingleNoteDTO;
 import com.springboot.lottery.entity.Member;
 import com.springboot.lottery.entity.MemberFundRecord;
 import com.springboot.lottery.entity.MemberSingleNote;
 import com.springboot.lottery.service.MemberService;
+import com.springboot.lottery.service.impl.MemberServiceImpl;
 import com.springboot.lottery.util.BeanLoad;
 import com.springboot.lottery.util.MessageUtil;
 import com.springboot.lottery.util.ObjectResult;
@@ -85,15 +87,16 @@ public class MemberController {
             }  
         }
         //对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
-        if(ipAddress!=null && ipAddress.length()>15){   
-            if(ipAddress.indexOf(",")>0){  
-                ipAddress = ipAddress.substring(0,ipAddress.indexOf(","));  
-            }  
-        }else {
-        	// IP地址获取失败！
-        	result.setCode(MessageUtil.IP_ADDRESS);
-        	return result;
-        }  
+//        if(ipAddress!=null && ipAddress.length()>15){   
+//            if(ipAddress.indexOf(",")>0){  
+//                ipAddress = ipAddress.substring(0,ipAddress.indexOf(","));  
+//            }  
+//        }else {
+//        	System.out.println("ssss");
+//        	// IP地址获取失败！
+//        	result.setCode(MessageUtil.IP_ADDRESS);
+//        	return result;
+//        }  
 		String name = member.getName();
 		String password = member.getPassword();
 		String bankPassword = member.getBank_password();
@@ -648,18 +651,27 @@ public class MemberController {
 		long time = (day * 60 * 60 * 24) + (hour * 60 * 60) + (min * 60 ) + second;
 		// 超过一天未完成支付则时间超时
 		if (time > 60 * 60 * 24) {
+			map.put("state", "-2");// 状态
+			map.put("resultRemark", "订单失效，已超过24小时未完成支付！");
+			// 根据订单号修改状态
+			int updateFundRecord = memberService.updateFundRecord(map);
+			if (updateFundRecord <= 0) {
+				result.setCode(MessageUtil.UPDATE_ERROR);
+				return result;
+			}
 			// 时间超时
 			result.setCode(MessageUtil.TIME_OVERTIME);
 			return result;
-		}
-		map.put("state", 1);// 状态
-		// 根据订单号修改状态
-		int updateFundRecord = memberService.updateFundRecord(map);
-		if (updateFundRecord <= 0) {
-			result.setCode(MessageUtil.UPDATE_ERROR);
+		}else {
+			map.put("state", "1");// 状态
+			// 根据订单号修改状态
+			int updateFundRecord = memberService.updateFundRecord(map);
+			if (updateFundRecord <= 0) {
+				result.setCode(MessageUtil.UPDATE_ERROR);
+				return result;
+			}
 			return result;
 		}
-		return result;
 	}
 
 	/**
@@ -668,13 +680,11 @@ public class MemberController {
 	 * @param number 订单号
 	 * @param state 状态
 	 * @param record 记录类型：充值、取款
-	 * @param mid 会员id
-	 * @param money 金钱
 	 * @return
 	 */
 	@RequestMapping(value = "alter/fund-record", method = RequestMethod.POST)
 	@ResponseBody
-	public ObjectResult alterFundRecord(String number, String state, String record, String mid, String money) {
+	public ObjectResult alterFundRecord(String number, String state, String record, String resultRemark) {
 		String token = request.getHeader("token");
 		ObjectResult result = new ObjectResult();
 		Cache cache = getCache();
@@ -692,7 +702,20 @@ public class MemberController {
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("number", number);// 订单号
+		List<FundRecordDTO> queryFundRecordDTO = memberService.queryFundRecordDTO(map);
+		if(queryFundRecordDTO.size() != 1 || queryFundRecordDTO == null) {
+			// 空值
+			result.setCode(MessageUtil.NULL_ERROR);
+			return result;
+		}
+		FundRecordDTO fundRecordDTO = queryFundRecordDTO.get(0);
+		if(state.equals(fundRecordDTO.getState())) {
+			// 订单已被结算
+			result.setCode(MessageUtil.FUND_RECORD_ERROR);
+			return result;
+		}
 		map.put("state", state);// 状态
+		map.put("resultRemark", resultRemark);// 结果备注
 		// 根据订单号修改状态
 		int updateFundRecord = memberService.updateFundRecord(map);
 		if (updateFundRecord <= 0) {
@@ -700,39 +723,162 @@ public class MemberController {
 			return result;
 		}
 		Map<String, Object> memberMap = new HashMap<String, Object>();
+		String mid = fundRecordDTO.getMid();// 获取mid
+		String money = fundRecordDTO.getMoney();// 获取金额
 		memberMap.put("mid", mid);
-		// 根据mid获取会员所有信息
-		List<Member> queryMember = memberService.queryMember(memberMap);
-		if(queryMember.size() != 1 || queryMember == null) {
-			// 空值
-			result.setCode(MessageUtil.NULL_ERROR);
-			return result;
-		}
-		Member member = queryMember.get(0);
 		// 如果充值成功向账户中添加金额
 		if(record.equals("0") && state.equals("2")) {
-			String sum = member.getSum();
-			memberMap.put("sum", String.format("%.2f", Float.valueOf(sum) + Float.valueOf(money)));
+			String sum = fundRecordDTO.getSum();// 获取余额
+			String discounts = fundRecordDTO.getDiscounts();// 获取优惠金额
+			memberMap.put("sum", String.format("%.2f", Float.valueOf(sum) + Float.valueOf(money) + Float.valueOf(discounts)));
 			int updateSum = memberService.updateSum(memberMap);
 			if(updateSum > 0) {
 				return result;
 			}else {
+				map.put("state", fundRecordDTO.getState());// 状态
+				map.put("resultRemark", "--");// 结果备注
+				// 根据订单号修改状态
+				memberService.updateFundRecord(map);
 				result.setCode(MessageUtil.UPDATE_ERROR);
 				return result;
 			}
 		}
 		// 如果提款失败向账户返回金额
 		if(record.equals("1") && (state.equals("-1") || state.equals("-2"))) {
-			String sum = member.getSum();
+			String sum = fundRecordDTO.getSum();// 获取余额
 			memberMap.put("sum", String.format("%.2f", Float.valueOf(sum) + Float.valueOf(money)));
 			int updateSum = memberService.updateSum(memberMap);
 			if(updateSum > 0) {
 				return result;
 			}else {
+				map.put("state", fundRecordDTO.getState());// 状态
+				map.put("resultRemark", "--");// 结果备注
+				// 根据订单号修改状态
+				memberService.updateFundRecord(map);
 				result.setCode(MessageUtil.UPDATE_ERROR);
 				return result;
 			}
 		}
+		return result;
+	}
+	
+	/**
+	 * 20180525充值/取款处理
+	 * 
+	 * @param number 订单号
+	 * @param record 记录类型：充值、取款
+	 * @return
+	 */
+	@RequestMapping(value = "dispose/fund-record", method = RequestMethod.POST)
+	@ResponseBody
+	public ObjectResult disposeFundRecord(String number,String record) {
+		String token = request.getHeader("token");
+		ObjectResult result = new ObjectResult();
+		Cache cache = getCache();
+		// 判断token是否为空
+		if (StringUtils.isBlank(token)) {
+			// 空值
+			result.setCode(MessageUtil.NULL_ERROR);
+			return result;
+		}
+		// 判断token是否过期
+		if (cache.get(token) == null) {
+			// token过期
+			result.setCode(MessageUtil.TOKEN_OVERDUE);
+			return result;
+		}
+		// 获取缓存中的数据
+		Member member = (Member) cache.get(token).get();
+		// 获取缓存中的会员id
+		String mid = member.getMid();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("number", number);// 订单号
+		List<FundRecordDTO> queryFundRecordDTO = memberService.queryFundRecordDTO(map);
+		if(queryFundRecordDTO.size() != 1 || queryFundRecordDTO == null) {
+			// 空值
+			result.setCode(MessageUtil.NULL_ERROR);
+			return result;
+		}
+		FundRecordDTO fundRecordDTO = queryFundRecordDTO.get(0);
+		if(record.equals("0")) {
+			if("-1".equals(fundRecordDTO.getState())) {
+				// 订单已被处理
+				result.setCode(MessageUtil.FUND_RECORD_ERROR);
+				return result;
+			}
+			map.put("state", "-1");// 状态
+		}else if(record.equals("1")) {
+			if("1".equals(fundRecordDTO.getState())) {
+				// 订单已被处理
+				result.setCode(MessageUtil.FUND_RECORD_ERROR);
+				return result;
+			}
+			map.put("state", "1");// 状态
+		}else {
+			// 参数错误
+			result.setCode(MessageUtil.PARAMETER_ERROR);
+			return result;
+		}
+		map.put("dispose", mid);
+		// 根据订单号修改状态
+		int updateFundRecord = memberService.updateFundRecord(map);
+		if (updateFundRecord <= 0) {
+			result.setCode(MessageUtil.UPDATE_ERROR);
+			return result;
+		}
+		return result;
+	}
+	
+	/**
+	 * 20180525审核列表
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "audit/fund-record", method = RequestMethod.GET)
+	@ResponseBody
+	public ObjectResult disposeFundRecord(String record) {
+		String token = request.getHeader("token");
+		ObjectResult result = new ObjectResult();
+		Cache cache = getCache();
+		// 判断token是否为空
+		if (StringUtils.isBlank(token)) {
+			// 空值
+			result.setCode(MessageUtil.NULL_ERROR);
+			return result;
+		}
+		// 判断token是否过期
+		if (cache.get(token) == null) {
+			// token过期
+			result.setCode(MessageUtil.TOKEN_OVERDUE);
+			return result;
+		}
+		// 获取缓存中的数据
+		Member member = (Member) cache.get(token).get();
+		// 获取缓存中的会员id
+		String mid = member.getMid();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("dispose", mid);// 处理人员
+		map.put("record", record);// 存取款状态
+		// 0表示充值记录，1表示提现记录
+		if(record.equals("0")) {
+			// 审核状态
+			map.put("state", "-1");
+		} else if(record.equals("1")) {
+			// 审核状态
+			map.put("state", "1");
+		} else {
+			// 参数错误
+			result.setCode(MessageUtil.PARAMETER_ERROR);
+			return result;
+		}
+		List<FundRecordDTO> list = memberService.queryFundRecordDTO(map);
+		if(list == null || list.size() == 0) {
+			return result;
+		}
+		MemberServiceImpl memberServiceImpl = new MemberServiceImpl();
+		// 返回前端需要的字段
+		List<Map<String, Object>> listByFundRecords = memberServiceImpl.toListByFundRecords(list, record, null);
+		result.setResult(listByFundRecords);
 		return result;
 	}
 	
@@ -966,6 +1112,7 @@ public class MemberController {
 		memberSingleNote.setOccasion(occasion);// 设置场次
 		memberSingleNote.setIor_type(ratioType);// 设置比率类型
 		memberSingleNote.setIor_ratio(iorRatio);// 设置比率
+		memberSingleNote.setRatio(ratioData);// 设置赔率
 		memberSingleNote.setBet(bet);// 设置下注对象
 		memberSingleNote.setBet_type(betType);// 设置下注类型
 		memberSingleNote.setStrong(strong);// 让球方
@@ -1143,7 +1290,7 @@ public class MemberController {
 	 */
 	@RequestMapping(value = "account/single-note", method = RequestMethod.POST)
 	@ResponseBody
-	public ObjectResult accountSingleNote(String number, String accident, String fullTeamh, String fullTeamc,
+	public ObjectResult accountSingleNote(String number, boolean accident, String fullTeamh, String fullTeamc,
 			String hrTeamh, String hrTeamc) {
 		String token = request.getHeader("token");
 		ObjectResult result = new ObjectResult();
@@ -1178,7 +1325,7 @@ public class MemberController {
 			return result;
 		}
 		// 如果赛事腰折,则直接结算
-		if(accident != null && accident.equals("赛事腰折")) {
+		if(accident) {
 			String mid = singleNoteDTO.getMid();// 获取mid
 			Float memberByMoney = Float.parseFloat(singleNoteDTO.getSum());// 获取用户余额
 			Float money = Float.parseFloat(singleNoteDTO.getMoney());// 获取下注金额
@@ -1206,6 +1353,10 @@ public class MemberController {
 			result.setCode(MessageUtil.NULL_ERROR);
 			return result;
 		}
+		if(StringUtils.isBlank(fullOrHrTeamc) || StringUtils.isBlank(fullOrHrTeamh)) {
+			result.setCode(MessageUtil.NULL_ERROR);
+			return result;
+		}
 		scoreTeamc = Integer.parseInt(fullOrHrTeamc);
 		scoreTeamh = Integer.parseInt(fullOrHrTeamh);
 		String betType = singleNoteDTO.getBet_type();// 获取下注类型
@@ -1220,24 +1371,21 @@ public class MemberController {
 		Integer score = null;
 		// 比较主客场比分返回结果
 		if (scoreTeamc > scoreTeamh) {
-			System.out.println(map.get("teamc") + "赢得整场比赛");
 			bet = "C";
 			score = scoreTeamc - scoreTeamh;
 		} else if (scoreTeamc < scoreTeamh) {
-			System.out.println(map.get("teamh") + "赢得整场比赛");
 			bet = "H";
 			score = scoreTeamh - scoreTeamc;
 		} else if (scoreTeamc == scoreTeamh) {
-			System.out.println(map.get("teamc") + "VS" + map.get("teamh") + "和局");
 			bet = "N";
 			score = scoreTeamh - scoreTeamc;
 		}
 		boolean stateUpdate = resultGame(singleNoteDTO, bet, scoreTeamh, scoreTeamc, score);
 		if(stateUpdate) {
-			// 注单结算失败
-			result.setCode(MessageUtil.SINGLE_NOTE_ERROR);
 			return result;
 		}else {
+			// 注单结算失败
+			result.setCode(MessageUtil.SINGLE_NOTE_ERROR);
 			return result;
 		}
 	}

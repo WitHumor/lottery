@@ -97,7 +97,7 @@ public interface MemberDao {
 	 * @param map
 	 * @return
 	 */
-	List<FundRecordDTO> listFundRecord(Map<String, Object> map);
+	List<FundRecordDTO> queryFundRecordDTO(Map<String, Object> map);
 	
 	/**
 	 * 查询资金流水记录总条数
