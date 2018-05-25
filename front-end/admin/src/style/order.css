@@ -1,0 +1,45 @@
+
+.opbtn {
+    line-height: 26px;
+    height: 26px;
+    width: 80px;
+    font-size: 14px;
+}
+
+.optips {
+    color: #FF2020;
+    line-height: 30px;
+}
+
+.optips i {
+    font-weight: bold;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.layui-field-title {
+    margin: 0 0 10px;
+}
+
+.layui-quote-nm {
+    background-color: #fff;
+    margin-bottom: 30px;
+}
+
+#allTime,
+#keyword {
+    width: 270px;
+}
+
+.errortips {
+    width: calc(100% + 40px);
+    line-height: 30px;
+    text-align: center;
+    color: #fff;
+    background-color: #FF6A6A;
+    margin-left: -20px;
+}
+
+.operateBtn {
+    width: 100px;
+}

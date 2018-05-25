@@ -72,7 +72,7 @@ var DW = {
                         content: '<div style="padding: 30px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">汇率实时变化可能会导致充值的点数有所变化，您是否接受？</div>',
                         yes: function() {
                             layer.close(index);
-                            DW.createOrder();
+                            DW.withdrawal();
                         },
                         cancel: function() {
                             if (real != $('.cny-rate').text()) {

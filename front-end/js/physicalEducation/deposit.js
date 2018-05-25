@@ -240,10 +240,11 @@ var DE = {
                     window.location.href = 'tradingrecord.html?type=deposit';
                 }, 2000);
             } else if (data.code == '1117') {
-                layer.msg('您没有在规定时间内完成操作，可联系客服处理', {
+                layer.msg('您没有在规定时间内完成操作，订单已失效', {
                     time: 2000,
-                    icon: 2
+                    icon: 0
                 });
+                setTimeout(function() {window.location.reload();}, 2000);
             } else {
                 layer.msg('完成支付提交失败', {
                     time: 2000,

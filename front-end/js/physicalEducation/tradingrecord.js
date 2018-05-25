@@ -21,62 +21,60 @@ $(function() {
 });
 
 var TD = {
+    ajax: new HttpService(),
     txjl: {
-        select: '<option value="" selected>全部</option><option value="0">等待处理</option><option value="1">等待支付</option><option value="2">支付完成</option><!-- <option value="-1">已取消</option> --><option value="-2">审批拒绝</option>',
+        select: '<option value="" selected>全部</option><option value="0">等待处理</option><option value="1">审核中</option><option value="2">支付完成</option><!-- <option value="-1">已取消</option> --><option value="-2">审批拒绝</option>',
         cols: [
             [{
-                    field: 'time',
-                    title: '申请时间',
-                }, {
-                    field: 'number',
-                    title: '提现单号',
-                }, {
-                    field: 'moneyAddress',
-                    title: '钱包地址',
-                }, {
-                    field: 'money',
-                    title: '提现金额',
-                }, {
-                    field: 'state',
-                    title: '状态',
-                    templet: function(data) {
-                        var st = '';
-                        switch (data.state) {
-                            case '0':
-                                st = '等待处理';
-                                break;
-                            case '1':
-                                st = '等待支付';
-                                break;
-                            case '2':
-                                st = '支付完成';
-                                break;
-                            case '-1':
-                                st = '已取消';
-                                break;
-                            case '-2':
-                                st = '审批拒绝';
-                                break;
-                            default:
-                                st = '-';
-                        }
-                        return st;
+                field: 'time',
+                title: '申请时间',
+            }, {
+                field: 'number',
+                title: '提现单号',
+            }, {
+                field: 'moneyAddress',
+                title: '钱包地址',
+            }, {
+                field: 'money',
+                title: '提现金额',
+            }, {
+                field: 'state',
+                title: '状态',
+                templet: function(data) {
+                    var st = '';
+                    switch (data.state) {
+                        case '0':
+                            st = '等待处理';
+                            break;
+                        case '1':
+                            st = '审核中';
+                            break;
+                        case '2':
+                            st = '支付完成';
+                            break;
+                        case '-1':
+                            st = '已取消';
+                            break;
+                        case '-2':
+                            st = '审批拒绝';
+                            break;
+                        default:
+                            st = '-';
                     }
+                    return st;
                 }
-                // , {
-                //     field: 'operate',
-                //     title: '操作',
-                // }
-                , {
-                    field: 'remark',
-                    title: '备注',
-                }
-            ]
+            }, {
+                field: 'remark',
+                title: '备注',
+            }, {
+                field: 'resultRemark',
+                title: '审核意见',
+            }]
         ],
 
     },
     czjl: {
-        select: '<option value="" selected>全部</option><option value="0">等待支付</option><option value="1">支付成功</option><option value="2">充值成功</option><option value="-2">充值失败</option>',
+        select: '<option value="" selected>全部</option><option value="0">等待支付</option><option value="1">支付成功</option><option value="-1">审核中</option><option value="2">充值成功</option><option value="-2">充值失败</option>',
         cols: [
             [{
                 field: 'time',
@@ -103,7 +101,7 @@ var TD = {
             }, {
                 field: 'state',
                 title: '状态',
-                width: '100',
+                minWidth: '100',
                 templet: function(data) {
                     var st = '';
                     switch (data.state) {
@@ -112,6 +110,9 @@ var TD = {
                             break;
                         case '1':
                             st = '支付成功';
+                            break;
+                        case '-1':
+                            st = '审核中';
                             break;
                         case '2':
                             st = '充值成功';
@@ -123,6 +124,27 @@ var TD = {
                             st = '-';
                     }
                     return st;
+                }
+            }, {
+                field: 'resultRemark',
+                title: '审核意见',
+            }, {
+                title: '操作',
+                fixed: 'right',
+                width: 100,
+                align: 'center',
+                templet: function(data) {
+                    var html = '<a class="layui-btn layui-btn-xs layui-btn-disabled" style="width: 70px;">已支付</a>';
+                    if (data.state == '0') {
+                        html = '<a class="layui-btn layui-btn-xs" onclick="TD.surePay(\''+ data.number +'\');" style="width: 70px;">确认支付</a>';
+                    } else if (data.state == '-1') {
+                        html = '<a class="layui-btn layui-btn-xs layui-btn-disabled" style="width: 70px;">审核中</a>';
+                    } else if (data.state == '2') {
+                        html = '<a class="layui-btn layui-btn-xs layui-btn-disabled" style="width: 70px;">充值成功</a>';
+                    } else if (data.state == '-2') {
+                        html = '<a class="layui-btn layui-btn-xs layui-btn-disabled" style="width: 70px;">充值失败</a>';
+                    }
+                    return html;
                 }
             }]
         ],
@@ -246,11 +268,12 @@ var TD = {
                 withdrawStatus = $('#withdrawStatus').val(),
                 keyword = $('#keyword').val();
 
-            var cols = '', param = {
-                beginTime: allTime[0] || "",
-                endTime: allTime[1] || "",
-                state: withdrawStatus
-            };
+            var cols = '',
+                param = {
+                    beginTime: allTime[0] || "",
+                    endTime: allTime[1] || "",
+                    state: withdrawStatus
+                };
             if (litype == '0') {
                 cols = TD.czjl.cols;
                 param.record = litype;
@@ -300,7 +323,6 @@ var TD = {
                 // data: data,
                 cols: cols,
                 done: function(res, curr, count) {
-                    console.log(res);
                     if (res.code == '1109' || res.code == '1114') {
                         layer.msg('登录超时，请重新登陆', {
                             time: 2000,
@@ -315,5 +337,39 @@ var TD = {
                 }
             });
         });
-    }
+    },
+
+    surePay: function(oId) {
+        TD.ajax.post('/member/member-pay', {
+            number: oId
+        }, function(data) {
+            if (data.code == '2018') {
+                layer.msg('确认支付提交成功，请耐心等待工作人员处理', {
+                    time: 2000,
+                    icon: 1
+                });
+                setTimeout(function() {
+                    $('#all-search').click();
+                }, 2000);
+            } else if (data.code == '1117') {
+                layer.msg('您没有在规定时间内完成操作，订单已失效', {
+                    time: 2000,
+                    icon: 0
+                });
+                setTimeout(function() {
+                    $('#all-search').click();
+                }, 2000);
+            } else {
+                layer.msg('确认支付提交失败', {
+                    time: 2000,
+                    icon: 1
+                });
+            }
+        }, function(e) {
+            layer.msg('网络错误', {
+                time: 2000,
+                icon: 2
+            });
+        });
+    },
 }

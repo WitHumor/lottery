@@ -1,3 +1,6 @@
+<script type="text/html" template>
+    <link rel="stylesheet" href="{{ layui.setter.base }}style/order.css?v={{ layui.admin.v }}-1" media="all">
+</script>
 <title>
     下注单</title>
 <div class="layui-card layadmin-header">
@@ -9,10 +12,19 @@
     </div>
 </div>
 <style>
-.operateBtn {
+/*.operateBtn {
     width: 100px;
 }
-</style>s
+
+.errortips {
+    width: calc(100% + 40px);
+    line-height: 30px;
+    text-align: center;
+    color: #fff;
+    background-color: #FF6A6A;
+    margin-left: -20px;
+}*/
+</style>
 <div class="layui-fluid">
     <div class="layui-form">
         <div class="layui-inline">
@@ -169,7 +181,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                 state: betState,
                 keyword: keyword
             }
-        })
+        });
     });
 
     //监听工具条
@@ -179,18 +191,75 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
         var tr = obj.tr; //获得当前行 tr 的DOM对象
 
         if (layEvent === 'handleClose') { //手动结算
-
-        }
-        // else if (layEvent === 'del') { //删除
-        //     layer.confirm('真的删除行么', function(index) {
-        //         obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-        //         layer.close(index);
-        //         //向服务端发送删除指令
-        //     });
-        // }
-        else if (layEvent === 'cancel') { //取消注单
-            console.log(data);
-            layer.confirm('确定要取消此注单吗？', {title: '提示'}, function(index) {
+            var html = '<div class="errortips hide"></div><div class="layui-form"><div class="layui-form-item"><label class="layui-form-label">赛事腰折</label><div class="layui-input-block"><input id="dropping" type="checkbox" name="close" lay-skin="switch" lay-filter="switchListen" lay-text="是|否"></div></div><div class="layui-form-item"><div class="layui-inline"><label class="layui-form-label">半场比分</label><div class="layui-input-inline" style="width: 100px;"><input type="text" name="hteamh" placeholder="主场得分" autocomplete="off" class="layui-input scores"></div><div class="layui-form-mid">:</div><div class="layui-input-inline" style="width: 100px;"><input type="text" name="hteamc" placeholder="客场得分" autocomplete="off" class="layui-input scores"></div></div></div><div class="layui-form-item"><div class="layui-inline"><label class="layui-form-label">全场比分</label><div class="layui-input-inline" style="width: 100px;"><input type="text" name="teamh" placeholder="主场得分" autocomplete="off" class="layui-input scores"></div><div class="layui-form-mid">:</div><div class="layui-input-inline" style="width: 100px;"><input type="text" name="teamc" placeholder="客场得分" autocomplete="off" class="layui-input scores"></div></div></div></div>';
+            layer.confirm(html, {
+                title: '比赛信息',
+                area: ['420px', '330px'],
+                move: false,
+                btn: ['结算', '取消'],
+                success: function(layero, index) {
+                    form.render();
+                    //监听指定开关
+                    form.on('switch(switchListen)', function(data) {
+                        if (this.checked) {
+                            $('.scores').attr('disabled', 'disabled').css('background-color', '#e6e6e6');
+                        } else {
+                            $('.scores').removeAttr('disabled').css('background-color', '#fff');
+                        }
+                    });
+                }
+            }, function(index) {
+                if (!$('#dropping').is(':checked') && !checkes([$('.scores')])) {
+                    console.log($($('.scores')[0]).val());
+                    return;
+                }
+                var param = {
+                    number: data.number,
+                    accident: $('#dropping').is(':checked'),
+                    hrTeamh: $($('.scores')[0]).val(),
+                    hrTeamc: $($('.scores')[1]).val(),
+                    fullTeamh: $($('.scores')[2]).val(),
+                    fullTeamc: $($('.scores')[3]).val(),
+                };
+                admin.req({
+                    url: setter.serviceUrl + '/member/account/single-note',
+                    type: 'post',
+                    data: param,
+                    done: function(res) {
+                        if (res.code == '2018') {
+                            layer.msg('注单手动结算成功', {
+                                offset: '15px',
+                                time: 2000,
+                                icon: 1
+                            });
+                            setTimeout(function() {
+                                $('#search').click();
+                            }, 2000);
+                        } else if (res.code == '1119') {
+                            layer.msg('注单已结算，请勿重复操作', {
+                                offset: '15px',
+                                time: 2000,
+                                icon: 0
+                            });
+                            // setTimeout(function() {
+                            //     $('#search').click();
+                            // }, 2000);
+                        } else {
+                            layer.msg('注单手动结算失败', {
+                                offset: '15px',
+                                time: 2000,
+                                icon: 2
+                            });
+                        }
+                    }
+                });
+            }, function(index) {
+                layer.close(index);
+            });
+        } else if (layEvent === 'cancel') { //取消注单
+            layer.confirm('确定要取消此注单吗？', {
+                title: '提示'
+            }, function(index) {
                 layer.close(index);
                 admin.req({
                     url: setter.serviceUrl + '/member/cancel/single-note',
@@ -208,6 +277,15 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                             setTimeout(function() {
                                 $('#search').click();
                             }, 2000);
+                        } else if (res.code == '1119') {
+                            layer.msg('注单已被取消，请勿重复操作', {
+                                offset: '15px',
+                                time: 2000,
+                                icon: 0
+                            });
+                            setTimeout(function() {
+                                $('#search').click();
+                            }, 2000);
                         } else {
                             layer.msg('注单取消失败', {
                                 offset: '15px',
@@ -218,12 +296,34 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                     }
                 });
             });
-            //同步更新缓存对应的值
-            // obj.update({
-            //     username: '123',
-            //     title: 'xxx'
-            // });
         }
     });
+
+    function checkes(inputArr) {
+        var regs = /^\d+$/,
+            type = true;
+        $.each(inputArr[0], function(i, item) {
+            var val = $(item).val();
+            if (!val) {
+                $('.errortips').text('得分不能为空！').show();
+                // setTimeout(function() {
+                //     $('.errortips').text('得分不能为空！').hide();
+                // }, 2000);
+                type = false;
+                return false;
+            } else if (!regs.test(val)) {
+                $('.errortips').text('得分数只能为0或者正整数！').show();
+                // setTimeout(function() {
+                //     $('.errortips').text('得分不能为空！').hide();
+                // }, 2000);
+                type = false;
+                return false;
+            }
+        });
+        if (type) {
+            $('.errortips').text('').hide();
+        }
+        return type;
+    }
 });
 </script>
