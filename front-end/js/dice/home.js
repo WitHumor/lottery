@@ -171,6 +171,58 @@ var dice = {
 		  content: $('#shuoming')
 		});
 	},
+	betHistory: function(page){
+		this.ajax.get('/dice/bet-history', {"page":page}, function(data) {
+				if (data.code == '2018') {
+					var historyHtml = "<div id='historySection' style='width:100%'><section>" +
+								'<div class="content">' + 
+									'<ul class="betRecord-ul">' + 
+										'<div class="lists">' ;
+									for(var r in data.result.result){
+										var obj = data.result.result[r];
+										historyHtml = historyHtml + "<li>" + 
+											'<div class="flex-cont flex-simple">' + 
+											'<div class="flex-item s-word">' + 
+											'<p class="p-money">第'+obj.term+'期</p>' + 
+											'</div>' + 
+											'<div class="flex-item s-word">' + 
+											'<p class="s-tit">开奖号码：'+obj.result+'点, ' + (obj.result>3?"大":"小") + ", " + (obj.result%2==0?"双":"单")+'</p>' + 
+											'<p class="s-desc">'+obj.bet_time_str+'</p>' + 
+											'</div>' + 
+											'<div class="flex-item s-word">' + 
+											'<p class="s-tit">下注：200 双</p>' + 
+											'<p class="s-desc">赢：180</p>' + 
+											'</div></div></li> ';
+											
+									}
+
+								historyHtml = historyHtml + 		'</div>' + 
+									  '</ul>' + 
+								"</div>" + 
+								"</section></div>";
+							layer.open({
+							  type: 1,
+							  title: false,
+							  closeBtn: 0,
+							  area: '460px',
+							  shadeClose: true,
+							  content: historyHtml
+							});
+				} else {
+					layer.msg('数据获取失败', {
+						time: 2000,
+						icon: 2
+					});
+				}
+			}, function(e) {
+				layer.msg('数据获取失败', {
+					time: 2000,
+					icon: 2
+				});
+				console.log(e);
+			});	
+
+	},
 	initPage: function (){
 		if(dice.dicewait == 0){
 			this.ajax.get('/dice/dice-draw', {}, function(data) {
