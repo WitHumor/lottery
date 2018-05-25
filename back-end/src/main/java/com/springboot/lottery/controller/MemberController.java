@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -165,6 +166,7 @@ public class MemberController {
 	 */
 	@RequestMapping(value = "login-member", method = RequestMethod.POST)
 	@ResponseBody
+	@CrossOrigin(origins = "*")
 	public ObjectResult loginMember(Member member) {
 		Cache cache = getCache();
 		String token = request.getHeader("token");

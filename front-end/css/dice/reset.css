@@ -1,0 +1,23 @@
+/*通用样式*/
+body,h1,h2,h3,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldest,table,td,img,div,dl,dt,dd,input{margin:0;padding:0;font-size:12px;}
+h1{font-weight: bold;line-height: 1.5;}
+h2,h3{line-height: inherit;}
+body{background: #fff;}
+img{border:none;vertical-align: initial;}
+ul{display:block;}
+li{list-style:none;}
+a{text-decoration:none; font-weight: normal;}
+a:link {text-decoration:none;}
+a:visited {text-decoration:none;}
+a:hover {text-decoration:none;}
+a:active {text-decoration:none;}
+input,select,textarea{outline:none;}
+textarea{resize:none}
+
+/*浮动*/
+.left{float:left;display:inline-block;}
+.right{float:right;display:inline-block;}
+
+/*清除浮动、防止溢出*/
+.clearfix:after{content:"";display:block;clear:both;}
+.clearfix{_zoom:l; overflow: hidden;}
