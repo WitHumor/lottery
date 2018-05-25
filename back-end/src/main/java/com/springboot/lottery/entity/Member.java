@@ -18,12 +18,16 @@ public class Member implements Serializable {
 	private String name;
 	// 登录密码
 	private String password;
+	// 权限
+	private String role;
 	// 手机号
 	private String phone;
 	// IP地址
 	private String address;
 	// 余额
 	private String sum;
+	// 邀请码
+	private String invitation_code;
 	// 真实姓名
 	private String real_name;
 	// 取款密码
@@ -83,6 +87,14 @@ public class Member implements Serializable {
 		this.sum = sum;
 	}
 
+	public String getInvitation_code() {
+		return invitation_code;
+	}
+
+	public void setInvitation_code(String invitation_code) {
+		this.invitation_code = invitation_code;
+	}
+
 	public String getReal_name() {
 		return real_name;
 	}
@@ -120,6 +132,14 @@ public class Member implements Serializable {
 
 	public String getToken() {
 		return token;
+	}
+	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public void setToken(String token) {

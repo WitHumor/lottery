@@ -18,18 +18,29 @@ public class TimedTask {
 	
 	@Autowired
 	private MemberController memberController;
-//	
-//	@Scheduled(fixedDelay = 5000)
+	
+//	@Scheduled(fixedDelay = 3000)
 //	public void singleNote() {
 //		System.out.println(Thread.currentThread().getName() + "定时任务启动");
-//		String member = null;
+//		boolean member;
 //		try {
 //			member = memberController.singleNoteAccount();
-//			if(member == null) {
-//				System.out.println("-----");
+//			if(member) {
+//				System.out.println("---------");
 //			}
 //		} catch (ParseException e) {
 //			e.printStackTrace();
+//		}
+//	}
+//	/**
+//	 * 每隔一分钟查询超过24小时未结算的结果
+//	 */
+//	@Scheduled(cron = "0 0/1 * * * ?")
+//	public void amidithionOvertime() {
+//		System.out.println(Thread.currentThread().getName() + "定时任务启动");
+//		boolean amidithion = memberController.amidithionOvertime();
+//		if(amidithion == false) {
+//			System.err.println("无超过24小时未结算数据");
 //		}
 //	}
 }

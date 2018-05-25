@@ -9,9 +9,11 @@
 			member(mid,
 			name,
 			password,
+			role,
 			phone,
 			address,
 			sum,
+			invitation_code,
 			real_name,
 			bank_password,
 			bank_name,
@@ -19,9 +21,11 @@
 	    VALUES(#{mid},
 			#{name},
 			#{password},
+			#{role},
 			#{phone},
 			#{address},
 			#{sum},
+			#{invitation_code},
 			#{real_name},
 			#{bank_password},
 			#{bank_name},
@@ -45,6 +49,8 @@
 			occasion,
 			ior_type,
 			ior_ratio,
+			ratio,
+			strong,
 			state,
 			money,
 			valid_money,
@@ -64,6 +70,8 @@
 			#{occasion},
 			#{ior_type},
 			#{ior_ratio},
+			#{ratio},
+			#{strong},
 			#{state},
 			#{money},
 			#{valid_money},
@@ -86,7 +94,8 @@
 			money,
 			discounts,
 			state,
-			remark)
+			remark,
+			result_remark)
 	    VALUES(#{frid},
 			#{mid},
 			now(),
@@ -99,7 +108,8 @@
 			#{money},
 			#{discounts},
 			#{state},
-			#{remark})
+			#{remark},
+			#{result_remark})
 	</insert>
 	
 	<!-- 20180509根据资金流水表id删除信息 -->
@@ -151,15 +161,29 @@
 			number = #{number}
 	</update>
 	
+	<!-- 20180428会员名验证 -->
+	<select id="verifyMember" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT
+			`name`
+		FROM 
+			member
+		WHERE 1 = 1
+		<if test="_parameter != null and _parameter != ''">
+			AND name = #{name} LIMIT 1 
+		</if>
+	</select>
+	
 	<!-- 20180428查询会员信息 -->
 	<select id="queryMember" resultType="com.springboot.lottery.entity.Member" parameterType="java.util.Map">
 		SELECT
 			mid,
 			name,
 			password,
+			role,
 			phone,
 			address,
 			sum,
+			invitation_code,
 			real_name,
 			bank_password,
 			bank_name,
@@ -172,44 +196,6 @@
 		</if>
 		<if test="name != null and name != ''">
 			AND name = #{name}
-		</if>
-	</select>
-	
-	<!-- 20180507查询注单DTO -->
-	<select id="querySingleNoteDTO" resultType="com.springboot.lottery.dto.SingleNoteDTO" parameterType="java.util.Map">
-		SELECT 
-			sn.snid,
-			sn.mid,
-			sn.bet_time,
-			sn.number,
-			sn.type,
-			sn.league,
-			sn.team_h,
-			sn.team_c,
-			sn.bet,
-			sn.score,
-			sn.bet_type,
-			sn.occasion,
-			sn.ior_type,
-			sn.ior_ratio,
-			sn.state,
-			sn.money,
-			sn.valid_money,
-			sn.deal_money,
-			sn.win_lose,
-			m.sum
-		FROM
-			member m 
-		RIGHT JOIN
-			single_note sn 
-		ON 
-			m.mid = sn.mid 
-		WHERE 1 = 1
-		<if test="state != null and state != ''">
-			AND sn.state = #{state}
-		</if>
-		<if test="betTime != null and betTime != ''">
-			AND sn.bet_time LIKE CONCAT(#{betTime},'%')
 		</if>
 	</select>
 	
@@ -229,6 +215,17 @@
 			fr.discounts,
 			fr.state,
 			fr.remark,
+			fr.result_remark,
+			m.name,
+			m.password,
+			m.role,
+			m.phone,
+			m.address,
+			m.sum,
+			m.invitation_code,
+			m.real_name,
+			m.bank_password,
+			m.bank_name,
 			m.bank_number
 		FROM
 			member m 
@@ -241,7 +238,7 @@
 			AND fr.mid = #{mid}
 		</if>
 		<if test="type != null and type != ''">
-			AND fr.type = #{type}
+			AND fr.currency = #{type}
 		</if>
 		<if test="record != null and record != ''">
 			AND fr.record = #{record}
@@ -255,8 +252,13 @@
 		<if test="endTime != null and endTime != ''">
 			AND fr.time <![CDATA[ <= ]]> #{endTime}
 		</if>
+		<if test="keyword != null and keyword != ''">
+			AND (m.name Like CONCAT('%',#{keyword},'%') 
+			OR fr.number Like CONCAT('%',#{keyword},'%'))
+		</if>
+			order by fr.time desc 
 		<if test="beginIndex != null and pageSize != null and pageSize != 0">
-			order by fr.time desc limit ${beginIndex},${pageSize}
+			limit ${beginIndex},${pageSize}
 		</if>
 	</select>
 	
@@ -265,25 +267,33 @@
 		SELECT
 			count(*)
 		FROM
-			fund_record
+			member m 
+		RIGHT JOIN
+			fund_record fr 
+		ON 
+			m.mid = fr.mid 
 		WHERE 1 = 1
 		<if test="mid != null and mid != ''">
-			AND mid = #{mid}
+			AND fr.mid = #{mid}
 		</if>
 		<if test="type != null and type != ''">
-			AND type = #{type}
+			AND fr.currency = #{type}
 		</if>
 		<if test="record != null and record != ''">
-			AND record = #{record}
+			AND fr.record = #{record}
 		</if>
 		<if test="state != null and state != ''">
-			AND state = #{state}
+			AND fr.state = #{state}
 		</if>
 		<if test="beginTime != null and beginTime != ''">
-			AND time <![CDATA[ >= ]]> #{beginTime}
+			AND fr.time <![CDATA[ >= ]]> #{beginTime}
 		</if>
 		<if test="endTime != null and endTime != ''">
-			AND time <![CDATA[ <= ]]> #{endTime}
+			AND fr.time <![CDATA[ <= ]]> #{endTime}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND (m.name Like CONCAT('%',#{keyword},'%') 
+			OR fr.number Like CONCAT('%',#{keyword},'%'))
 		</if>
 	</select>
 	
@@ -302,7 +312,8 @@
 			money,
 			discounts,
 			state,
-			remark
+			remark,
+			result_remark
 		FROM
 			fund_record 
 		WHERE 1 = 1
@@ -310,7 +321,7 @@
 			AND mid = #{mid}
 		</if>
 		<if test="type != null and type != ''">
-			AND type = #{type}
+			AND currency = #{type}
 		</if>
 		<if test="record != null and record != ''">
 			AND record = #{record}
@@ -327,8 +338,9 @@
 		<if test="endTime != null and endTime != ''">
 			AND time <![CDATA[ <= ]]> #{endTime}
 		</if>
+			order by time desc
 		<if test="beginIndex != null and pageSize != null and pageSize != 0">
-			order by time desc limit ${beginIndex},${pageSize}
+			limit ${beginIndex},${pageSize}
 		</if>
 	</select>
 	
@@ -349,6 +361,8 @@
 			occasion,
 			ior_type,
 			ior_ratio,
+			ratio,
+			strong,
 			state,
 			money,
 			valid_money,
@@ -363,14 +377,17 @@
 		<if test="mid != null and mid != ''">
 			AND mid = #{mid}
 		</if>
-		<if test="betType != null and betType != ''">
-			AND bet_type = #{betType}
-		</if>
 		<if test="number != null and number != ''">
 			AND number = #{number}
 		</if>
 		<if test="state != null and state != ''">
 			AND state = #{state}
+		</if>
+		<if test="states != null and states != ''">
+			AND state IN (${states})
+		</if>
+		<if test="betType != null and betType != ''">
+			AND bet_type = #{betType}
 		</if>
 		<if test="winLose != null and winLose != ''">
 			AND win_lose = #{winLose}
@@ -381,13 +398,97 @@
 		<if test="endTime != null and endTime != ''">
 			AND bet_time <![CDATA[ <= ]]> #{endTime}
 		</if>
+		<if test="betTypes != null and betTypes != ''">
+			AND bet_type Like CONCAT('%',#{betTypes})
+		</if>
 		<if test="keyword != null and keyword != ''">
 			AND (league Like CONCAT('%',#{keyword},'%') 
 			OR team_h Like CONCAT('%',#{keyword},'%') 
 			OR team_c Like CONCAT('%',#{keyword},'%'))
 		</if>
+			order by bet_time desc
 		<if test="beginIndex != null and pageSize != null and pageSize != 0">
-			order by bet_time desc limit ${beginIndex},${pageSize}
+			limit ${beginIndex},${pageSize}
+		</if>
+	</select>
+	
+	<!-- 20180507查询注单DTO -->
+	<select id="querySingleNoteDTO" resultType="com.springboot.lottery.dto.SingleNoteDTO" parameterType="java.util.Map">
+		SELECT 
+			sn.snid,
+			sn.mid,
+			sn.bet_time,
+			sn.number,
+			sn.type,
+			sn.league,
+			sn.team_h,
+			sn.team_c,
+			sn.bet,
+			sn.score,
+			sn.bet_type,
+			sn.occasion,
+			sn.ior_type,
+			sn.ior_ratio,
+			sn.ratio,
+			sn.strong,
+			sn.state,
+			sn.money,
+			sn.valid_money,
+			sn.deal_money,
+			sn.win_lose,
+			m.name,
+			m.password,
+			m.role,
+			m.phone,
+			m.address,
+			m.sum,
+			m.invitation_code,
+			m.real_name,
+			m.bank_password,
+			m.bank_name,
+			m.bank_number
+		FROM
+			member m 
+		RIGHT JOIN
+			single_note sn 
+		ON 
+			m.mid = sn.mid 
+		WHERE 1 = 1
+		<if test="snid != null and snid != ''">
+			AND sn.snid = #{snid}
+		</if>
+		<if test="mid != null and mid != ''">
+			AND sn.mid = #{mid}
+		</if>
+		<if test="betType != null and betType != ''">
+			AND sn.bet_type = #{betType}
+		</if>
+		<if test="number != null and number != ''">
+			AND sn.number = #{number}
+		</if>
+		<if test="state != null and state != ''">
+			AND sn.state = #{state}
+		</if>
+		<if test="winLose != null and winLose != ''">
+			AND sn.win_lose = #{winLose}
+		</if>
+		<if test="beginTime != null and beginTime != ''">
+			AND sn.bet_time <![CDATA[ >= ]]> #{beginTime}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND sn.bet_time <![CDATA[ <= ]]> #{endTime}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND (sn.league Like CONCAT('%',#{keyword},'%') 
+			OR sn.team_h Like CONCAT('%',#{keyword},'%') 
+			OR sn.team_c Like CONCAT('%',#{keyword},'%'))
+		</if>
+		<if test="name != null and name != ''">
+			OR m.name Like CONCAT('%',#{keyword},'%')
+		</if>
+			order by sn.bet_time desc
+		<if test="beginIndex != null and pageSize != null and pageSize != 0">
+			limit ${beginIndex},${pageSize}
 		</if>
 	</select>
 	
@@ -396,36 +497,43 @@
 		SELECT
 			count(*)
 		FROM
-			single_note 
+			member m 
+		RIGHT JOIN
+			single_note sn 
+		ON 
+			m.mid = sn.mid 
 		WHERE 1 = 1
 		<if test="snid != null and snid != ''">
-			AND snid = #{snid}
+			AND sn.snid = #{snid}
 		</if>
 		<if test="mid != null and mid != ''">
-			AND mid = #{mid}
+			AND sn.mid = #{mid}
 		</if>
 		<if test="betType != null and betType != ''">
-			AND bet_type = #{betType}
+			AND sn.bet_type = #{betType}
 		</if>
 		<if test="number != null and number != ''">
-			AND number = #{number}
+			AND sn.number = #{number}
 		</if>
 		<if test="state != null and state != ''">
-			AND state = #{state}
+			AND sn.state = #{state}
 		</if>
 		<if test="winLose != null and winLose != ''">
-			AND win_lose = #{winLose}
+			AND sn.win_lose = #{winLose}
 		</if>
 		<if test="beginTime != null and beginTime != ''">
-			AND bet_time <![CDATA[ >= ]]> #{beginTime}
+			AND sn.bet_time <![CDATA[ >= ]]> #{beginTime}
 		</if>
 		<if test="endTime != null and endTime != ''">
-			AND bet_time <![CDATA[ <= ]]> #{endTime}
+			AND sn.bet_time <![CDATA[ <= ]]> #{endTime}
 		</if>
 		<if test="keyword != null and keyword != ''">
-			AND (league Like CONCAT('%',#{keyword},'%') 
-			OR team_h Like CONCAT('%',#{keyword},'%') 
-			OR team_c Like CONCAT('%',#{keyword},'%'))
+			AND (sn.league Like CONCAT('%',#{keyword},'%') 
+			OR sn.team_h Like CONCAT('%',#{keyword},'%') 
+			OR sn.team_c Like CONCAT('%',#{keyword},'%'))
+		</if>
+		<if test="name != null and name != ''">
+			OR m.name Like CONCAT('%',#{keyword},'%')
 		</if>
 	</select>
 </mapper>

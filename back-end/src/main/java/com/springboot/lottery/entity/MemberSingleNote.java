@@ -40,6 +40,10 @@ public class MemberSingleNote implements Serializable {
 	private String ior_type;
 	// 比率
 	private String ior_ratio;
+	// 赔率
+	private String ratio;
+	// 让球方
+	private String strong;
 	// 状态
 	private String state;
 	// 投注金额
@@ -191,6 +195,14 @@ public class MemberSingleNote implements Serializable {
 		return win_lose;
 	}
 
+	public String getStrong() {
+		return strong;
+	}
+
+	public void setStrong(String strong) {
+		this.strong = strong;
+	}
+
 	public void setWin_lose(String win_lose) {
 		this.win_lose = win_lose;
 	}
@@ -201,5 +213,13 @@ public class MemberSingleNote implements Serializable {
 
 	public void setScore(String score) {
 		this.score = score;
+	}
+
+	public String getRatio() {
+		return ratio;
+	}
+
+	public void setRatio(String ratio) {
+		this.ratio = ratio;
 	}
 }

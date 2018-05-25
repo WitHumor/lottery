@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,15 @@ public class MemberServiceImpl implements MemberService {
 	public int addMember(Member member) {
 		return memberDao.addMember(member);
 	}
-
+	/**
+	 * 会员名验证
+	 * @param name
+	 * @return
+	 */
+	@Override
+	public String verifyMember(String name) {
+		return memberDao.verifyMember(name);
+	}
 	/**
 	 * 会员登录
 	 * 
@@ -69,7 +78,8 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	@Override
 	public int updateSum(Map<String, Object> map) {
-		return memberDao.updateSum(map);
+			int updateSum = memberDao.updateSum(map);
+			return updateSum;
 	}
 
 	/**
@@ -124,13 +134,25 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	@Override
 	public Page<Map<String, Object>> listFundRecord(Map<String, Object> map) {
+		// 根据条件获取数据
 		List<FundRecordDTO> list = memberDao.listFundRecord(map);
 		String record = (String)map.get("record");
-		List<Map<String, Object>> listByFundRecords = toListByFundRecords(list,record);
+		String mid = (String)map.get("mid");
+		// 根据会员id是否为空判断权限，根据record判断是存取款
+		List<Map<String, Object>> listByFundRecords = toListByFundRecords(list, record, mid);
+		// 根据条件查询条数
 		int total = memberDao.loadFundRecordTotal(map);
-		Page<Map<String, Object>> page = new Page<Map<String, Object>>((int)map.get("pageNo"), (int)map.get("pageSize"), total,listByFundRecords);
-		return page;
+		if(map.get("pageNo") == null || map.get("pageSize") == null) {
+			// 不进行分页
+			Page<Map<String, Object>> page = new Page<Map<String, Object>>(total,listByFundRecords);
+			return page;
+		} else {
+			// 进行分页
+			Page<Map<String, Object>> page = new Page<Map<String, Object>>((int)map.get("pageNo"), (int)map.get("pageSize"), total,listByFundRecords);
+			return page;
+		}
 	}
+	
 	/**
 	 * 查询注单记录
 	 * 
@@ -139,11 +161,44 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	@Override
 	public Page<Map<String, Object>> listSingleNote(Map<String, Object> map) {
-		List<MemberSingleNote> list = memberDao.querySingleNote(map);
-		List<Map<String, Object>> listBySingleNotes = toListBySingleNotes(list);
+		// 获取会员id
+		String mid = (String)map.get("mid");
+		String betType = (String)map.get("betType");
+		String state = (String)map.get("state");
+		List<Map<String, Object>> listBySingleNotes = null;
+		if(StringUtils.isNotBlank(betType)) {
+			// 根据FT与BK查询滚球
+			if(betType.equals("FT") || betType.equals("BK")) {
+				if(state.equals("0")) {
+					String states = "'0','2'";
+					map.put("states", states);
+				}
+				map.put("betTypes", betType);
+				map.remove("state");
+				map.remove("betType");
+			}
+		}
+		// 根据会员id是否为空判断权限
+		if(StringUtils.isBlank(mid)) {
+			// 增加用户名查询
+			map.put("name", map.get("keyword"));
+			List<SingleNoteDTO> list = memberDao.querySingleNoteDTO(map);
+			listBySingleNotes = toListBySingleNoteDTO(list);
+		}else {
+			List<MemberSingleNote> list = memberDao.querySingleNote(map);
+			listBySingleNotes = toListBySingleNotes(list);	
+		}
+		// 根据条件查询条数
 		int total = memberDao.loadSingleNoteTotal(map);
-		Page<Map<String, Object>> page = new Page<Map<String, Object>>((int)map.get("pageNo"), (int)map.get("pageSize"), total,listBySingleNotes);
-		return page;
+		if(map.get("pageNo") == null || map.get("pageSize") == null) {
+			// 不进行分页
+			Page<Map<String, Object>> page = new Page<Map<String, Object>>(total,listBySingleNotes);
+			return page;
+		} else {
+			// 进行分页
+			Page<Map<String, Object>> page = new Page<Map<String, Object>>((int)map.get("pageNo"), (int)map.get("pageSize"), total,listBySingleNotes);
+			return page;
+		}
 	}
 	/**
 	 * 查询注单DTO
@@ -193,15 +248,45 @@ public class MemberServiceImpl implements MemberService {
 	 * @param dtos
 	 * @return
 	 */
-	private List<Map<String, Object>> toListByFundRecords(List<FundRecordDTO> dtos, String record) {
+	private List<Map<String, Object>> toListByFundRecords(List<FundRecordDTO> dtos, String record, String mid) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		if (dtos != null) {
 			for (FundRecordDTO dto : dtos) {
-				Map<String, Object> map = toMapByFundRecord(dto, record);
+				Map<String, Object> map = toMapByFundRecord(dto, record, mid);
 				list.add(map);
 			}
 		}
 		return list;
+	}
+	
+	/**
+	 * FundRecordDTO 放入 Map<String, Object> 只保留前端需要的字段
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	private Map<String, Object> toMapByFundRecord(FundRecordDTO dto, String record, String mid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String time = format.format(dto.getTime());
+		map.put("time", time);// 时间
+		map.put("number", dto.getNumber()); // 订单号
+		map.put("money", dto.getMoney()); // 金额
+		map.put("state", dto.getState());// 状态
+		map.put("resultRemark", dto.getResult_remark());// 结果备注
+		// 如果是提现记录添加两条信息，返回给前端
+		if (record.equals("1")) {
+			map.put("moneyAddress", dto.getMoney_address());// 钱包地址
+			map.put("remark", dto.getRemark());// 备注
+		}
+		if (record.equals("0")) {
+			map.put("type", dto.getCurrency());// 充值货币类型
+		}
+		if(StringUtils.isBlank(mid)) {
+			map.put("currencyCount", dto.getCurrency_count());// 货币个数
+			map.put("name", dto.getName());// 会员名
+		}
+		return map;
 	}
 	/**
 	 * List<SingleNote> 转为 List<Map<String, Object>> 只保留前端需要的字段
@@ -221,31 +306,6 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	/**
-	 * FundRecordDTO 放入 Map<String, Object> 只保留前端需要的字段
-	 * 
-	 * @param dto
-	 * @return
-	 */
-	private Map<String, Object> toMapByFundRecord(FundRecordDTO dto, String record) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String time = format.format(dto.getTime());
-		map.put("time", time);// 时间
-		map.put("number", dto.getNumber()); // 订单号
-		map.put("money", dto.getMoney()); // 金额
-		map.put("state", dto.getState());// 状态
-		// 如果是提现记录添加两条信息，返回给前端
-		if (record.equals("1")) {
-			map.put("moneyAddress", dto.getMoney_address());// 钱包地址
-			map.put("remark", dto.getRemark());// 备注
-		}
-		if (record.equals("0")) {
-			map.put("type", dto.getCurrency());// 充值货币类型
-		}
-		return map;
-	}
-	
-	/**
 	 * MemberSingleNote 放入 Map<String, Object> 只保留前端需要的字段
 	 * 
 	 * @param singleNote
@@ -255,15 +315,62 @@ public class MemberServiceImpl implements MemberService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String time = format.format(singleNote.getBet_time());
+		map.put("number", singleNote.getNumber());// 注单号
 		map.put("betTime", time);// 下注时间
 		map.put("league", singleNote.getLeague());// 联赛
 		map.put("teamh", singleNote.getTeam_h());// 主场
 		map.put("teamc", singleNote.getTeam_c());// 客场
 		map.put("betType", singleNote.getBet_type());// 下注类型 足球|篮球
+		map.put("ratio", singleNote.getRatio());// 赔率
+		map.put("bet", singleNote.getBet());// 下注赢方
 		map.put("state", singleNote.getState());// 结算状态
 		map.put("money", singleNote.getMoney());// 下注金额
 		map.put("dealMoney", singleNote.getDeal_money());// 交易金额
 		map.put("winLose", singleNote.getWin_lose());// 输赢状态
+		return map;
+	}
+	/**
+	 * List<FundRecordDTO> 转为 List<Map<String, Object>> 只保留前端需要的字段
+	 * 
+	 * @param dtos
+	 * @return
+	 */
+	private List<Map<String, Object>> toListBySingleNoteDTO(List<SingleNoteDTO> dtos) {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		if (dtos != null) {
+			for (SingleNoteDTO dto : dtos) {
+				Map<String, Object> map = toMapBySingleNoteDTO(dto);
+				list.add(map);
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * MemberSingleNote 放入 Map<String, Object> 只保留前端需要的字段
+	 * 
+	 * @param singleNote
+	 * @return
+	 */
+	private Map<String, Object> toMapBySingleNoteDTO(SingleNoteDTO singleNote) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String time = format.format(singleNote.getBet_time());
+		map.put("snid", singleNote.getSnid());// 注单id
+		map.put("number", singleNote.getNumber());// 注单号
+		map.put("mid", singleNote.getMid());// 会员id
+		map.put("betTime", time);// 下注时间
+		map.put("league", singleNote.getLeague());// 联赛
+		map.put("teamh", singleNote.getTeam_h());// 主场
+		map.put("teamc", singleNote.getTeam_c());// 客场
+		map.put("ratio", singleNote.getRatio());// 赔率
+		map.put("bet", singleNote.getBet());// 下注赢方
+		map.put("betType", singleNote.getBet_type());// 下注类型 足球|篮球
+		map.put("state", singleNote.getState());// 结算状态
+		map.put("money", singleNote.getMoney());// 下注金额
+		map.put("dealMoney", singleNote.getDeal_money());// 交易金额
+		map.put("winLose", singleNote.getWin_lose());// 输赢状态
+		map.put("name", singleNote.getName());// 会员名
 		return map;
 	}
 }
