@@ -49,7 +49,7 @@
 
 .page .rows{font-size:15px}
 .page .num{font-size:15px}
-.page .next{font-size:15px}
+.page .next{font-size:15px;padding:5px;}
 .page .current{font-size:15px}
 .page .end{font-size:15px}
 	.container {
@@ -404,6 +404,7 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
 			text-decoration: none;
 			color: #999;
         }
+		
 
 		
         p.p-money{ color: #3D3459; font-weight: 700;}

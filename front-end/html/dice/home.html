@@ -32,7 +32,7 @@
 				</div>
 			</div>
 			<div class="weui-flex" style="text-align: center;margin-top: 15px;">
-				<div class="weui-flex__item"> <a href="javascript:void(0)" id="history" class="top-a" onclick='dice.betHistory(1);'>历史记录</a></div>
+				<div class="weui-flex__item"> <a href="myhistory.html" id="history" class="top-a">历史记录</a></div>
 				<div class="weui-flex__item">
 					<div class="top-a">
 						<div style="color:#fff">本次压注：<span class="type" id="show_number" style="color:#FFF201"> 无  </span></div>
@@ -82,15 +82,15 @@
 					<p class="weui-tabbar__label">时时彩</p>
 				</a> -->
 
-				<a href="/" class="weui-tabbar__item">
+				<a href="home.html" class="weui-tabbar__item">
 					<i class="dice-icon-2 weui-tabbar__icon "></i>
 					<p class="weui-tabbar__label">猜大小</p>
 				</a>
-				<a href="/index.php?m=&amp;c=Index&amp;a=usercode" class="weui-tabbar__item">
+				<a href="share.html" class="weui-tabbar__item">
 					<i class="myShare-icon-1 weui-tabbar__icon "></i>
 					<p class="weui-tabbar__label">分享赚钱</p>
 				</a>
-				<a href="/index.php?m=&amp;c=Index&amp;a=ucenter" class="weui-tabbar__item">
+				<a href="me.html" class="weui-tabbar__item">
 					<i class="personCenter-icon-1 weui-tabbar__icon "></i>
 					<p class="weui-tabbar__label">个人中心</p>
 				</a>
@@ -135,39 +135,9 @@
 		<div id='shuoming' style='display:none;width:100%'>
 			<img src="../../img/dice/457684782019572638.jpg" border='0'> 
 		</div>
-
-		<div id='historySection' style='width:100%'>
-		<section>
-			<div class="content">
-				<ul class="betRecord-ul">
-					<div class="lists">
-						<li>
-							<div class="flex-cont flex-simple">
-								<div class="flex-item s-word">
-									<p class="p-money">329期</p>
-								</div>
-								<div class="flex-item s-word">
-									<p class="s-tit">开奖号码：1</p>
-									<p class="s-desc">2018-05-24 19:53</p>
-								</div>
-								<div class="flex-item s-word">
-									<p class="s-tit">下注：200 双</p>
-									<p class="s-desc">赢：180</p>
-								</div>
-									
-							</div>
-						</li>           
-					</div>
-				   
-				</ul>
-
-		<input type="hidden" id="page" value="3">
-		  <div class="page" style=" padding:10px;margin-bottom: 30px;">
-		<div><span class="rows">共 329 条记录</span>   <span class="current">1</span><a class="num" href="/bakup/index.php?m=&c=Index&a=lishi&p=2">2</a><a class="num" href="/bakup/index.php?m=&c=Index&a=lishi&p=3">3</a><a class="num" href="/bakup/index.php?m=&c=Index&a=lishi&p=4">4</a><a class="num" href="/bakup/index.php?m=&c=Index&a=lishi&p=5">5</a><a class="num" href="/bakup/index.php?m=&c=Index&a=lishi&p=6">6</a><a class="num" href="/bakup/index.php?m=&c=Index&a=lishi&p=7">7</a><a class="num" href="/bakup/index.php?m=&c=Index&a=lishi&p=8">8</a><a class="num" href="/bakup/index.php?m=&c=Index&a=lishi&p=9">9</a><a class="num" href="/bakup/index.php?m=&c=Index&a=lishi&p=10">10</a><a class="num" href="/bakup/index.php?m=&c=Index&a=lishi&p=11">11</a> <a class="next" href="/bakup/index.php?m=&c=Index&a=lishi&p=2">>></a> <a class="end" href="/bakup/index.php?m=&c=Index&a=lishi&p=22">22</a></div></div>
-		</section>
-		</div>
 	<script src="../../lib/jquery-3.3.1.min.js"></script>
 	 <script src="../../plugins/layer/layer.min.js"></script>
+	<script src="../../js/dice/com.js"></script>
 	<script src="../../js/dice/home.js"></script>
  </body>
 </html>

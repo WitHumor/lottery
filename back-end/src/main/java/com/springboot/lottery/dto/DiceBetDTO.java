@@ -1,11 +1,11 @@
-package com.springboot.lottery.entity;
+package com.springboot.lottery.dto;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.springboot.lottery.util.DiceBetUtil;
 
-public class DiceBet {
+public class DiceBetDTO {
 	private Integer id;
 	private String mid;
 	private Integer term;
@@ -16,6 +16,13 @@ public class DiceBet {
 	private Date draw_time;
 	private Integer draw_term;
 	private Double win_money;
+	private Integer result;
+	public Integer getResult() {
+		return result;
+	}
+	public void setResult(Integer result) {
+		this.result = result;
+	}
 	public String getWin() {
 		return win;
 	}
@@ -23,7 +30,32 @@ public class DiceBet {
 		return bet_time;
 	}
 	
+
+	public String getBet_time_str() {
+		if(this.getBet_time() != null) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			return format.format(this.getBet_time());
+		}else {return "";}
+		
+	}
 	
+	public String getBet_name() {
+		String rt = "";
+		if(this.bet == DiceBetUtil.dan) {
+			rt = "单";
+		}else if(this.bet == DiceBetUtil.shuang) {
+			rt = "双";
+		}else if(this.bet == DiceBetUtil.da) {
+			rt = "大";
+		}else if(this.bet == DiceBetUtil.xiao) {
+			rt = "小";
+		}else {
+			rt = this.bet + "点";
+		}
+		
+			
+			return rt;
+	}
 	public void setBet_time(Date bet_time) {
 		this.bet_time = bet_time;
 	}

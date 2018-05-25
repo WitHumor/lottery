@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.springboot.lottery.dto.DiceBetDTO;
+import com.springboot.lottery.dto.DiceDrawBetDTO;
 import com.springboot.lottery.entity.DiceBet;
 import com.springboot.lottery.entity.DiceDraw;
 import com.springboot.lottery.entity.Member;
@@ -25,4 +26,8 @@ public interface DiceService {
 	void rewardMember(DiceDraw current, int result, DiceBet db);
 	
 	List<DiceBetDTO> queryDiceBetDTO(Map<String, Object> map);
+	
+	List<DiceDrawBetDTO> queryDiceDrawBetDTO(Map<String, Object> map);
+	
+	int queryDiceDrawBetTotal(Map<String, Object> map);
 }

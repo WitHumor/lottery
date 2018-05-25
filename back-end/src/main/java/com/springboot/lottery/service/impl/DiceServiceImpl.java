@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.lottery.dto.DiceBetDTO;
+import com.springboot.lottery.dto.DiceDrawBetDTO;
 import com.springboot.lottery.entity.DiceBet;
 import com.springboot.lottery.entity.DiceDraw;
 import com.springboot.lottery.entity.Member;
@@ -89,6 +90,16 @@ public class DiceServiceImpl implements DiceService {
 	public List<DiceBetDTO> queryDiceBetDTO(Map<String, Object> map){
 		
 		return diceDao.queryDiceBetDTO(map);
+	}
+	
+	public List<DiceDrawBetDTO> queryDiceDrawBetDTO(Map<String, Object> map){
+		
+		return diceDao.queryDiceDrawBetDTO(map);
+	}
+	
+	public int  queryDiceDrawBetTotal(Map<String, Object> map) {
+		
+		return diceDao.queryDiceDrawBetTotal(map);
 	}
 	
 	
