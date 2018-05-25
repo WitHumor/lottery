@@ -1,8 +1,8 @@
 package com.springboot.lottery.util;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.springboot.lottery.controller.MemberController;
+import com.springboot.lottery.entity.DiceBet;
 import com.springboot.lottery.entity.DiceDraw;
 import com.springboot.lottery.service.DiceService;
 
@@ -112,36 +112,66 @@ public class DiceTimedTask {
 		//100000
 		while(draw <= 0) {
 			draw = rand.nextInt(6) + 1;
-			if(draw == 1 && one_win>0){
-				win = one_win;
-				break;
+			if(draw == 1 && one_win>DiceBetUtil.single_win_limit){
+				double temp_win = DiceBetUtil.total_win + one_win;
+				if(temp_win > DiceBetUtil.total_win_limit) {
+					DiceBetUtil.total_win = DiceBetUtil.total_win + one_win;
+					win = one_win;
+					break;
+				}
 			} 
-			if(draw == 2 && two_win > 0) {
-				win = two_win;
-				break;
+			if(draw == 2 && two_win > DiceBetUtil.single_win_limit) {
+				double temp_win = DiceBetUtil.total_win + two_win;
+				if(temp_win > DiceBetUtil.total_win_limit) {
+					DiceBetUtil.total_win = DiceBetUtil.total_win + two_win;
+					win = two_win;
+					break;
+				}
 			}
-			if(draw == 3 && three_win > 0){
-				win = three_win;
-				break;
+			if(draw == 3 && three_win > DiceBetUtil.single_win_limit){
+				double temp_win = DiceBetUtil.total_win + three_win;
+				if(temp_win > DiceBetUtil.total_win_limit) {
+					DiceBetUtil.total_win = DiceBetUtil.total_win + three_win;
+					win = three_win;
+					break;
+				}
 			}
-			if(draw == 4 && four_win > 0){
-				win = four_win;
-				break;
+			if(draw == 4 && four_win > DiceBetUtil.single_win_limit){
+				double temp_win = DiceBetUtil.total_win + four_win;
+				if(temp_win > DiceBetUtil.total_win_limit) {
+					DiceBetUtil.total_win = DiceBetUtil.total_win + four_win;
+					win = four_win;
+					break;
+				}
 			}
-			if(draw == 5 && five_win > 0){
-				win = five_win;
-				break;
+			if(draw == 5 && five_win > DiceBetUtil.single_win_limit){
+				double temp_win = DiceBetUtil.total_win + five_win;
+				if(temp_win > DiceBetUtil.total_win_limit) {
+					DiceBetUtil.total_win = DiceBetUtil.total_win + five_win;
+					win = five_win;
+					break;
+				}
 			}
-			if(draw == 6 && six_win > 0) {
-				win = six_win;
-				break;
+			if(draw == 6 && six_win > DiceBetUtil.single_win_limit) {
+				double temp_win = DiceBetUtil.total_win + six_win;
+				if(temp_win > DiceBetUtil.total_win_limit) {
+					DiceBetUtil.total_win = DiceBetUtil.total_win + six_win;
+					win = six_win;
+					break;
+				}
 			}
 			
 		}
 		
 		
 		diceService.genereateNewDiceDraw(current, draw,win);
-		//TODO 
+		q = new HashMap<String,Object>();
+		q.put("term", current.getCurrent_term());
+		List<DiceBet> dbs = diceService.queryDiceBet(q);
+		for(DiceBet db:dbs) {
+			
+			diceService.rewardMember(current, draw, db);
+		}
 		
 		DiceBetUtil.current_term = current.getCurrent_term() + 1;
 		DiceBetUtil.last_term = current.getCurrent_term() ;

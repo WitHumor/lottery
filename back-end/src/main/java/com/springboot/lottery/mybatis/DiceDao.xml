@@ -23,14 +23,31 @@
 			term,
 			bet,
 			bet_value,
-			win)
+			win,
+			bet_time,
+			draw_time,
+			draw_term,
+			win_money)
 	    VALUES(#{mid},
 			#{term},
 			#{bet},
 			#{bet_value},
-			#{win})
+			#{win},
+			#{bet_time},
+			#{draw_time},
+			#{draw_term},
+			#{win_money})
 	</insert>
 		
+	<update id="updateDiceBet" parameterType="com.springboot.lottery.entity.DiceBet">
+		UPDATE
+			dice_bet d
+		SET
+		   d.win = #{win},d.draw_time=#{draw_time},d.draw_term=#{draw_term},d.win_money=#{win_money}
+		WHERE
+		    d.id = #{id}
+	</update>
+	
 	<update id="updateDiceDraw" parameterType="java.util.Map">
 		UPDATE
 			dice_draw d
@@ -39,7 +56,6 @@
 		WHERE
 		    d.id = #{id}
 	</update>
-	
 	
 	<select id="queryDiceDraw" resultType="com.springboot.lottery.entity.DiceDraw" parameterType="java.util.Map">
 		SELECT * FROM 
@@ -60,5 +76,62 @@
 			and term=${term}
 		</if>
 		group by bet
+	</select>
+	
+	<select id="queryDiceBet" resultType="com.springboot.lottery.entity.DiceBet" parameterType="java.util.Map">
+		SELECT * FROM 
+		dice_bet 
+		WHERE 1 = 1
+		<if test="mid != null">
+			and mid = #{mid}
+		</if>
+		<if test="history != null">
+			and win is not null
+		</if>
+		<if test="term != null and term != 0">
+			and term = ${term}
+		</if>
+		<if test="beginIndex != null and pageSize != null and pageSize != 0">
+			order by id desc limit ${beginIndex},${pageSize}
+		</if>	
+	</select>
+	<select id="queryDiceBetDTO" resultType="com.springboot.lottery.dto.DiceBetDTO" parameterType="java.util.Map">
+		SELECT b.*,d.result FROM 
+		dice_bet b,dice_draw d
+		where b.term=d.current_term
+		<if test="mid != null">
+			and mid = #{mid}
+		</if>
+		<if test="history != null">
+			and win is not null
+		</if>
+		<if test="term != null and term != 0">
+			and term = ${term}
+		</if>
+		<if test="beginIndex != null and pageSize != null and pageSize != 0">
+			order by id desc limit ${beginIndex},${pageSize}
+		</if>	
 	</select>	
+	<select id="queryDiceBetTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT count(*) FROM 
+		dice_bet 
+		WHERE 1 = 1
+		<if test="mid != null">
+			and mid = #{mid}
+		</if>
+		<if test="history != null">
+			and win is not null
+		</if>
+		<if test="term != null and term != 0">
+			and term = ${term}
+		</if>
+	</select>
+	<update id="updateSum" parameterType="java.util.Map">
+		UPDATE
+			member m
+		SET
+		   m.sum = m.sum + #{sum} 
+		WHERE
+		    m.mid = #{mid}
+	</update>		
 </mapper>

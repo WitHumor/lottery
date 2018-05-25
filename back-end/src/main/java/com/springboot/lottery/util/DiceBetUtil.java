@@ -22,11 +22,24 @@ public class DiceBetUtil {
 	
 	public static final int da = 10;
 	
+	public static final double danshuang = 1.9;
+	
+	public static final double daxiao = 1.9;
+	
+	public static final double number = 5;
 	
 	public static final int dice_draw_minutes = 1;
+	
+	public static double total_win = 0;
+	
+	public static final int total_win_limit = -5000;
+	
+	public static final int single_win_limit = -1000;
 	
 	public static int current_term = 0;
 	public static int last_term = 0;
 	public static int last_term_result = 0;
 	public static boolean drawing = false;
+	
+	public static final int page_size = 5;
 }

@@ -1,46 +1,86 @@
 package com.springboot.lottery.entity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DiceBet {
-	private int id;
-	private int mid;
-	private int term;
-	private int bet;
-	private double bet_value;
+	private Integer id;
+	private String mid;
+	private Integer term;
+	private Integer bet;
+	private Double bet_value;
 	private String win;
+	private Date bet_time;
+	private Date draw_time;
+	private Integer draw_term;
+	private Double win_money;
 	public String getWin() {
 		return win;
+	}
+	public Date getBet_time() {
+		return bet_time;
+	}
+	
+	public String getBet_time_str() {
+		if(this.getBet_time() != null) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			return format.format(this.getBet_time());
+		}else {return "";}
+		
+	}
+	public void setBet_time(Date bet_time) {
+		this.bet_time = bet_time;
+	}
+	public Date getDraw_time() {
+		return draw_time;
+	}
+	public void setDraw_time(Date draw_time) {
+		this.draw_time = draw_time;
+	}
+	public Integer getDraw_term() {
+		return draw_term;
+	}
+	public void setDraw_term(Integer draw_term) {
+		this.draw_term = draw_term;
+	}
+	public Double getWin_money() {
+		return win_money;
+	}
+	public void setWin_money(Double win_money) {
+		this.win_money = win_money;
 	}
 	public void setWin(String win) {
 		this.win = win;
 	}
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-	public int getMid() {
+
+	public String getMid() {
 		return mid;
 	}
-	public void setMid(int mid) {
+	public void setMid(String mid) {
 		this.mid = mid;
 	}
-	public int getTerm() {
+	public Integer getTerm() {
 		return term;
 	}
-	public void setTerm(int term) {
+	public void setTerm(Integer term) {
 		this.term = term;
 	}
-	public int getBet() {
+	public Integer getBet() {
 		return bet;
 	}
-	public void setBet(int bet) {
+	public void setBet(Integer bet) {
 		this.bet = bet;
 	}
-	public double getBet_value() {
+	public Double getBet_value() {
 		return bet_value;
 	}
-	public void setBet_value(double bet_value) {
+	public void setBet_value(Double bet_value) {
 		this.bet_value = bet_value;
 	}
 	

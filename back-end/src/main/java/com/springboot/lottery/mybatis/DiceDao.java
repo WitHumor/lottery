@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.MapKey;
 
+import com.springboot.lottery.dto.DiceBetDTO;
 import com.springboot.lottery.entity.DiceBet;
 import com.springboot.lottery.entity.DiceDraw;
 
@@ -37,5 +38,14 @@ public interface DiceDao {
 	int updateDiceDraw(Map<String, Object> map);
 	
 	int addDiceBet(DiceBet diceBet);
-
+	
+	List<DiceBet> queryDiceBet(Map<String, Object> map);
+	
+	int updateSum(Map<String, Object> map);
+	
+	int updateDiceBet(DiceBet diceBet);
+	
+	int queryDiceBetTotal(Map<String, Object> map);
+	List<DiceBetDTO> queryDiceBetDTO(Map<String, Object> map);
+	
 }
