@@ -27,7 +27,7 @@
 			<div class="weui-flex">
 				<div class="weui-flex__item" style="margin: 10px auto;">
 					<div class="wrap">
-						<div id="result_dice" class="dice dice_1" style="cursor: pointer;"></div>
+						<div id="result_dice" class="dice dice_e" style="cursor: pointer;"></div>
 					</div>
 				</div>
 			</div>
@@ -58,7 +58,11 @@
 				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="dice.select_num(9,'小')" class="bigAndSmall" id="small" data-num="1"><span class="wrap-a-span">小</span><br><span class="fontSize">1赔1.9</span></span></div>
 			</div>
 			<div class="weui-flex">
-				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="dice.select_num(7,'单')" class="bigAndSmall" id="big" data-num="1"><span class="wrap-a-span">单</span><br><span class="fontSize">1赔1.9</span></span></div>
+				<div class="weui-flex__item wrap-a-bigAndSmall">
+					<span onclick="dice.select_num(7,'单')" class="bigAndSmall" id="big" data-num="1">
+						<span class="wrap-a-span">单</span><br>
+						<span class="fontSize">1赔1.9</span>
+					</span></div>
 				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="dice.select_num(8,'双')" class="bigAndSmall" id="small" data-num="1"><span class="wrap-a-span">双</span><br><span class="fontSize">1赔1.9</span></span></div>
 			</div>
 			<div class="forms">
@@ -97,41 +101,67 @@
 			</div>
 		</nav>
 
-
-
-	 </div>
-
-
-		  <div id='bet' style='display:none;width:100%'>
-			<div style='background-color:rgba(0, 0, 0, 0.59);border-radius: 10px;'> 
+		  <div id='bet' style='display:none;width:100%;margin: auto;max-width:500px;'>
+			<div style='background-color:#686868;border-radius: 10px;'> 
 				<div style='color:#fff;margin:auto;text-align: center;  padding: 10px 0;'>
 					账户余额：<span id='account'></span> 本次押注：<span id='bet_name'></span>
 				</div>
 				<div class="weui-flex" id="img" style="">
-					<div class="weui-flex__item" onclick="dice.add_bet(10)">
-						<a href="javascript:void(0);" data-num="5"><img src="../../../img/dice/jetton-10.png" data-num="10" class="jetton-img"></a></div>
-					<div class="weui-flex__item" onclick="dice.add_bet(20)">
-						<a href="javascript:void(0);" data-num="10"><img src="../../../img/dice/jetton-20.png" data-num="20" class="jetton-img"></a></div>
-					<div class="weui-flex__item" onclick="dice.add_bet(50)"><a href="javascript:void(0);" data-num="20"><img src="../../../img/dice/jetton-50.png" data-num="50" class="jetton-img"></a></div>
-					<div class="weui-flex__item" onclick="dice.add_bet(100)">
-						<a href="javascript:void(0);" data-num="50"><img src="../../../img/dice/jetton-100.png" data-num="100" class="jetton-img"></a></div>
+					<div class="weui-flex__item">
+						<div><a href="javascript:void(0);" onclick="dice.add_bet(10)"><img src="../../../img/dice/jetton-10.png" data-num="10" class="jetton-img"></a></div>
+						<div style="text-align: center; padding-top: 10px;">
+						<a href="javascript:dice.add_bet(10);" class="weui-btn weui-btn_mini weui-btn_primary">+</a>&nbsp;<a href="javascript:dice.reduce_bet(10);" class="weui-btn weui-btn_mini weui-btn_primary">-</a> </div>
+					</div>
+					<div class="weui-flex__item">
+						<div><a href="javascript:void(0);"onclick="dice.add_bet(20)"><img src="../../../img/dice/jetton-20.png" data-num="20" class="jetton-img"></a></div>
+						<div style="text-align: center;  padding-top: 10px;">
+						<a href="javascript:dice.add_bet(20);" class="weui-btn weui-btn_mini weui-btn_primary">+</a>&nbsp;<a href="javascript:dice.reduce_bet(20);" class="weui-btn weui-btn_mini weui-btn_primary">-</a> </div>
+					</div>
+					<div class="weui-flex__item">
+						<div><a href="javascript:void(0);" onclick="dice.add_bet(50)"><img src="../../../img/dice/jetton-50.png" data-num="50" class="jetton-img"></a></div>
+						<div style="text-align: center; padding-top: 10px">
+						<a href="javascript:dice.add_bet(50);" class="weui-btn weui-btn_mini weui-btn_primary">+</a>&nbsp;<a href="javascript:dice.reduce_bet(50);" class="weui-btn weui-btn_mini weui-btn_primary">-</a> </div>
+					</div>
+					<div class="weui-flex__item">
+						<div><a href="javascript:void(0);"  onclick="dice.add_bet(100)"><img src="../../../img/dice/jetton-100.png" data-num="100" class="jetton-img"></a></div>
+						<div style="text-align: center; padding-top: 10px">
+						<a href="javascript:dice.add_bet(100);" class="weui-btn weui-btn_mini weui-btn_primary">+</a>&nbsp;<a href="javascript:dice.reduce_bet(100);" class="weui-btn weui-btn_mini weui-btn_primary">-</a> </div>
+					</div>
 				</div>
 				<div class="weui-flex">
-					
-					<div class="weui-flex__item" onclick="dice.add_bet(150)">
-						<a href="javascript:void(0);" data-num="150"><img src="../../../img/dice/jetton-150.png" data-num="150" class="jetton-img"></a></div>
-					<div class="weui-flex__item" onclick="dice.add_bet(200)"><a href="javascript:void(0);" data-num="200"><img src="../../../img/dice/jetton-200.png" data-num="200" class="jetton-img"></a></div>
-					<div class="weui-flex__item" onclick="dice.add_bet(500)"><a href="javascript:void(0);" data-num="500"><img src="../../../img/dice/jetton-500.png" data-num="500" class="jetton-img"></a></div><div class="weui-flex__item" onclick="dice.add_bet(1000)"><a href="javascript:void(0);" data-num="1000"><img src="../../../img/dice/jetton-1000.png" data-num="1000" class="jetton-img"></a></div>
+					<div class="weui-flex__item">
+						<div><a href="javascript:void(0);" onclick="dice.add_bet(150)"><img src="../../../img/dice/jetton-150.png" data-num="150" class="jetton-img"></a></div>
+						<div style="text-align: center; padding-top: 10px">
+						<a href="javascript:dice.add_bet(150);" class="weui-btn weui-btn_mini weui-btn_primary">+</a>&nbsp;<a href="javascript:dice.reduce_bet(150);" class="weui-btn weui-btn_mini weui-btn_primary">-</a> </div>
+					</div>
+					<div class="weui-flex__item">
+						<div><a href="javascript:void(0);" onclick="dice.add_bet(200)"><img src="../../../img/dice/jetton-200.png" data-num="200" class="jetton-img"></a></div>
+						<div style="text-align: center; padding-top: 10px">
+						<a href="javascript:dice.add_bet(200);" class="weui-btn weui-btn_mini weui-btn_primary">+</a>&nbsp;<a href="javascript:dice.reduce_bet(200);" class="weui-btn weui-btn_mini weui-btn_primary">-</a> </div>
+					</div>
+					<div class="weui-flex__item">
+						<div><a href="javascript:void(0);" onclick="dice.add_bet(500)"><img src="../../../img/dice/jetton-500.png" data-num="500" class="jetton-img"></a></div>
+						<div style="text-align: center; padding-top: 10px">
+						<a href="javascript:dice.add_bet(500);" class="weui-btn weui-btn_mini weui-btn_primary">+</a>&nbsp;<a href="javascript:dice.reduce_bet(500);" class="weui-btn weui-btn_mini weui-btn_primary">-</a> </div>
+					</div>
+					<div class="weui-flex__item">
+						<div><a href="javascript:void(0);" onclick="dice.add_bet(1000)"><img src="../../../img/dice/jetton-1000.png" data-num="1000" class="jetton-img"></a></div>
+						<div style="text-align: center; padding-top: 10px">
+						<a href="javascript:dice.add_bet(1000);" class="weui-btn weui-btn_mini weui-btn_primary">+</a>&nbsp;<a href="javascript:dice.reduce_bet(1000);" class="weui-btn weui-btn_mini weui-btn_primary">-</a> </div>
+					</div>
 				</div>
 				<div style='color:#fff;margin:auto;text-align: center;  padding: 10px 0;'>
 					下注金额：<span id='bet_value'>0</span>
 				</div>
 				<div style="text-align: center;  padding: 10px 0;">
-					<a href="javascript:dice.add_bet(10);" class="weui-btn weui-btn_mini weui-btn_primary">+</a>&nbsp;<a href="javascript:dice.reduce_bet(10);" class="weui-btn weui-btn_mini weui-btn_primary">-</a> </div>
-				<div style="text-align: center;  padding: 10px 0;">
 					<a href="javascript:dice.save_bet();" class="weui-btn weui-btn_mini weui-btn_primary">确认</a>&nbsp;<a href="javascript:dice.exit_bet();" class="weui-btn weui-btn_mini weui-btn_primary">关闭</a> </div>
 			</div>
 		</div>
+
+	 </div>
+
+
+
 		<div id='shuoming' style='display:none;width:100%'>
 			<img src="../../../img/dice/457684782019572638.jpg" border='0'> 
 		</div>

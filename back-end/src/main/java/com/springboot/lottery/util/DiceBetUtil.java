@@ -28,7 +28,7 @@ public class DiceBetUtil {
 	
 	public static final double number = 5;
 	
-	public static final int dice_draw_minutes = 1;
+	public static final int dice_draw_minutes = 10;
 	
 	public static double total_win = 0;
 	

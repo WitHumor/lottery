@@ -336,6 +336,7 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
 }
 .bet-skin{
 	border-radius: 10px !important;
+	background-color:transparent !important;
 }
 	ul,li{padding:0px;}
 

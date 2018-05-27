@@ -1,5 +1,7 @@
 package com.springboot.lottery.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,19 +61,28 @@ public class DiceServiceImpl implements DiceService {
 	}
 	@Transactional
 	public void genereateNewDiceDraw(DiceDraw current, int result, double win) {
-		
+		Date now = new Date();
 		Map<String, Object> u = new HashMap<String,Object>();
 		u.put("result", result);
-		u.put("end_time", new Date());
+		u.put("end_time", now);
 		u.put("id", current.getId());
 		diceDao.updateDiceDraw(u);
 		
+		SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
+		int nowI = Integer.parseInt(format.format(now));
+		int currentI = Integer.parseInt(format.format(current.getStart_time()));
+		
 		DiceDraw newOne = new DiceDraw();
-		newOne.setCurrent_term(current.getCurrent_term() + 1);
 		newOne.setPrize_pool(current.getPrize_pool() + win);
-		newOne.setStart_time(new Date());
+		newOne.setStart_time(now);
 		newOne.setResult(null);
 		newOne.setEnd_time(null);
+		if(nowI == currentI ) {
+			newOne.setCurrent_term(current.getCurrent_term() + 1);
+		}else {
+			String term = nowI + "0001";
+			newOne.setCurrent_term(Integer.parseInt(term));
+		}
 		diceDao.addDiceDraw(newOne);
 	}
 	
