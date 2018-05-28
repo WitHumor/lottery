@@ -229,7 +229,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                         if (res.code == '2018') {
                             layer.msg('注单手动结算成功', {
                                 offset: '15px',
-                                time: 2000,
+                                time: 1500,
                                 icon: 1
                             });
                             setTimeout(function() {
@@ -238,7 +238,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                         } else if (res.code == '1119') {
                             layer.msg('注单已结算，请勿重复操作', {
                                 offset: '15px',
-                                time: 2000,
+                                time: 1500,
                                 icon: 0
                             });
                             // setTimeout(function() {
@@ -247,7 +247,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                         } else {
                             layer.msg('注单手动结算失败', {
                                 offset: '15px',
-                                time: 2000,
+                                time: 1500,
                                 icon: 2
                             });
                         }
@@ -271,7 +271,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                         if (res.code == '2018') {
                             layer.msg('注单取消成功', {
                                 offset: '15px',
-                                time: 2000,
+                                time: 1500,
                                 icon: 1
                             });
                             setTimeout(function() {
@@ -280,7 +280,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                         } else if (res.code == '1119') {
                             layer.msg('注单已被取消，请勿重复操作', {
                                 offset: '15px',
-                                time: 2000,
+                                time: 1500,
                                 icon: 0
                             });
                             setTimeout(function() {
@@ -289,7 +289,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                         } else {
                             layer.msg('注单取消失败', {
                                 offset: '15px',
-                                time: 2000,
+                                time: 1500,
                                 icon: 2
                             });
                         }

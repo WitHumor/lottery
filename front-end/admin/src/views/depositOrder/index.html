@@ -216,7 +216,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                 if (res.code == '2018') {
                     layer.msg('订单锁定成功,请尽快处理', {
                         offset: '15px',
-                        time: 2000,
+                        time: 1000,
                         icon: 1
                     });
                     setTimeout(function() {
@@ -226,7 +226,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                 } else if (res.code == '1120') {
                     layer.msg('订单正在被处理', {
                         offset: '15px',
-                        time: 2000,
+                        time: 1500,
                         icon: 0
                     });
                     setTimeout(function() {
@@ -235,7 +235,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                 } else {
                     layer.msg('订单锁定失败', {
                         offset: '15px',
-                        time: 2000,
+                        time: 1500,
                         icon: 2
                     });
                 }
@@ -302,7 +302,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                         if (res.code == '2018') {
                             layer.msg('审核成功', {
                                 offset: '15px',
-                                time: 2000,
+                                time: 1000,
                                 icon: 1
                             });
                             setTimeout(function() {
@@ -312,7 +312,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                         } else if (res.code == '1120') {
                             layer.msg('订单已被处理，请勿重复操作', {
                                 offset: '15px',
-                                time: 2000,
+                                time: 1500,
                                 icon: 0
                             });
                             setTimeout(function() {
@@ -322,7 +322,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                         } else {
                             layer.msg('审核失败', {
                                 offset: '15px',
-                                time: 2000,
+                                time: 1500,
                                 icon: 2
                             });
                         }

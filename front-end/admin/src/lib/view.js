@@ -86,7 +86,7 @@ layui.define(['laytpl', 'layer'], function(exports) {
                 if (statusCode.logout.indexOf(res[response.statusName]) > -1) {
                     layer.msg('登录超时，请重新登陆', {
                         offset: '15px',
-                        time: 2000,
+                        time: 1500,
                         icon: 2
                     });
                     setTimeout(function() {

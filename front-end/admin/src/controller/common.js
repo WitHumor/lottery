@@ -33,7 +33,7 @@ layui.define(function(exports) {
                 layer.msg('列表参数有误', {
                     offset: '15px',
                     anim: 6,
-                    time: 2000
+                    time: 1500
                 });
                 return;
             }
@@ -66,7 +66,7 @@ layui.define(function(exports) {
                     if (setter.response.statusCode['logout'].indexOf(res[setter.response.statusName]) > -1) {
                         layer.msg('登录超时，请重新登陆', {
                             offset: '15px',
-                            time: 2000,
+                            time: 1500,
                             icon: 2
                         });
                         setTimeout(function() {
