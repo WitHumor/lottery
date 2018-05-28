@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="Shortcut Icon" href="../../../favicon.ico">
+ <link href="../../../css/dice/home.css" rel="stylesheet">
+ <link href="../../../fonts/dice/font_1467614459_1046817.css" rel="stylesheet" />
+ <link rel="stylesheet" href="../../../css/dice/reset.css" />
+
+
+
+  <title>永利高 - 个人中心</title>
+  <style>
+        .user-img-2{width: 50px;display: block; border-radius: 10px;box-shadow: 0 0 5px #000;
+            -webkit-animation: avatar .3s forwards;
+            animation: avatar .3s forwards;}
+        .user-img{
+            width: 100px;
+            height: 100px;
+            display: block;
+            border-radius: 50%;
+            margin: 0px auto;
+
+            background-color: #fff;
+            box-shadow: 0 0 10px #000;
+            -webkit-transform: scale(.5);
+            -ms-transform: scale(.5);
+            transform: scale(.5);
+            -webkit-animation: avatar .3s forwards;
+            animation: avatar .3s forwards;
+        }
+        .user-title{
+            font-weight: 400;
+            font-size: 17px;
+            width: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-wrap: normal;
+            word-wrap: break-word;
+            word-break: break-all;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.82);
+            padding-top: 5px;
+        }
+        .user-desc{
+            color: #999999;
+            font-size: 13px;
+            line-height: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.82);
+        }
+		.PcIconWidth{ width: 30px;}
+        /* fade in and expand image to full size, with a slight bounce */
+        @-webkit-keyframes avatar {
+            70% {
+                opacity: 1;
+                -webkit-transform: scale(1.1);
+                transform: scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+        @keyframes avatar {
+            70% {
+                opacity: 1;
+                -webkit-transform: scale(1.1);
+                transform: scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+        .PcIconWidth{ width: 25px; height: 25px;}
+        /*提现按钮*/
+        .tiXian{
+            box-shadow: 0 0 5px 0 rgba(0,0,0,.24); background-color: #775cc1; border:0; color: #fff;
+        }
+
+
+.ucenter-account,.ucenter-menu{ background:#fff;}
+
+		.ucenter-account ul li{ padding:30px;}
+
+		.ucenter-account ul li a span.number{ display:block; font-size:16px; color:#357CB4;}
+
+		.ucenter-account ul li a span.text1{ display:block; font-size:14px; color:#666;}
+
+		
+
+		.ucenter-menu ul li span.glyphicon{ font-size:18px; color:#666;}
+
+		
+
+		.ucenter-header{ background:#357CB4; padding:10px; position:relative;}
+
+		.ucenter-header .widthdraw{ position:absolute; right:10px; top:45px; padding:5px 15px; background:#ccc; color:#000;}
+
+		.ucenter-menu,.ucenter-account{margin: 5px 0; font-family: "微软雅黑"; border-top: 1px solid #EAEAEA;}
+
+		.ucenter-menu ul li,.ucenter-account ul li{float: left; text-align: center; border-right: 1px solid #EAEAEA; border-bottom: 1px solid #EAEAEA;}
+
+		.ucenter-account ul li{width: 33.33%; padding: 10px 0;}
+
+		.ucenter-menu ul li{width: 33.3%; line-height: 20px; padding: 25px 0;}
+
+		.ucenter-menu ul li.li-none,.ucenter-account ul li.li-none{ border-right: none;}
+
+		.ucenter-menu ul li a,.ucenter-account ul li a{display: block; color: #000;}
+
+		.ucenter-menu ul li a span,.ucenter-account ul li a span{color: #FF0000;}
+
+
+
+		.ucenter-content ul li{ box-sizing:border-box;}		
+
+		.iconfont{ font-size:24px;}
+
+	
+		</style>
+ </head>
+ <body style='background-color:#F3F3F3;'>
+ <div class="container">
+	<section style="background-image: radial-gradient(circle at 60% 48%, #3D3459, #10112F); padding: 15px 0; position: relative;">
+		<figure style="padding-top: 20px;"><img src="../../../img/dice/default-head.jpg" class="user-img"></figure>
+		<p class="user-title">匿名</p>
+		<p class="user-desc">我的ID：<span id='myid'>61</span></p>
+	</section>
+
+	<div class="ucenter-content" style=" margin-top:10px;">
+
+			<div class="ucenter-account">
+
+				<ul class="clearfix">
+					<li class="li-none">
+
+						<a href="../onlinedraw.html">
+
+							<span class="number" id='yue'></span>
+
+							<span class="text1">
+							
+							余额</span>
+
+						</a>
+
+					</li>
+
+				</ul>
+
+			</div>
+
+			<div class="ucenter-menu">
+
+				<ul class="clearfix">
+
+					<li>
+
+						<a href="../onlinedraw.html">
+
+							<span class="iconfont icon-coin"></span><br>
+
+							我要提现
+
+						</a>
+
+					</li>
+
+					<li>
+
+						<a href="../tradingrecord.html">
+
+							<span class="iconfont icon-sortlight"></span><br>
+
+							提现记录
+
+						</a>
+
+					</li>
+
+					<li class="li-none">
+
+						<a href="history.html">
+
+							<span class="iconfont icon-friendfill"></span><br>
+
+							开奖记录
+
+						</a>
+
+					</li>
+
+					<li>
+
+						<a href="http://sz.jiimii.cn/index.php?m=&amp;c=Index&amp;a=usercode">
+
+							<span class="iconfont icon-qrcode"></span><br>
+
+							我的二维码
+
+						</a>
+
+					</li>
+
+					
+
+					<li class="">
+
+						<a href="../onlinedeposit.html">
+
+							<span class="iconfont icon-sponsor"></span><br>
+
+							在线充值
+
+						</a>
+
+					</li> 
+
+					<li class="">
+
+						<a href="myhistory.html">
+
+							<span class="iconfont icon-sortlight"></span><br>
+
+							我的下注
+
+						</a>
+
+					</li>
+
+				</ul>
+
+			</div>
+
+		<nav>
+			<div class="weui-tabbar nav">
+
+				<a href="home.html" class="weui-tabbar__item">
+					<i class="dice-icon-2 weui-tabbar__icon "></i>
+					<p class="weui-tabbar__label">猜大小</p>
+				</a>
+				<a href="share.html" class="weui-tabbar__item">
+					<i class="myShare-icon-1 weui-tabbar__icon "></i>
+					<p class="weui-tabbar__label">分享赚钱</p>
+				</a>
+				<a href="me.html" class="weui-tabbar__item">
+					<i class="personCenter-icon-1 weui-tabbar__icon "></i>
+					<p class="weui-tabbar__label">个人中心</p>
+				</a>
+			</div>
+		</nav>
+
+		</div>
+</div>
+	<script src="../../../lib/jquery-3.3.1.min.js"></script>
+	 <script src="../../../plugins/layer/layer.min.js"></script>
+	 <script src="../../../js/dice/com.js"></script>
+	<script src="../../../js/dice/me.js"></script>
+ </body>
+</html>

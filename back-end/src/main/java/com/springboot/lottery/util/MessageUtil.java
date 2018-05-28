@@ -45,6 +45,6 @@ public class MessageUtil {
 	public final static String IP_ADDRESS = "1118";
 	// 注单结算错误
 	public final static String SINGLE_NOTE_ERROR = "1119";
-	// 注单结算错误
-//	public final static String SINGLE_NOTE_ERROR = "1119";
+	// 充值/取款结算错误
+	public final static String FUND_RECORD_ERROR = "1120";
 }

@@ -84,6 +84,7 @@
 		INSERT INTO 
 			fund_record(frid,
 			mid,
+			dispose,
 			time,
 			number,
 			phone_code,
@@ -98,6 +99,7 @@
 			result_remark)
 	    VALUES(#{frid},
 			#{mid},
+			#{dispose},
 			now(),
 			#{number},
 			#{phone_code},
@@ -157,6 +159,12 @@
 			fund_record
 		SET
 		  	state = #{state}
+		  	<if test="resultRemark != null and resultRemark != ''">
+		  		,result_remark = #{resultRemark}
+		  	</if>
+		  	<if test="dispose != null and dispose != ''">
+		  		,dispose = #{dispose}
+		  	</if>
 	   	WHERE
 			number = #{number}
 	</update>
@@ -200,11 +208,12 @@
 	</select>
 	
 	<!-- 20180509 查询存取款记录-->
-	<select id="listFundRecord" resultType="com.springboot.lottery.dto.FundRecordDTO" parameterType="java.util.Map">
+	<select id="queryFundRecordDTO" resultType="com.springboot.lottery.dto.FundRecordDTO" parameterType="java.util.Map">
 		SELECT
 			fr.frid,
 			fr.mid,
 			fr.time,
+			fr.dispose,
 			fr.number,
 			fr.record,
 			fr.phone_code,
@@ -237,6 +246,12 @@
 		<if test="mid != null and mid != ''">
 			AND fr.mid = #{mid}
 		</if>
+		<if test="number != null and number != ''">
+			AND fr.number = #{number}
+		</if>
+		<if test="dispose != null and dispose != ''">
+			AND fr.dispose = #{dispose}
+		</if>
 		<if test="type != null and type != ''">
 			AND fr.currency = #{type}
 		</if>
@@ -256,9 +271,16 @@
 			AND (m.name Like CONCAT('%',#{keyword},'%') 
 			OR fr.number Like CONCAT('%',#{keyword},'%'))
 		</if>
-			order by fr.time desc 
+		<choose>
+			<when test="states != null and states != ''">
+				ORDER BY fr.state = #{states} DESC,fr.time DESC
+			</when>
+			<otherwise>
+				ORDER BY fr.time DESC 
+			</otherwise>
+		</choose>
 		<if test="beginIndex != null and pageSize != null and pageSize != 0">
-			limit ${beginIndex},${pageSize}
+			LIMIT ${beginIndex},${pageSize}
 		</if>
 	</select>
 	
@@ -302,6 +324,7 @@
 		SELECT
 			frid,
 			mid,
+			dispose,
 			time,
 			number,
 			record,
@@ -338,9 +361,9 @@
 		<if test="endTime != null and endTime != ''">
 			AND time <![CDATA[ <= ]]> #{endTime}
 		</if>
-			order by time desc
+			ORDER BY time DESC
 		<if test="beginIndex != null and pageSize != null and pageSize != 0">
-			limit ${beginIndex},${pageSize}
+			LIMIT ${beginIndex},${pageSize}
 		</if>
 	</select>
 	
@@ -406,9 +429,9 @@
 			OR team_h Like CONCAT('%',#{keyword},'%') 
 			OR team_c Like CONCAT('%',#{keyword},'%'))
 		</if>
-			order by bet_time desc
+			ORDER BY bet_time DESC
 		<if test="beginIndex != null and pageSize != null and pageSize != 0">
-			limit ${beginIndex},${pageSize}
+			LIMIT ${beginIndex},${pageSize}
 		</if>
 	</select>
 	
@@ -486,9 +509,18 @@
 		<if test="name != null and name != ''">
 			OR m.name Like CONCAT('%',#{keyword},'%')
 		</if>
-			order by sn.bet_time desc
+		<choose>
+			<when test="forAccount != null and notAccount != null">
+				ORDER BY sn.state = #{forAccount} DESC, 
+					sn.state = #{notAccount} DESC,
+					sn.bet_time DESC
+			</when>
+			<otherwise>
+				ORDER BY sn.bet_time DESC
+			</otherwise>
+		</choose>
 		<if test="beginIndex != null and pageSize != null and pageSize != 0">
-			limit ${beginIndex},${pageSize}
+			LIMIT ${beginIndex},${pageSize}
 		</if>
 	</select>
 	

@@ -78,8 +78,14 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	@Override
 	public int updateSum(Map<String, Object> map) {
+		String mid = (String)map.get("mid");
+		if(StringUtils.isBlank(mid)) {
+			return 0;
+		}
+		synchronized (mid) {
 			int updateSum = memberDao.updateSum(map);
 			return updateSum;
+		}
 	}
 
 	/**
@@ -134,10 +140,21 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	@Override
 	public Page<Map<String, Object>> listFundRecord(Map<String, Object> map) {
+		String record = (String)map.get("record");// 获取取款、存款状态
+		String mid = (String)map.get("mid");// 获取会员id
+		String state = (String)map.get("state");// 获取状态
+		if(StringUtils.isBlank(mid) && StringUtils.isBlank(state)) {
+			if(StringUtils.isNotBlank(record)) {
+				// 判断充值还是取款进行排序
+				if(record.equals("0")) {
+					map.put("states", "1");
+				}else if(record.equals("1")) {
+					map.put("states", "0");
+				}
+			}
+		}
 		// 根据条件获取数据
-		List<FundRecordDTO> list = memberDao.listFundRecord(map);
-		String record = (String)map.get("record");
-		String mid = (String)map.get("mid");
+		List<FundRecordDTO> list = memberDao.queryFundRecordDTO(map);
 		// 根据会员id是否为空判断权限，根据record判断是存取款
 		List<Map<String, Object>> listByFundRecords = toListByFundRecords(list, record, mid);
 		// 根据条件查询条数
@@ -169,7 +186,7 @@ public class MemberServiceImpl implements MemberService {
 		if(StringUtils.isNotBlank(betType)) {
 			// 根据FT与BK查询滚球
 			if(betType.equals("FT") || betType.equals("BK")) {
-				if(state.equals("0")) {
+				if(StringUtils.isBlank(state) && state.equals("0")) {
 					String states = "'0','2'";
 					map.put("states", states);
 				}
@@ -182,6 +199,11 @@ public class MemberServiceImpl implements MemberService {
 		if(StringUtils.isBlank(mid)) {
 			// 增加用户名查询
 			map.put("name", map.get("keyword"));
+			// 自定义值排序
+			if(StringUtils.isBlank(state)) {
+				map.put("forAccount", "2");
+				map.put("notAccount", "0");
+			}
 			List<SingleNoteDTO> list = memberDao.querySingleNoteDTO(map);
 			listBySingleNotes = toListBySingleNoteDTO(list);
 		}else {
@@ -209,6 +231,17 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public List<SingleNoteDTO> querySingleNoteDTO(Map<String, Object> map) {
 		return memberDao.querySingleNoteDTO(map);
+	}
+	
+	/**
+	 * 查询取款存款DTO
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public List<FundRecordDTO> queryFundRecordDTO(Map<String, Object> map) {
+		return memberDao.queryFundRecordDTO(map);
 	}
 	
 	/**
@@ -248,7 +281,7 @@ public class MemberServiceImpl implements MemberService {
 	 * @param dtos
 	 * @return
 	 */
-	private List<Map<String, Object>> toListByFundRecords(List<FundRecordDTO> dtos, String record, String mid) {
+	public List<Map<String, Object>> toListByFundRecords(List<FundRecordDTO> dtos, String record, String mid) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		if (dtos != null) {
 			for (FundRecordDTO dto : dtos) {
@@ -265,7 +298,7 @@ public class MemberServiceImpl implements MemberService {
 	 * @param dto
 	 * @return
 	 */
-	private Map<String, Object> toMapByFundRecord(FundRecordDTO dto, String record, String mid) {
+	public Map<String, Object> toMapByFundRecord(FundRecordDTO dto, String record, String mid) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String time = format.format(dto.getTime());
@@ -274,13 +307,15 @@ public class MemberServiceImpl implements MemberService {
 		map.put("money", dto.getMoney()); // 金额
 		map.put("state", dto.getState());// 状态
 		map.put("resultRemark", dto.getResult_remark());// 结果备注
-		// 如果是提现记录添加两条信息，返回给前端
-		if (record.equals("1")) {
-			map.put("moneyAddress", dto.getMoney_address());// 钱包地址
-			map.put("remark", dto.getRemark());// 备注
-		}
-		if (record.equals("0")) {
-			map.put("type", dto.getCurrency());// 充值货币类型
+		if(StringUtils.isNotBlank(record)) {
+			// 如果是提现记录添加两条信息，返回给前端
+			if (record.equals("1")) {
+				map.put("moneyAddress", dto.getMoney_address());// 钱包地址
+				map.put("remark", dto.getRemark());// 备注
+			}
+			if (record.equals("0")) {
+				map.put("type", dto.getCurrency());// 充值货币类型
+			}
 		}
 		if(StringUtils.isBlank(mid)) {
 			map.put("currencyCount", dto.getCurrency_count());// 货币个数

@@ -10,6 +10,8 @@ public class FundRecordDTO implements Serializable {
 	private String frid;
 	// 会员ID
 	private String mid;
+	// 处理人
+	private String dispose;
 	// 交易时间
 	private Date time;
 	// 编号
@@ -89,6 +91,14 @@ public class FundRecordDTO implements Serializable {
 		this.address = address;
 	}
 	
+	public String getDispose() {
+		return dispose;
+	}
+
+	public void setDispose(String dispose) {
+		this.dispose = dispose;
+	}
+
 	public String getPhone_code() {
 		return phone_code;
 	}

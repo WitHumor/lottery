@@ -17,6 +17,8 @@ public class MemberFundRecord implements Serializable {
 	private String frid;
 	// 会员ID
 	private String mid;
+	// 处理人
+	private String dispose;
 	// 交易时间
 	private Date time;
 	// 编号
@@ -148,6 +150,14 @@ public class MemberFundRecord implements Serializable {
 
 	public String getResult_remark() {
 		return result_remark;
+	}
+
+	public String getDispose() {
+		return dispose;
+	}
+
+	public void setDispose(String dispose) {
+		this.dispose = dispose;
 	}
 
 	public void setResult_remark(String result_remark) {

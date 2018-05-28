@@ -3,6 +3,7 @@ package com.springboot.lottery.service;
 import java.util.List;
 import java.util.Map;
 
+import com.springboot.lottery.dto.FundRecordDTO;
 import com.springboot.lottery.dto.SingleNoteDTO;
 import com.springboot.lottery.entity.Member;
 import com.springboot.lottery.entity.MemberFundRecord;
@@ -72,6 +73,14 @@ public interface MemberService {
 	 */
 	List<SingleNoteDTO> querySingleNoteDTO(Map<String, Object> map);
 
+	/**
+	 * 查询取款存款DTO
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<FundRecordDTO> queryFundRecordDTO(Map<String, Object> map);
+	
 	/**
 	 * 在线存款与在线取款
 	 * 
