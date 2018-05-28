@@ -1,4 +1,5 @@
-var CDS = 3, PCDS = 60;
+var CDS = 3,
+    PCDS = 60;
 $(function() {
     init();
     getAllDatas(config.today_BK);
@@ -22,12 +23,24 @@ function init() {
     });
 
     $('.pourRefreshBtn').click(function() {
-        common.getPourList({betType: 'BK', state: '0'});
+        common.getPourList({
+            betType: 'BK',
+            state: '0'
+        });
         countdown1 = PCDS;
     });
 
-    common.getPourList({betType: 'BK', state: '0'});
-    countDown1();
+    var userinfo = sessionStorage.getItem("userinfo");
+    if (userinfo && JSON.parse(userinfo).token) {
+        common.getPourList({
+            betType: 'BK',
+            state: '0'
+        });
+        countDown1();
+        $('.bottomPourTicket').show();
+    } else {
+        $('.bottomPourTicket').hide();
+    }
 }
 
 function getActiveTab() {
@@ -45,15 +58,39 @@ function getAllDatas(reqData) {
         page_no: currentPage
     });
     currentUrl = reqData.url + '?uid=' + datas.uid + '&rtype=' + datas.rtype + '&langx=zh-cn&mtype=3&page_no=' + datas.page_no + '&league_id=&hot_game=';
+    // $.ajax({
+    //     type: config.common.type,
+    //     url: reqData.url,
+    //     data: datas,
+    //     success: function(data) {
+    //         analysis(data);
+    //     },
+    //     error: function(error) {
+    //         console.log(error);
+    //     }
+    // });
     $.ajax({
-        type: config.common.type,
-        url: reqData.url,
-        data: datas,
+        type: 'POST',
+        url: ServerUrl + '/member/load-url',
+        data: {
+            url: currentUrl
+        },
+        dataType: 'text',
         success: function(data) {
-            analysis(data);
+            if (data != '1101') {
+                analysis(data);
+            } else {
+                layer.msg('数据加载失败', {
+                    time: 2000,
+                    icon: 2
+                })
+            }
         },
         error: function(error) {
-            console.log(error);
+            layer.msg('网络连接失败，请稍后再试', {
+                time: 2000,
+                icon: 2
+            })
         }
     });
 }
@@ -336,7 +373,10 @@ function countDown() {
 
 function countDown1() {
     if (countdown1 == 0) {
-        common.getPourList({betType: 'BK', state: '0'});
+        common.getPourList({
+            betType: 'BK',
+            state: '0'
+        });
         countdown1 = PCDS;
     } else {
         countdown1--;

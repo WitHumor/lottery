@@ -26,7 +26,7 @@ var config = {
         // {"name":"其他","tabtype":"OP"},
     ],
     common: {
-        type: 'GET',
+        type: 'POST',
         data: {
             uid: '41E1C90D347A90C6A60811350',
             langx: 'zh-cn',

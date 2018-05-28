@@ -38,9 +38,9 @@ var HttpService = function() {
                     });
                     sessionStorage.setItem('userinfo', '');
                     sessionStorage.setItem('toid', '');
-                    setTimeout(function() {
-                        window.location.href = 'home.html';
-                    }, 2000);
+                    // setTimeout(function() {
+                    //     window.location.href = 'home.html';
+                    // }, 2000);
                 } else if (typeof(succ) == "function") {
                     return succ(data);
                 } else {
