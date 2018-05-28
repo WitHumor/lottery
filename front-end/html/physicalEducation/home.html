@@ -49,7 +49,7 @@
                 <p><i class="iconfont icon-lanqiu"></i>&nbsp;篮球</p>
                 <img src="../../img/bkball.png">
             </a>
-            <a href="javascript:void(0);" onclick="common.comesoon();">
+            <a href="javascript:void(0);" class="lotteryBetting">
                 <p><i class="iconfont icon-taiqiu"></i>&nbsp;彩票投注</p>
                 <img src="../../img/lottery.png">
             </a>
@@ -71,7 +71,29 @@
     <script src="../../js/com.js"></script>
     <script src="../../plugins/layer/layer.min.js"></script>
     <script src="../../fonts/iconfont.js"></script>
-    <script src="../../js/physicalEducation/home.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        $("#carousel").FtCarousel({
+            time: 3000
+        });
+        var userinfo = sessionStorage.getItem("userinfo");
+
+        $('.lotteryBetting').click(function() {
+            if (userinfo && JSON.parse(userinfo).token) {
+                // window.open("http://www.xrp-candy.com/dice/home.html");
+                window.location.href = 'dice/home.html';
+            } else {
+                layer.msg("请先登录", {
+                    icon: 0,
+                    time: 2000
+                });
+                setTimeout(function() {
+                    common.openlayer('L');
+                }, 2000);
+            }
+        });
+    });
+    </script>
 </body>
 
 </html>

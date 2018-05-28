@@ -265,6 +265,7 @@ function sureDeal(datastr) {
     var re = /^[1-9]\d*$/;
     if (!sessionStorage.getItem('toid')) {
         layer.msg("请登录再下注", {
+            icon: 0,
             time: 2000
         });
         setTimeout(function() {
