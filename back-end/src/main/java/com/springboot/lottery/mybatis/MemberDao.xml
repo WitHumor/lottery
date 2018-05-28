@@ -137,9 +137,12 @@
 		UPDATE
 			member m
 		SET
-		   m.sum = #{sum} 
+		   m.sum = #{sum},
+		   m.version = ${version} + 1 
 		WHERE
 		    m.mid = #{mid}
+		AND
+			m.version = ${version}
 	</update>
 	
 	<!-- 20180503注单结算 -->
@@ -190,6 +193,7 @@
 			role,
 			phone,
 			address,
+			version,
 			sum,
 			invitation_code,
 			real_name,

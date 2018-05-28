@@ -11,11 +11,11 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -166,7 +166,6 @@ public class MemberController {
 	 */
 	@RequestMapping(value = "login-member", method = RequestMethod.POST)
 	@ResponseBody
-	@CrossOrigin(origins = "*")
 	public ObjectResult loginMember(Member member) {
 		Cache cache = getCache();
 		String token = request.getHeader("token");
@@ -314,18 +313,19 @@ public class MemberController {
 		String token = request.getHeader("token");
 		ObjectResult result = new ObjectResult();
 		Cache cache = getCache();
-		// 判断token是否为空
-		if (StringUtils.isBlank(token)) {
-			// 空值
-			result.setCode(MessageUtil.NULL_ERROR);
-			return result;
-		}
-		// 判断token是否过期
-		if (cache.get(token) == null) {
-			// token过期
-			result.setCode(MessageUtil.TOKEN_OVERDUE);
-			return result;
-		}
+//		// 判断token是否为空
+//		if (StringUtils.isBlank(token)) {
+//			// 空值
+//			result.setCode(MessageUtil.NULL_ERROR);
+//			return result;
+//		}
+//		// 判断token是否过期
+//		if (cache.get(token) == null) {
+//			// token过期
+//			result.setCode(MessageUtil.TOKEN_OVERDUE);
+//			return result;
+//		}
+		System.out.println("aaaaaaaaaaaaaaaaaaa");
 		// 获取缓存中的数据
 		Member member = (Member) cache.get(token).get();
 		// 获取缓存中的会员id
@@ -476,7 +476,6 @@ public class MemberController {
 		map.put("mid", mid);
 		List<Member> memberList = memberService.queryMember(map);
 		if (memberList == null || memberList.size() > 1) {
-			System.err.println("mid查询不到数据");
 			// 数据匹配错误
 			result.setCode(MessageUtil.DATA_NOT_FOUND);
 			return result;
@@ -486,13 +485,6 @@ public class MemberController {
 		if (!member.getBank_password().equals(password)) {
 			// 密码错误
 			result.setCode(MessageUtil.PASSWORD_ERROR);
-			return result;
-		}
-		String sum = member.getSum();
-		// 判断余额是否足够
-		if (Float.parseFloat(sum) < Float.parseFloat(money)) {
-			// 超过自己的余额
-			result.setCode(MessageUtil.MONEY_EXCEED);
 			return result;
 		}
 		// 添加资金交易记录
@@ -517,7 +509,7 @@ public class MemberController {
 			return result;
 		}
 		// 设置余额
-		map.put("sum",String.format("%.2f", Float.parseFloat(sum) - Float.parseFloat(money)));
+		map.put("money",String.format("%.2f", 0 - Float.parseFloat(money)));
 		// 根据会员id修改账户余额
 		int updateSum = memberService.updateSum(map);
 		// 判断余额是否修改成功，如果不成功，则删除资金记录
@@ -707,7 +699,7 @@ public class MemberController {
 		List<FundRecordDTO> queryFundRecordDTO = memberService.queryFundRecordDTO(map);
 		if(queryFundRecordDTO.size() != 1 || queryFundRecordDTO == null) {
 			// 空值
-			result.setCode(MessageUtil.NULL_ERROR);
+			result.setCode(MessageUtil.DATA_NOT);
 			return result;
 		}
 		FundRecordDTO fundRecordDTO = queryFundRecordDTO.get(0);
@@ -730,9 +722,8 @@ public class MemberController {
 		memberMap.put("mid", mid);
 		// 如果充值成功向账户中添加金额
 		if(record.equals("0") && state.equals("2")) {
-			String sum = fundRecordDTO.getSum();// 获取余额
 			String discounts = fundRecordDTO.getDiscounts();// 获取优惠金额
-			memberMap.put("sum", String.format("%.2f", Float.valueOf(sum) + Float.valueOf(money) + Float.valueOf(discounts)));
+			memberMap.put("moeny", String.format("%.2f", Float.valueOf(money) + Float.valueOf(discounts)));
 			int updateSum = memberService.updateSum(memberMap);
 			if(updateSum > 0) {
 				return result;
@@ -747,8 +738,7 @@ public class MemberController {
 		}
 		// 如果提款失败向账户返回金额
 		if(record.equals("1") && (state.equals("-1") || state.equals("-2"))) {
-			String sum = fundRecordDTO.getSum();// 获取余额
-			memberMap.put("sum", String.format("%.2f", Float.valueOf(sum) + Float.valueOf(money)));
+			memberMap.put("moeny", String.format("%.2f", Float.valueOf(money)));
 			int updateSum = memberService.updateSum(memberMap);
 			if(updateSum > 0) {
 				return result;
@@ -798,7 +788,7 @@ public class MemberController {
 		List<FundRecordDTO> queryFundRecordDTO = memberService.queryFundRecordDTO(map);
 		if(queryFundRecordDTO.size() != 1 || queryFundRecordDTO == null) {
 			// 空值
-			result.setCode(MessageUtil.NULL_ERROR);
+			result.setCode(MessageUtil.DATA_NOT);
 			return result;
 		}
 		FundRecordDTO fundRecordDTO = queryFundRecordDTO.get(0);
@@ -953,6 +943,25 @@ public class MemberController {
 	}
 
 	/**
+	 * 20180526url地址加载
+	 * 
+	 * @param url
+	 * @return
+	 */
+	@RequestMapping(value = "load-url", method = RequestMethod.POST)
+	@ResponseBody
+	public String loadUrl(String url) {
+		// 根据url地址获取Document对象
+		Document loadUrl = JsoupUtil.loadUrl(url);
+		// 判断url地址是否加载失败
+		if(loadUrl == null) {
+			return MessageUtil.NETWORK_CONNECTION;
+		}
+		// 返回html网页
+		return loadUrl.html();
+	}
+	
+	/**
 	 * 20180502会员下注
 	 * 
 	 * @param url
@@ -1011,7 +1020,7 @@ public class MemberController {
 		List<Map<String, String>> list = JsoupUtil.listFieldAndData(stringAll);
 		if (list == null) {
 			// 空值
-			result.setCode(MessageUtil.NULL_ERROR);
+			result.setCode(MessageUtil.DATA_NOT);
 			return result;
 		}
 		// 获取地址中与gid匹配的数据
@@ -1130,10 +1139,9 @@ public class MemberController {
 			return result;
 		}
 		// 修改账户余额
-		Float sum = Float.parseFloat(member.getSum()) - Float.parseFloat(money);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("mid", mid);// 设置mid
-		map.put("sum", String.format("%.2f", sum));// 设置余额
+		map.put("money", String.format("%.2f", 0 - Float.parseFloat(money)));// 设置余额
 		// 根据mid修改余额
 		int updateSum = memberService.updateSum(map);
 		// 判断余额是否修改成功，如果不成功则删除添加的下注订单
@@ -1240,7 +1248,7 @@ public class MemberController {
 		// 根据snid获取注单表详细信息
 		List<SingleNoteDTO> querySingleNoteDTO = memberService.querySingleNoteDTO(map);
 		if(querySingleNoteDTO.size() != 1 || querySingleNoteDTO == null) {
-			result.setCode(MessageUtil.NULL_ERROR);
+			result.setCode(MessageUtil.DATA_NOT);
 			return result;
 		}
 		SingleNoteDTO singleNoteDTO = querySingleNoteDTO.get(0);
@@ -1249,12 +1257,11 @@ public class MemberController {
 			result.setCode(MessageUtil.SINGLE_NOTE_ERROR);
 			return result;
 		}
-		String sum = singleNoteDTO.getSum();// 获取账户余额
 		String money = singleNoteDTO.getMoney();// 获取下注金额
 		String snid = singleNoteDTO.getSnid();// 获取注单id
 		Map<String, Object> singleNoteMap = new HashMap<String, Object>();
 		map.put("mid", singleNoteDTO.getMid());// 设置会员id
-		map.put("sum",String.format("%.2f", Float.parseFloat(sum) + Float.parseFloat(money)));// 设置余额
+		map.put("money",String.format("%.2f", Float.parseFloat(money)));// 设置余额
 		// 根据mid修改余额
 		int updateSum = memberService.updateSum(map);
 		if (updateSum <= 0) {
@@ -1271,7 +1278,7 @@ public class MemberController {
 		int singleNoteAccount = memberService.singleNoteAccount(singleNoteMap);
 		// 如果注单表修改失败则把账户余额修改回去
 		if (singleNoteAccount <= 0) {
-			map.put("sum", sum);// 设置余额
+			map.put("money", 0 - Float.parseFloat(money));// 设置余额
 			memberService.updateSum(map);// 修改账户余额
 			result.setCode(MessageUtil.UPDATE_ERROR);
 			return result;
@@ -1314,7 +1321,7 @@ public class MemberController {
 		// 根据snid获取注单表详细信息
 		List<SingleNoteDTO> querySingleNoteDTO = memberService.querySingleNoteDTO(map);
 		if(querySingleNoteDTO.size() != 1 || querySingleNoteDTO == null) {
-			result.setCode(MessageUtil.NULL_ERROR);
+			result.setCode(MessageUtil.DATA_NOT);
 			return result;
 		}
 		SingleNoteDTO singleNoteDTO = querySingleNoteDTO.get(0);
@@ -1352,11 +1359,11 @@ public class MemberController {
 			// 获取主场上半场比分
 			fullOrHrTeamh = hrTeamh;
 		} else {
-			result.setCode(MessageUtil.NULL_ERROR);
+			result.setCode(MessageUtil.DATA_NOT);
 			return result;
 		}
 		if(StringUtils.isBlank(fullOrHrTeamc) || StringUtils.isBlank(fullOrHrTeamh)) {
-			result.setCode(MessageUtil.NULL_ERROR);
+			result.setCode(MessageUtil.DATA_NOT);
 			return result;
 		}
 		scoreTeamc = Integer.parseInt(fullOrHrTeamc);
@@ -2122,7 +2129,7 @@ public class MemberController {
 		Map<String, Object> singleNoteMap = new HashMap<String, Object>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("mid", mid);// 设置mid
-		map.put("sum", String.format("%.2f", sum));// 设置余额
+		map.put("money", String.format("%.2f", sum - memberByMoney));// 设置余额
 		// 根据mid修改余额
 		int updateSum = memberService.updateSum(map);
 		if (updateSum <= 0) {
@@ -2137,17 +2144,19 @@ public class MemberController {
 		money = sum - (memberByMoney + money);
 		// 保留两位小数
 		String dealMoney = String.format("%.2f", money);
-		// 如果为正数就拼接加号
-		dealMoney = money > 0 ? "+" + dealMoney : dealMoney;
-		// 如果为0,则什么都不要加
-		dealMoney = money == 0 ? String.format("%.0f", money) : dealMoney;
+		// 如果赢就拼接加号
+		dealMoney = winLose.equals("1") ? "+" + dealMoney : dealMoney;
+		// 如果输就拼接减号
+		dealMoney = winLose.equals("-1") ? "-" + dealMoney : dealMoney;
+		// 如果不输不赢,则什么都不要加
+		dealMoney = winLose.equals("0") ? String.format("%.0f", money) : dealMoney;
 		singleNoteMap.put("dealMoney", dealMoney);
 		// 根据snid修改注单状态
 		int singleNoteAccount = memberService.singleNoteAccount(singleNoteMap);
 		// 如果注单表修改失败则把账户余额修改回去
 		if (singleNoteAccount <= 0) {
 			System.err.println("修改注单状态失败！");
-			map.put("sum", String.format("%.2f", memberByMoney));// 设置余额
+			map.put("money", String.format("%.2f", 0 - (sum - memberByMoney)));// 设置余额
 			memberService.updateSum(map);// 修改账户余额
 			return false;
 		} else {
@@ -2217,7 +2226,7 @@ public class MemberController {
 	 * 
 	 * @return
 	 */
-	private Cache getCache() {
+	public Cache getCache() {
 		Cache cache = manager.getCache("memberCache");
 		return cache;
 	}
