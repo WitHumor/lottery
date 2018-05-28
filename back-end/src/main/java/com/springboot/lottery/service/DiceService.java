@@ -21,7 +21,7 @@ public interface DiceService {
 	
 	void genereateNewDiceDraw(DiceDraw current, int result, double win);
 	
-	int addDiceBet(DiceBet diceBet,Member member);
+	int addDiceBet(DiceBet diceBet,String mid);
 	
 	void rewardMember(DiceDraw current, int result, DiceBet db);
 	

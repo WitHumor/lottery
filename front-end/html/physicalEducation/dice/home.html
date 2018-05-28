@@ -32,14 +32,11 @@
 				</div>
 			</div>
 			<div class="weui-flex" style="text-align: center;margin-top: 15px;">
-				<div class="weui-flex__item"> <a href="myhistory.html" id="history" class="top-a">历史记录</a></div>
+				<div class="weui-flex__item"> <a href="myhistory.html" id="history" class="top-a">我的下注</a></div>
 				<div class="weui-flex__item">
-					<div class="top-a">
-						<div style="color:#fff">本次压注：<span class="type" id="show_number" style="color:#FFF201"> 无  </span></div>
-						<div style="color:#fff">筹码数：<span class="chouMaNum" id="show_money" style="color:#FFF201">0</span></div>
-					</div>
+					<a href='javascript:void(0)' onclick="dice.shuoming();" class="top-a">游戏说明</a>
 				</div>
-				<div class="weui-flex__item"><a href='javascript:void(0)' onclick="dice.shuoming();" class="top-a">游戏说明</a></div>
+				<div class="weui-flex__item"><a href='history.html' onclick="dice.shuoming();" class="top-a">历史记录</a></div>
 			</div>
 
 		</header>
@@ -54,38 +51,136 @@
 				</div>
 			</div>
 			<div class="weui-flex">
-				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="dice.select_num(10,'大')" class="bigAndSmall" id="big" data-num="1"><span class="wrap-a-span">大</span><br><span class="fontSize">1赔1.9</span></span></div>
-				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="dice.select_num(9,'小')" class="bigAndSmall" id="small" data-num="1"><span class="wrap-a-span">小</span><br><span class="fontSize">1赔1.9</span></span></div>
-			</div>
-			<div class="weui-flex">
+				<div class="weui-flex__item wrap-a-bigAndSmall" style='position:relative'>
+					<span onclick="dice.select_num(10,'大')" class="bigAndSmall" id="big" data-num="1">
+						<div class="wrap-a-span">大</div>
+						<div class="fontSize">1赔1.9</div>
+						
+					</span>
+					<div class='bet-mask' id="bet-mask10">
+						<div class='bet-info' id='betValueDiv10'>
+							<div class='bet-image'><img src='../../../img/dice/dice2.png'/></div>
+							<div class='bet-value'>下注：<span id='betValue10' class='bet-value-num'>0</span></div>
+						</div>
+					</div>
+				</div>
 				<div class="weui-flex__item wrap-a-bigAndSmall">
-					<span onclick="dice.select_num(7,'单')" class="bigAndSmall" id="big" data-num="1">
-						<span class="wrap-a-span">单</span><br>
-						<span class="fontSize">1赔1.9</span>
-					</span></div>
-				<div class="weui-flex__item wrap-a-bigAndSmall"><span onclick="dice.select_num(8,'双')" class="bigAndSmall" id="small" data-num="1"><span class="wrap-a-span">双</span><br><span class="fontSize">1赔1.9</span></span></div>
+					<span onclick="dice.select_num(9,'小')" class="bigAndSmall" id="small" data-num="1">
+						<div class="wrap-a-span">小</div>
+						<div class="fontSize">1赔1.9</div>
+					</span>
+					<div class='bet-mask' id="bet-mask9">
+						<div class='bet-info' id='betValueDiv9'>
+							<div class='bet-image'><img src='../../../img/dice/dice2.png'/></div>
+							<div class='bet-value'>下注：<span id='betValue9' class='bet-value-num'>0</span></div>
+						</div>
+					</div>
+				</div>
+				<div class="weui-flex__item wrap-a-bigAndSmall">
+					<span onclick="dice.select_num(7,'单')" class="bigAndSmall" id="big">
+						<div class="wrap-a-span">单</div>
+						<div class="fontSize">1赔1.9</div>
+					</span>
+					<div class='bet-mask' id="bet-mask7">
+						<div class='bet-info' id='betValueDiv7'>
+							<div class='bet-image'><img src='../../../img/dice/dice2.png'/></div>
+							<div class='bet-value'>下注：<span id='betValue7' class='bet-value-num'>0</span></div>
+						</div>
+					</div>
+				</div>
+				<div class="weui-flex__item wrap-a-bigAndSmall">
+					<span onclick="dice.select_num(8,'双')" class="bigAndSmall" id="small">
+						<div class="wrap-a-span">双</div>
+						<div class="fontSize">1赔1.9</div>
+					</span>
+					<div class='bet-mask' id="bet-mask8">
+						<div class='bet-info' id='betValueDiv8'>
+							<div class='bet-image'><img src='../../../img/dice/dice2.png'/></div>
+							<div class='bet-value'>下注：<span id='betValue8' class='bet-value-num'>0</span></div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="forms">
 				<div class="weui-flex">
-					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="dice.select_num(1, '1')"> <span class="wrap-a-span">1</span><br><span class="fontSize">1赔5</span></div>
-					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="dice.select_num(2, '2')"> <span class="wrap-a-span">2</span><br><span class="fontSize">1赔5</span></div>
-					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="dice.select_num(3, '3')"> <span class="wrap-a-span">3</span><br><span class="fontSize">1赔5</span></div>
+					<div class="weui-flex__item wrap-a-bigAndSmall">
+						<div  onclick="dice.select_num(1, '1')">
+							<div class="wrap-a-span">1</div>
+							<div class="fontSize">1赔5</div>
+						</div>
+						<div class='bet-mask'  id="bet-mask1">
+							<div class='bet-info' id='betValueDiv1'>
+								<div class='bet-image'><img src='../../../img/dice/dice2.png'/></div>
+								<div class='bet-value'>下注：<span id='betValue1' class='bet-value-num'>0</span></div>
+							</div>
+						</div>
+					</div>
+					<div class="weui-flex__item wrap-a-bigAndSmall"> 
+						<div onclick="dice.select_num(2, '2')">
+							<div class="wrap-a-span">2</div>
+							<div class="fontSize">1赔5</div>
+						</div>
+						<div class='bet-mask' id="bet-mask2">
+							<div class='bet-info' id='betValueDiv2'>
+								<div class='bet-image'><img src='../../../img/dice/dice2.png'/></div>
+								<div class='bet-value'>下注：<span id='betValue2' class='bet-value-num'>0</span></div>
+							</div>
+						</div>
+					</div>
+					<div class="weui-flex__item wrap-a-bigAndSmall">
+						<div onclick="dice.select_num(3, '3')">
+							<div class="wrap-a-span">3</div>
+							<div class="fontSize">1赔5</div>
+						</div>
+						<div class='bet-mask' id="bet-mask3">
+							<div class='bet-info' id='betValueDiv3'>
+								<div class='bet-image'><img src='../../../img/dice/dice2.png'/></div>
+								<div class='bet-value'>下注：<span id='betValue3' class='bet-value-num'>0</span></div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="weui-flex">
-					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="dice.select_num(4, '4')"> <span class="wrap-a-span">4</span><br><span class="fontSize">1赔5</span></div>
-					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="dice.select_num(5, '5')"> <span class="wrap-a-span">5</span><br><span class="fontSize">1赔5</span></div>
-					<div class="weui-flex__item wrap-a-bigAndSmall" onclick="dice.select_num(6, '6')"> <span class="wrap-a-span">6</span><br><span class="fontSize">1赔5</span></div>
+					<div class="weui-flex__item wrap-a-bigAndSmall">
+						<div onclick="dice.select_num(4, '4')">
+							<div class="wrap-a-span">4</div>
+							<div class="fontSize">1赔5</div>
+						</div>
+						<div class='bet-mask' id="bet-mask4">
+							<div class='bet-info' id='betValueDiv4'>
+								<div class='bet-image'><img src='../../../img/dice/dice2.png'/></div>
+								<div class='bet-value'>下注：<span id='betValue4' class='bet-value-num'>0</span></div>
+							</div>
+						</div>
+					</div>
+					<div class="weui-flex__item wrap-a-bigAndSmall">
+						<div onclick="dice.select_num(5, '5')">
+							<div class="wrap-a-span">5</div>
+							<div class="fontSize">1赔5</div>
+						</div>
+						<div class='bet-mask' id="bet-mask5">
+							<div class='bet-info' id='betValueDiv5'>
+								<div class='bet-image'><img src='../../../img/dice/dice2.png'/></div>
+								<div class='bet-value'>下注：<span id='betValue5' class='bet-value-num'>0</span></div>
+							</div>
+						</div>
+					</div>
+					<div class="weui-flex__item wrap-a-bigAndSmall">
+						<div onclick="dice.select_num(6, '6')">
+							<div class="wrap-a-span">6</div>
+							<div class="fontSize">1赔5</div>
+						</div>
+						<div class='bet-mask' id="bet-mask6">
+							<div class='bet-info' id='betValueDiv6'>
+								<div class='bet-image'><img src='../../../img/dice/dice2.png'/></div>
+								<div class='bet-value'>下注：<span id='betValue6' class='bet-value-num'>0</span></div>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
 		</section>
 
 		<nav>
 			<div class="weui-tabbar nav">
-				<!-- <a href="/Ssc/index.html" class="weui-tabbar__item">
-					<i class="my-bet-1 weui-tabbar__icon "></i>
-					<p class="weui-tabbar__label">时时彩</p>
-				</a> -->
-
 				<a href="home.html" class="weui-tabbar__item">
 					<i class="dice-icon-2 weui-tabbar__icon "></i>
 					<p class="weui-tabbar__label">猜大小</p>

@@ -24,7 +24,8 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
 
     ,interceptor: true //是否开启未登入拦截
 
-    ,serviceUrl: 'http://192.168.43.20:8080'  //接口
+    ,serviceUrl: 'http://www.xrp-candy.com/springBoot'  //接口
+    //,serviceUrl: 'http://192.168.43.20:8080'  //接口
 
     //自定义请求字段
     ,request: {

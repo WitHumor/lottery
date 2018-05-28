@@ -1,7 +1,6 @@
 package com.springboot.lottery.service.impl;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +14,9 @@ import com.springboot.lottery.dto.DiceBetDTO;
 import com.springboot.lottery.dto.DiceDrawBetDTO;
 import com.springboot.lottery.entity.DiceBet;
 import com.springboot.lottery.entity.DiceDraw;
-import com.springboot.lottery.entity.Member;
 import com.springboot.lottery.mybatis.DiceDao;
-import com.springboot.lottery.mybatis.MemberDao;
 import com.springboot.lottery.service.DiceService;
+import com.springboot.lottery.service.MemberService;
 import com.springboot.lottery.util.DiceBetUtil;
 
 /**
@@ -33,7 +31,7 @@ public class DiceServiceImpl implements DiceService {
 	private DiceDao diceDao;
 	
 	@Autowired
-	private MemberDao memberDao;
+	private MemberService memberService;
 	
 	@Override
 	public List<DiceDraw> queryDiceDraw(Map<String, Object> map)
@@ -48,16 +46,19 @@ public class DiceServiceImpl implements DiceService {
 	}
 	
 	@Transactional
-	public int addDiceBet(DiceBet diceBet,Member member) {
+	public int addDiceBet(DiceBet diceBet,String mid) {
 		// 修改账户余额
-		Float sum = Float.parseFloat(member.getSum()) -  new Float(diceBet.getBet_value());
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("mid", member.getMid());// 设置mid
-		map.put("sum", String.valueOf(sum));// 设置余额
-		// 根据mid修改余额
-		int updateSum = memberDao.updateSum(map);
 		
-		return diceDao.addDiceBet(diceBet);
+		map.put("mid", mid);
+		map.put("money", String.valueOf((0-diceBet.getBet_value())));
+		
+		int updateSum = memberService.updateSum(map);
+		int rt = 0;
+		if(updateSum > 0) {
+			rt = diceDao.addDiceBet(diceBet);
+		}
+		return rt;
 	}
 	@Transactional
 	public void genereateNewDiceDraw(DiceDraw current, int result, double win) {
