@@ -201,26 +201,12 @@ public class DiceController {
 			result.setCode(MessageUtil.TOKEN_OVERDUE);
 			return result;
 		}
+		
 		// 获取缓存中的数据
 		Member member = (Member) cache.get(token).get();
 		//check user credit
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		// 根据id查询账户余额
-		map.put("mid", member.getMid());
-		List<Member> memberList =  memberService.queryMember(map);
-		if (memberList == null || memberList.size() > 1) {
-			System.err.println("mid查询不到数据");
-			// 数据匹配错误
-			result.setCode(MessageUtil.DATA_NOT_FOUND);
-			return result;
-		}
-		member = memberList.get(0);
-		if (Double.parseDouble(member.getSum()) < bet_value) {
-			// 超过自己的余额
-			result.setCode(MessageUtil.MONEY_EXCEED);
-			return result;
-		}
+		
 		while(DiceBetUtil.drawing) {
 			
 			Thread.sleep(1000);
@@ -234,7 +220,11 @@ public class DiceController {
 		db.setTerm(DiceBetUtil.current_term);
 		db.setWin(null);
 		db.setBet_time(new Date());
-		diceService.addDiceBet(db,member);
+		int updateSum = diceService.addDiceBet(db,member.getMid());
+		if(updateSum < 0) {
+			result.setCode(MessageUtil.MONEY_EXCEED);
+			return result;
+		}
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("bet",db.getBet());
@@ -297,9 +287,10 @@ public class DiceController {
 	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "dice-draw", method = RequestMethod.GET)
 	@ResponseBody
-	public ObjectResult getDiceDrawInfo() {
+	public ObjectResult getDiceDrawInfo(boolean init) {
 		ObjectResult result = new ObjectResult();
 		Map<String, Object> returnMap = new HashMap<String, Object>();
+		Map<String,Double> betMap = new HashMap<String,Double>();
 		if(!DiceBetUtil.drawing) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("beginIndex", 0);
@@ -320,6 +311,45 @@ public class DiceController {
 					}
 					returnMap.put("drawTime",leftTime);
 					returnMap.put("currentTerm",current.getCurrent_term());
+					
+					//
+					
+					//check token
+					String token = request.getHeader("token");
+					Cache cache = getCache();
+					// 判断token是否为空
+					if (StringUtils.isBlank(token)) {
+						// 空值
+						result.setCode(MessageUtil.NULL_ERROR);
+						return result;
+					}
+					// 判断token是否过期
+					if (cache.get(token) == null) {
+						// token过期
+						result.setCode(MessageUtil.TOKEN_OVERDUE);
+						return result;
+					}
+					// 获取缓存中的数据
+					Member member = (Member) cache.get(token).get();
+					
+					map = new HashMap<String, Object>();
+					map.put("mid", member.getMid());
+					if(init) {
+						map.put("term", current.getCurrent_term());
+					}else {
+						map.put("term", last.getCurrent_term());
+					}
+					List<DiceBet> bets = diceService.queryDiceBet(map);
+					
+					for(DiceBet bet : bets) {
+						if(init) {
+							betMap.put(bet.getBet().toString(),bet.getBet_value());
+						}else {
+							betMap.put(bet.getBet().toString(),bet.getWin_money());
+						}
+					}
+					returnMap.put("bet", betMap);
+					//
 				}else {
 					
 					
@@ -332,6 +362,7 @@ public class DiceController {
 			returnMap.put("lastResult", DiceBetUtil.last_term_result);
 			returnMap.put("drawTime",0);
 			returnMap.put("currentTerm",DiceBetUtil.current_term);
+			returnMap.put("bet", betMap);
 		}
 		result.setResult(returnMap);
 		

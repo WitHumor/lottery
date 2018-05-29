@@ -56,13 +56,13 @@ public class JsoupUtil {
 	private static final String HR_MAIN = "td[class].hr_main";// 获取上半场篮球比分
 
 	private static final String FULL_MAIN = "td[class].full_main";// 获取全场篮球比分
-	
+
 	private static final String EXCHANGE_PRICE = "div[class].box p[class].price";// 获取全场篮球比分
 
 	public static void main(String[] args) {
-
+		
 	}
-	
+
 	/**
 	 * 根据赛事名称进行匹配-足球
 	 * 
@@ -83,7 +83,8 @@ public class JsoupUtil {
 		// 判断对象是否为空再根据前一天去查询
 		if (gameResult == null || gameResult.size() <= 0) {
 			String previousDay = previousDay(leagueDate);
-			url = "https://www.ylg56789.com/app/member/FT_Result?game_type=FT&today1=" + previousDay + "&uid=&langx=zh-cn";
+			url = "https://www.ylg56789.com/app/member/FT_Result?game_type=FT&today1=" + previousDay
+					+ "&uid=&langx=zh-cn";
 			// 根据字段进行切割，并放入到list集合中
 			gameResult = getGameResult(url, LEG_BAR, TEAM_C_FT, TEAM_H_FT, HR_MAIN_FT, FULL_MAIN_FT, league);
 			// 判断对象是否为空
@@ -116,7 +117,8 @@ public class JsoupUtil {
 		// 判断对象是否为空再根据前一天去查询
 		if (gameResult == null || gameResult.size() <= 0) {
 			String previousDay = previousDay(leagueDate);
-			url = "https://www.ylg56789.com/app/member/BK_Result?game_type=BK&today1=" + previousDay + "&uid=&langx=zh-cn";
+			url = "https://www.ylg56789.com/app/member/BK_Result?game_type=BK&today1=" + previousDay
+					+ "&uid=&langx=zh-cn";
 			// 根据字段进行切割，并放入到list集合中
 			gameResult = getGameResult(url, LEG_BAR, TEAM_C, TEAM_H, HR_MAIN, FULL_MAIN, league);
 			// 判断对象是否为空
@@ -319,7 +321,7 @@ public class JsoupUtil {
 		// 加载url地址
 		Document loadUrl = loadUrl(url);
 		// 判断url地址是否连接成功
-		if(loadUrl == null) {
+		if (loadUrl == null) {
 			return null;
 		}
 		// 根据指定的位置查找数据
@@ -346,7 +348,7 @@ public class JsoupUtil {
 		// 加载url地址
 		Document loadUrl = loadUrl(url);
 		// 判断url地址是否连接成功
-		if(loadUrl == null) {
+		if (loadUrl == null) {
 			return null;
 		}
 		// 根据指定的位置查找数据
@@ -455,7 +457,7 @@ public class JsoupUtil {
 		map.put("ior_HMH", "独赢");
 		map.put("ior_HMC", "独赢");
 		map.put("ior_HMN", "独赢");
-		if(bet.equals("FT")) {
+		if (bet.equals("FT")) {
 			map.put("ior_HRH", "让球");
 			map.put("ior_HRC", "让球");
 			map.put("ior_RH", "让球");
@@ -463,7 +465,7 @@ public class JsoupUtil {
 			map.put("ior_EOO", "单");
 			map.put("ior_EOE", "双");
 		}
-		if(bet.equals("BK")) {
+		if (bet.equals("BK")) {
 			map.put("ior_RH", "让分");
 			map.put("ior_RC", "让分");
 			map.put("ior_HRH", "让分");
@@ -475,6 +477,7 @@ public class JsoupUtil {
 		}
 		return map;
 	}
+
 	/**
 	 * 字符串去掉空格
 	 * 
@@ -491,18 +494,20 @@ public class JsoupUtil {
 			return str;
 		}
 	}
+
 	/**
 	 * 根据货币类型汇率转换
+	 * 
 	 * @param currency
 	 * @return
 	 */
 	public static String getExchange(String currency) {
 		// 汇率转换地址
-		String url = "https://otcbtc.com/buy_offers?currency="+currency+"&fiat_currency=cny&payment_type=all";
+		String url = "https://otcbtc.com/buy_offers?currency=" + currency + "&fiat_currency=cny&payment_type=all";
 		// 加载url地址
 		Document loadUrl = loadUrl(url);
 		// 判断url地址是否连接成功
-		if(loadUrl == null) {
+		if (loadUrl == null) {
 			return null;
 		}
 		// 根据指定的位置查找数据
@@ -518,7 +523,7 @@ public class JsoupUtil {
 	 * @param url
 	 * @return
 	 */
-	private static Document loadUrl(String url) {
+	public static Document loadUrl(String url) {
 		try {
 			Document doc = Jsoup.connect(url).get();
 			return doc;
@@ -527,9 +532,10 @@ public class JsoupUtil {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 根据时间获取前一天
+	 * 
 	 * @param date
 	 * @return
 	 */

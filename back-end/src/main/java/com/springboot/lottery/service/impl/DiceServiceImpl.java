@@ -1,7 +1,6 @@
 package com.springboot.lottery.service.impl;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +14,9 @@ import com.springboot.lottery.dto.DiceBetDTO;
 import com.springboot.lottery.dto.DiceDrawBetDTO;
 import com.springboot.lottery.entity.DiceBet;
 import com.springboot.lottery.entity.DiceDraw;
-import com.springboot.lottery.entity.Member;
 import com.springboot.lottery.mybatis.DiceDao;
-import com.springboot.lottery.mybatis.MemberDao;
 import com.springboot.lottery.service.DiceService;
+import com.springboot.lottery.service.MemberService;
 import com.springboot.lottery.util.DiceBetUtil;
 
 /**
@@ -33,7 +31,7 @@ public class DiceServiceImpl implements DiceService {
 	private DiceDao diceDao;
 	
 	@Autowired
-	private MemberDao memberDao;
+	private MemberService memberService;
 	
 	@Override
 	public List<DiceDraw> queryDiceDraw(Map<String, Object> map)
@@ -48,16 +46,18 @@ public class DiceServiceImpl implements DiceService {
 	}
 	
 	@Transactional
-	public int addDiceBet(DiceBet diceBet,Member member) {
+	public int addDiceBet(DiceBet diceBet,String mid) {
 		// 修改账户余额
-		Float sum = Float.parseFloat(member.getSum()) -  new Float(diceBet.getBet_value());
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("mid", member.getMid());// 设置mid
-		map.put("sum", String.valueOf(sum));// 设置余额
-		// 根据mid修改余额
-		int updateSum = memberDao.updateSum(map);
 		
-		return diceDao.addDiceBet(diceBet);
+		map.put("mid", mid);
+		map.put("money", String.valueOf((0-diceBet.getBet_value())));
+		
+		int updateSum = memberService.updateSum(map);
+		if(updateSum > 0) {
+			diceDao.addDiceBet(diceBet);
+		}
+		return updateSum;
 	}
 	@Transactional
 	public void genereateNewDiceDraw(DiceDraw current, int result, double win) {
@@ -68,21 +68,25 @@ public class DiceServiceImpl implements DiceService {
 		u.put("id", current.getId());
 		diceDao.updateDiceDraw(u);
 		
+		/*
 		SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
 		int nowI = Integer.parseInt(format.format(now));
 		int currentI = Integer.parseInt(format.format(current.getStart_time()));
-		
+		*/
 		DiceDraw newOne = new DiceDraw();
 		newOne.setPrize_pool(current.getPrize_pool() + win);
 		newOne.setStart_time(now);
 		newOne.setResult(null);
 		newOne.setEnd_time(null);
+		newOne.setCurrent_term(current.getCurrent_term() + 1);
+		/*
 		if(nowI == currentI ) {
 			newOne.setCurrent_term(current.getCurrent_term() + 1);
 		}else {
 			String term = nowI + "0001";
 			newOne.setCurrent_term(Integer.parseInt(term));
 		}
+		*/
 		diceDao.addDiceDraw(newOne);
 	}
 	

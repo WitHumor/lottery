@@ -39,8 +39,10 @@ public class MemberServiceImpl implements MemberService {
 	public int addMember(Member member) {
 		return memberDao.addMember(member);
 	}
+
 	/**
 	 * 会员名验证
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -48,6 +50,7 @@ public class MemberServiceImpl implements MemberService {
 	public String verifyMember(String name) {
 		return memberDao.verifyMember(name);
 	}
+
 	/**
 	 * 会员登录
 	 * 
@@ -78,14 +81,42 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	@Override
 	public int updateSum(Map<String, Object> map) {
-		String mid = (String)map.get("mid");
-		if(StringUtils.isBlank(mid)) {
+		// 获取会员id
+		String mid = (String) map.get("mid");
+		if (StringUtils.isBlank(mid)) {
 			return 0;
 		}
-		synchronized (mid) {
-			int updateSum = memberDao.updateSum(map);
-			return updateSum;
+		// 获取money
+		Float money = Float.parseFloat((String) map.get("money"));
+		int updateSum = 0;
+		for (int i = 0; i < 3; i++) {
+			// 查询会员信息
+			List<Member> queryMember = memberDao.queryMember(map);
+			if (queryMember == null || queryMember.size() != 1) {
+				return 0;
+			}
+			Member member = queryMember.get(0);
+			// 获取锁值
+			int version = member.getVersion();
+			// 设置上限
+			version = version >= 999999999 ? 0 : version;
+			map.put("version", version);
+			// 获取会员余额
+			Float sum = Float.parseFloat(member.getSum());
+			// 判断余额是否足够
+			if(sum < money) {
+				updateSum = -1;
+				break;
+			}
+			// 设置余额
+			sum = sum + money;
+			map.put("sum", String.format("%.2f", sum));
+			updateSum = memberDao.updateSum(map);
+			if (updateSum > 0) {
+				break;
+			}
 		}
+		return updateSum;
 	}
 
 	/**
@@ -140,15 +171,15 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	@Override
 	public Page<Map<String, Object>> listFundRecord(Map<String, Object> map) {
-		String record = (String)map.get("record");// 获取取款、存款状态
-		String mid = (String)map.get("mid");// 获取会员id
-		String state = (String)map.get("state");// 获取状态
-		if(StringUtils.isBlank(mid) && StringUtils.isBlank(state)) {
-			if(StringUtils.isNotBlank(record)) {
+		String record = (String) map.get("record");// 获取取款、存款状态
+		String mid = (String) map.get("mid");// 获取会员id
+		String state = (String) map.get("state");// 获取状态
+		if (StringUtils.isBlank(mid) && StringUtils.isBlank(state)) {
+			if (StringUtils.isNotBlank(record)) {
 				// 判断充值还是取款进行排序
-				if(record.equals("0")) {
+				if (record.equals("0")) {
 					map.put("states", "1");
-				}else if(record.equals("1")) {
+				} else if (record.equals("1")) {
 					map.put("states", "0");
 				}
 			}
@@ -159,17 +190,18 @@ public class MemberServiceImpl implements MemberService {
 		List<Map<String, Object>> listByFundRecords = toListByFundRecords(list, record, mid);
 		// 根据条件查询条数
 		int total = memberDao.loadFundRecordTotal(map);
-		if(map.get("pageNo") == null || map.get("pageSize") == null) {
+		if (map.get("pageNo") == null || map.get("pageSize") == null) {
 			// 不进行分页
-			Page<Map<String, Object>> page = new Page<Map<String, Object>>(total,listByFundRecords);
+			Page<Map<String, Object>> page = new Page<Map<String, Object>>(total, listByFundRecords);
 			return page;
 		} else {
 			// 进行分页
-			Page<Map<String, Object>> page = new Page<Map<String, Object>>((int)map.get("pageNo"), (int)map.get("pageSize"), total,listByFundRecords);
+			Page<Map<String, Object>> page = new Page<Map<String, Object>>((int) map.get("pageNo"),
+					(int) map.get("pageSize"), total, listByFundRecords);
 			return page;
 		}
 	}
-	
+
 	/**
 	 * 查询注单记录
 	 * 
@@ -179,14 +211,14 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Page<Map<String, Object>> listSingleNote(Map<String, Object> map) {
 		// 获取会员id
-		String mid = (String)map.get("mid");
-		String betType = (String)map.get("betType");
-		String state = (String)map.get("state");
+		String mid = (String) map.get("mid");
+		String betType = (String) map.get("betType");
+		String state = (String) map.get("state");
 		List<Map<String, Object>> listBySingleNotes = null;
-		if(StringUtils.isNotBlank(betType)) {
+		if (StringUtils.isNotBlank(betType)) {
 			// 根据FT与BK查询滚球
-			if(betType.equals("FT") || betType.equals("BK")) {
-				if(StringUtils.isBlank(state) && state.equals("0")) {
+			if (betType.equals("FT") || betType.equals("BK")) {
+				if (StringUtils.isBlank(state) && state.equals("0")) {
 					String states = "'0','2'";
 					map.put("states", states);
 				}
@@ -196,32 +228,34 @@ public class MemberServiceImpl implements MemberService {
 			}
 		}
 		// 根据会员id是否为空判断权限
-		if(StringUtils.isBlank(mid)) {
+		if (StringUtils.isBlank(mid)) {
 			// 增加用户名查询
 			map.put("name", map.get("keyword"));
 			// 自定义值排序
-			if(StringUtils.isBlank(state)) {
+			if (StringUtils.isBlank(state)) {
 				map.put("forAccount", "2");
 				map.put("notAccount", "0");
 			}
 			List<SingleNoteDTO> list = memberDao.querySingleNoteDTO(map);
 			listBySingleNotes = toListBySingleNoteDTO(list);
-		}else {
+		} else {
 			List<MemberSingleNote> list = memberDao.querySingleNote(map);
-			listBySingleNotes = toListBySingleNotes(list);	
+			listBySingleNotes = toListBySingleNotes(list);
 		}
 		// 根据条件查询条数
 		int total = memberDao.loadSingleNoteTotal(map);
-		if(map.get("pageNo") == null || map.get("pageSize") == null) {
+		if (map.get("pageNo") == null || map.get("pageSize") == null) {
 			// 不进行分页
-			Page<Map<String, Object>> page = new Page<Map<String, Object>>(total,listBySingleNotes);
+			Page<Map<String, Object>> page = new Page<Map<String, Object>>(total, listBySingleNotes);
 			return page;
 		} else {
 			// 进行分页
-			Page<Map<String, Object>> page = new Page<Map<String, Object>>((int)map.get("pageNo"), (int)map.get("pageSize"), total,listBySingleNotes);
+			Page<Map<String, Object>> page = new Page<Map<String, Object>>((int) map.get("pageNo"),
+					(int) map.get("pageSize"), total, listBySingleNotes);
 			return page;
 		}
 	}
+
 	/**
 	 * 查询注单DTO
 	 * 
@@ -232,7 +266,7 @@ public class MemberServiceImpl implements MemberService {
 	public List<SingleNoteDTO> querySingleNoteDTO(Map<String, Object> map) {
 		return memberDao.querySingleNoteDTO(map);
 	}
-	
+
 	/**
 	 * 查询取款存款DTO
 	 * 
@@ -243,16 +277,17 @@ public class MemberServiceImpl implements MemberService {
 	public List<FundRecordDTO> queryFundRecordDTO(Map<String, Object> map) {
 		return memberDao.queryFundRecordDTO(map);
 	}
-	
+
 	/**
 	 * 查询资金流水记录总条数
+	 * 
 	 * @return
 	 */
 	@Override
 	public int loadFundRecordTotal(Map<String, Object> map) {
 		return memberDao.loadFundRecordTotal(map);
 	}
-	
+
 	/**
 	 * 资金流水记录状态修改
 	 * 
@@ -263,7 +298,7 @@ public class MemberServiceImpl implements MemberService {
 	public int updateFundRecord(Map<String, Object> map) {
 		return memberDao.updateFundRecord(map);
 	}
-	
+
 	/**
 	 * 查询资金流水记录
 	 * 
@@ -271,10 +306,10 @@ public class MemberServiceImpl implements MemberService {
 	 * @return
 	 */
 	@Override
-	public List<MemberFundRecord> queryFundRecord(Map<String, Object> map){
+	public List<MemberFundRecord> queryFundRecord(Map<String, Object> map) {
 		return memberDao.queryFundRecord(map);
 	}
-	
+
 	/**
 	 * List<FundRecordDTO> 转为 List<Map<String, Object>> 只保留前端需要的字段
 	 * 
@@ -291,7 +326,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * FundRecordDTO 放入 Map<String, Object> 只保留前端需要的字段
 	 * 
@@ -307,7 +342,7 @@ public class MemberServiceImpl implements MemberService {
 		map.put("money", dto.getMoney()); // 金额
 		map.put("state", dto.getState());// 状态
 		map.put("resultRemark", dto.getResult_remark());// 结果备注
-		if(StringUtils.isNotBlank(record)) {
+		if (StringUtils.isNotBlank(record)) {
 			// 如果是提现记录添加两条信息，返回给前端
 			if (record.equals("1")) {
 				map.put("moneyAddress", dto.getMoney_address());// 钱包地址
@@ -317,12 +352,13 @@ public class MemberServiceImpl implements MemberService {
 				map.put("type", dto.getCurrency());// 充值货币类型
 			}
 		}
-		if(StringUtils.isBlank(mid)) {
+		if (StringUtils.isBlank(mid)) {
 			map.put("currencyCount", dto.getCurrency_count());// 货币个数
 			map.put("name", dto.getName());// 会员名
 		}
 		return map;
 	}
+
 	/**
 	 * List<SingleNote> 转为 List<Map<String, Object>> 只保留前端需要的字段
 	 * 
@@ -364,6 +400,7 @@ public class MemberServiceImpl implements MemberService {
 		map.put("winLose", singleNote.getWin_lose());// 输赢状态
 		return map;
 	}
+
 	/**
 	 * List<FundRecordDTO> 转为 List<Map<String, Object>> 只保留前端需要的字段
 	 * 
@@ -380,7 +417,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * MemberSingleNote 放入 Map<String, Object> 只保留前端需要的字段
 	 * 

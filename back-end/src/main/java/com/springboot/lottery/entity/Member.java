@@ -24,6 +24,8 @@ public class Member implements Serializable {
 	private String phone;
 	// IP地址
 	private String address;
+	//锁记录
+	private int version;
 	// 余额
 	private String sum;
 	// 邀请码
@@ -77,6 +79,14 @@ public class Member implements Serializable {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	public String getSum() {

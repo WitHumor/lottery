@@ -26,9 +26,10 @@ public interface MemberService {
 	 * @return
 	 */
 	List<Member> queryMember(Map<String, Object> map);
-	
+
 	/**
 	 * 会员名验证
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -80,7 +81,7 @@ public interface MemberService {
 	 * @return
 	 */
 	List<FundRecordDTO> queryFundRecordDTO(Map<String, Object> map);
-	
+
 	/**
 	 * 在线存款与在线取款
 	 * 
@@ -119,7 +120,7 @@ public interface MemberService {
 	 * @return
 	 */
 	int updateFundRecord(Map<String, Object> map);
-	
+
 	/**
 	 * 查询资金流水记录
 	 * 
@@ -127,7 +128,7 @@ public interface MemberService {
 	 * @return
 	 */
 	List<MemberFundRecord> queryFundRecord(Map<String, Object> map);
-	
+
 	/**
 	 * 查询注单记录
 	 * 
