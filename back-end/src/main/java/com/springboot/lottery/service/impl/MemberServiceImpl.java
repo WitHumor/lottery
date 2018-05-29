@@ -103,6 +103,10 @@ public class MemberServiceImpl implements MemberService {
 			map.put("version", version);
 			// 获取会员余额
 			Float sum = Float.parseFloat(member.getSum());
+			// 判断余额是否足够
+			if(sum < money) {
+				break;
+			}
 			// 设置余额
 			sum = sum + money;
 			map.put("sum", String.format("%.2f", sum));
