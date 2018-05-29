@@ -105,6 +105,7 @@ public class MemberServiceImpl implements MemberService {
 			Float sum = Float.parseFloat(member.getSum());
 			// 判断余额是否足够
 			if(sum < money) {
+				updateSum = -1;
 				break;
 			}
 			// 设置余额
