@@ -52,6 +52,7 @@ var dice = {
 	exit_bet:function(){
 		this.account = this.account + this.bet_value;
 		this.bet_value = 0;
+		$('#bet_value').html(this.bet_value);
 		layer.closeAll();
 	},
 	add_bet: function (number){
@@ -63,7 +64,10 @@ var dice = {
 			}else{
 				 layer.msg('你的账户没有足够的余额，请先充值！', {
                     time: 2000,
-                    icon: 2
+                    icon: 2,
+					end: function(){ 
+						window.location.href='../onlinedeposit.html'
+					  }
                 });
 			}
 		},
@@ -96,22 +100,28 @@ var dice = {
 			var index = layer.load();
 			this.ajax.post('/dice/dice-bet', {term:dice.current_term,bet:dice.bet, bet_value:dice.bet_value}, 
 				function(data) {
-					if (data.code == '2018') {
-					
-						dice.update_bet(dice.bet,dice.bet_value);
-						dice.bet=0;
-						dice.bet_name = '';
-						dice.bet_value = 0;
-						$('#bet_value').html(dice.bet_value);
-						layer.closeAll();
-					} else {
-						layer.msg('数据获取失败', {
+					if (data.code == '1103'){
+						layer.msg('您的余额不足，请先充值！', {
 							time: 2000,
 							icon: 2
 						});
-					}
+					}else{
+						if (data.code == '2018') {
+						
+							dice.update_bet(dice.bet,dice.bet_value);
+							dice.bet=0;
+							dice.bet_name = '';
+							dice.bet_value = 0;
+							$('#bet_value').html(dice.bet_value);
+							layer.closeAll();
+						} else {
+							layer.msg('数据获取失败', {
+								time: 2000,
+								icon: 2
+							});
+						}
 
-				
+					}
 				}, function(e) {
 					layer.msg('数据获取失败', {
 						time: 2000,
@@ -128,11 +138,10 @@ var dice = {
 	shuoming: function(){
 		layer.open({
 		  type: 1,
+		  shade: false,
 		  title: false,
-		  closeBtn: 0,
-		  area: '420px',
+		  area: '100%',
 		  skin: 'layui-layer-nobg', //没有背景色
-		  shadeClose: true,
 		  content: $('#shuoming')
 		});
 	},
@@ -150,9 +159,6 @@ var dice = {
         }).delay(200).animate({opacity: 'show'},600,function(){
             dice.removeClass("dice_s").addClass("dice_e");
         }).delay(100).animate({left:'-2px',top:'2px'},100,function(){
-			if(dice.dicewait == 0){
-				dice.diceAnimate();
-			}
            
         });
 	},

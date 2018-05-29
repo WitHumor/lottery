@@ -54,11 +54,10 @@ public class DiceServiceImpl implements DiceService {
 		map.put("money", String.valueOf((0-diceBet.getBet_value())));
 		
 		int updateSum = memberService.updateSum(map);
-		int rt = 0;
 		if(updateSum > 0) {
-			rt = diceDao.addDiceBet(diceBet);
+			diceDao.addDiceBet(diceBet);
 		}
-		return rt;
+		return updateSum;
 	}
 	@Transactional
 	public void genereateNewDiceDraw(DiceDraw current, int result, double win) {
@@ -69,21 +68,25 @@ public class DiceServiceImpl implements DiceService {
 		u.put("id", current.getId());
 		diceDao.updateDiceDraw(u);
 		
+		/*
 		SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
 		int nowI = Integer.parseInt(format.format(now));
 		int currentI = Integer.parseInt(format.format(current.getStart_time()));
-		
+		*/
 		DiceDraw newOne = new DiceDraw();
 		newOne.setPrize_pool(current.getPrize_pool() + win);
 		newOne.setStart_time(now);
 		newOne.setResult(null);
 		newOne.setEnd_time(null);
+		newOne.setCurrent_term(current.getCurrent_term() + 1);
+		/*
 		if(nowI == currentI ) {
 			newOne.setCurrent_term(current.getCurrent_term() + 1);
 		}else {
 			String term = nowI + "0001";
 			newOne.setCurrent_term(Integer.parseInt(term));
 		}
+		*/
 		diceDao.addDiceDraw(newOne);
 	}
 	

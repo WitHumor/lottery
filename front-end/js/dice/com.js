@@ -1,3 +1,4 @@
+//var ServerUrl = 'http://localhost:8080'; //192.168.31.254
 var ServerUrl = 'http://www.xrp-candy.com/springBoot'; //192.168.31.254
 var HttpService = function() {
     this.MAX_VALUE = 100000;
@@ -25,18 +26,38 @@ var HttpService = function() {
             contentType: "application/x-www-form-urlencoded",
             data: data,
             success: function(data) {
-               if (typeof(succ) == "function") {
-                    return succ(data);
-                } else {
-                    console.log("the method is no a function!");
-                }
+			   if(data.code == '1114' || data.code == '1109' || data.code == '1102'){
+					   layer.msg('请重新登录！', {
+						time: 2000,
+						icon: 2,
+						end: function(){ 
+							window.location.href='../home.html'
+						  }
+					});
+			   }else{
+				   if (typeof(succ) == "function") {
+						return succ(data);
+					} else {
+						console.log("the method is no a function!");
+					}
+			   }
             },
             error: function(error) {
-                if (typeof(failed) == "function") {
-                    failed(error);
-                } else {
-                    console.log("the method is no a function!");
-                }
+				if(data.code == '1114' || data.code == '1109' || data.code == '1102'){
+					   layer.msg('请重新登录！', {
+						time: 2000,
+						icon: 2,
+						end: function(){ 
+							window.location.href='../home.html'
+						  }
+						});
+			   }else{
+					if (typeof(failed) == "function") {
+						failed(error);
+					} else {
+						console.log("the method is no a function!");
+					}
+				}
             }
         });
     };

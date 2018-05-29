@@ -1,0 +1,404 @@
+<script type="text/html" template>
+    <link rel="stylesheet" href="{{ layui.setter.base }}style/order.css?v={{ layui.admin.v }}-1" media="all">
+</script>
+<title>
+    存款单</title>
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">主页</a>
+        <a>
+            <cite>存款单</cite>
+        </a>
+    </div>
+</div>
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>正在处理的订单</legend>
+    </fieldset>
+    <blockquote class="layui-elem-quote layui-quote-nm" id="dealing">
+    </blockquote>
+    <div class="layui-form">
+        <div class="layui-inline">
+            <input id="allTime" type="text" readonly placeholder="申请时间区间" class="layui-input" />
+        </div>
+        <div class="layui-inline">
+            <select id="withdrawType">
+                <option value="">存款货币类型</option>
+                <option value="BTC">比特币（BTC）</option>
+                <option value="EOS">柚子币（EOS）</option>
+                <option value="ETH">以太币（ETH）</option>
+                <option value="XRP">瑞波币（XRP）</option>
+                <option value="LTC">莱特币（LTC）</option>
+                <option value="QTVM">量子币（QTVM）</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <select id="withdrawStatus">
+                <option value="">存款状态</option>
+                <option value="0">等待支付</option>
+                <option value="1">支付成功</option>
+                <option value="-1">审核中</option>
+                <option value="2">存款成功</option>
+                <option value="-2">存款失败</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <input id="keyword" type="text" placeholder="存款单号/存款用户" class="layui-input" />
+        </div>
+        <div class="layui-inline">
+            <button id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i>查询</button>
+        </div>
+    </div>
+    <div class="optips"><i class="layui-icon layui-icon-tips"></i> 管理员在审核订单时，请先锁定订单，再进行订单信息审核及资金操作；避免其他管理员的重复操作！</div>
+    <table class="layui-hide" id="datalist"></table>
+</div>
+<script type="text/html" id="operateBar">
+    <input type="checkbox" name="lock" title="锁定">
+</script>
+<script type="text/html" id="dealOrder">
+    <a class="layui-btn layui-btn-xs" style="width: 50px;" lay-event="audit">审核</a>
+    <!-- <a class="layui-btn layui-btn-xs" style="width: 50px;" lay-event="deblocking">解锁</a> -->
+</script>
+<script>
+layui.use(['admin', 'table', 'laydate', 'common'], function() {
+    var $ = layui.$,
+        setter = layui.setter,
+        admin = layui.admin,
+        element = layui.element,
+        laydate = layui.laydate,
+        table = layui.table,
+        form = layui.form,
+        common = layui.common,
+        router = layui.router();
+    element.render();
+
+    form.render();
+    var hasOrder = false;
+    myDealing();
+    common.dtimeInit('#allTime');
+    common.getList({
+        elem: '#datalist',
+        url: '/member/member-record',
+        param: {
+            record: '0'
+        },
+        cols: [
+            [{
+                field: 'time',
+                minWidth: 150,
+                title: '申请时间',
+            }, {
+                field: 'number',
+                minWidth: 180,
+                title: '存款单号',
+            }, {
+                field: 'name',
+                minWidth: 120,
+                title: '存款用户',
+            }, {
+                field: 'money',
+                minWidth: 120,
+                title: '存款金额(点)',
+            }, {
+                field: 'type',
+                minWidth: 100,
+                title: '存款类型',
+                // templet: function(data) {
+                //     var types = '-';
+                //     $.each(config.coin, function(i, item) {
+                //         if (item.value == data.type) {
+                //             types = item.name;
+                //             return false;
+                //         }
+                //     });
+                //     return types;
+                // }
+                templet: function(data) {
+                    var st = '';
+                    switch (data.type) {
+                        case 'BTC':
+                            st = '比特币';
+                            break;
+                        case 'EOS':
+                            st = '柚子币';
+                            break;
+                        case 'ETH':
+                            st = '以太币';
+                            break;
+                        case 'XRP':
+                            st = '瑞波币';
+                            break;
+                        case 'LTC':
+                            st = '莱特币';
+                            break;
+                        case 'QTUM':
+                            st = '量子币';
+                            break;
+                        default:
+                            st = '-';
+                    }
+                    return st;
+                }
+            }, {
+                field: 'state',
+                minWidth: 120,
+                title: '状态',
+                templet: function(data) {
+                    var st = '';
+                    switch (data.state) {
+                        case '0':
+                            st = '等待支付';
+                            break;
+                        case '1':
+                            st = '支付成功';
+                            break;
+                        case '-1':
+                            st = '审核中';
+                            break;
+                        case '2':
+                            st = '存款成功';
+                            break;
+                        case '-2':
+                            st = '存款失败';
+                            break;
+                        default:
+                            st = '-';
+                    }
+                    return st;
+                }
+            }, {
+                field: 'resultRemark',
+                title: '审核建议',
+            }, {
+                title: '操作',
+                fixed: 'right',
+                width: 110,
+                align: 'center',
+                templet: function(data) {
+                    var html = '';
+                    switch (data.state) {
+                        case '0':
+                            html = '<a class="opbtn layui-btn layui-btn-sm layui-btn-disabled">等待支付</a>';
+                            break;
+                        case '1':
+                            html = '<input type="checkbox" value="' + data.number + '" name="lock" title="锁定" lay-filter="lockOperate" '+ (hasOrder ? 'disabled' : '') +'>';
+                            break;
+                        case '-1':
+                            html = '<a class="opbtn layui-btn layui-btn-sm layui-btn-disabled">审核中</a>';
+                            break;
+                        case '2':
+                            html = '<a class="opbtn layui-btn layui-btn-sm layui-btn-disabled">存款成功</a>';
+                            break;
+                        default:
+                            html = '<a class="opbtn layui-btn layui-btn-sm layui-btn-disabled">取款失败</a>';
+                    }
+                    return html;
+                },
+                unresize: true
+            }]
+        ],
+    });
+
+    //监听锁定操作
+    form.on('checkbox(lockOperate)', function(obj) {
+        var value = this.value,
+            name = this.name,
+            checked = obj.elem.checked,
+            othis = obj.othis;
+        admin.req({
+            url: setter.serviceUrl + '/member/dispose/fund-record',
+            type: 'post',
+            data: {
+                number: value,
+                record: '0'
+            },
+            done: function(res) {
+                if (res.code == '2018') {
+                    layer.msg('订单锁定成功,请尽快处理', {
+                        offset: '15px',
+                        time: 1000,
+                        icon: 1
+                    });
+                    setTimeout(function() {
+                        myDealing();
+                        $('#search').click();
+                    }, 2000);
+                } else if (res.code == '1120') {
+                    layer.msg('订单正在被处理', {
+                        offset: '15px',
+                        time: 1500,
+                        icon: 0
+                    });
+                    setTimeout(function() {
+                        $('#search').click();
+                    }, 2000);
+                } else {
+                    layer.msg('订单锁定失败', {
+                        offset: '15px',
+                        time: 1500,
+                        icon: 2
+                    });
+                }
+            }
+        });
+    });
+
+    $('#search').click(function() {
+        var allTime = $('#allTime').val().split(' 至 '),
+            withdrawType = $('#withdrawType').val(),
+            withdrawStatus = $('#withdrawStatus').val(),
+            keyword = $('#keyword').val(),
+            param = {
+                record: '0',
+                beginTime: allTime[0] || "",
+                endTime: allTime[1] || "",
+                state: withdrawStatus,
+                type: withdrawType,
+                keyword: keyword
+            };
+        table.reload('idAllTable', {
+            where: param
+        });
+    });
+
+        //监听工具条
+    table.on('tool()', function(obj) {
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+        if (layEvent === 'audit') { //审核
+            var html = '<div class="errortips hide"></div><div class="layui-form"><div class="layui-form-item" pane=""><label class="layui-form-label">审核</label><div class="layui-input-block"><input type="radio" name="audits" value="2" title="支付完成" checked=""><input type="radio" name="audits" value="-2" title="审批拒绝"></div></div><div class="layui-form-item layui-form-text"><label class="layui-form-label">审核意见</label><div class="layui-input-block"><textarea id="rejectReason" placeholder="请输入拒绝原因" class="layui-textarea" style="max-height: 100px;"></textarea></div></div></div>';
+            layer.confirm(html, {
+                title: '审核信息',
+                area: ['480px', '340px'],
+                move: false,
+                btn: ['确定', '取消'],
+                success: function(layero, index) {
+                    form.render();
+                    console.log($("input[name='audits']:checked").val());
+                    console.log($('#rejectReason').val());
+                }
+            }, function(index) {
+                if($("input[name='audits']:checked").val() == -2 && !$('#rejectReason').val()) {
+                    $('.errortips').text('请填写拒绝原因').show();
+                    return;
+                } else {
+                    $('.errortips').text('').hide();
+                }
+                var param = {
+                    number: data.number,
+                    state: $("input[name='audits']:checked").val(),
+                    resultRemark: $('#rejectReason').val(),
+                    record: '0'
+                };
+                admin.req({
+                    url: setter.serviceUrl + '/member/alter/fund-record',
+                    type: 'post',
+                    data: param,
+                    done: function(res) {
+                        console.log(res);
+                        // layer.close(index);
+                        if (res.code == '2018') {
+                            layer.msg('审核成功', {
+                                offset: '15px',
+                                time: 1000,
+                                icon: 1
+                            });
+                            setTimeout(function() {
+                                myDealing();
+                                $('#search').click();
+                            }, 2000);
+                        } else if (res.code == '1120') {
+                            layer.msg('订单已被处理，请勿重复操作', {
+                                offset: '15px',
+                                time: 1500,
+                                icon: 0
+                            });
+                            setTimeout(function() {
+                                myDealing();
+                                $('#search').click();
+                            }, 2000);
+                        } else {
+                            layer.msg('审核失败', {
+                                offset: '15px',
+                                time: 1500,
+                                icon: 2
+                            });
+                        }
+                    }
+                });
+            }, function(index) {
+                layer.close(index);
+            });
+        } else if (layEvent === 'cancel') {}
+    });
+
+    function myDealing() {
+        $.ajaxSettings.async = false;
+        admin.req({
+            url: setter.serviceUrl + '/member/audit/fund-record',
+            type: 'get',
+            data: {
+                record: '0'
+            },
+            done: function(res) {
+                console.log(res);
+                if (res.code == '2018') {
+                    if (res.result.length > 0) {
+                        hasOrder = true;
+                        $('#dealing').html('<table class="layui-hide" id="dealdata"></table>');
+                        table.render({
+                            elem: '#dealdata',
+                            cols: [
+                                [{
+                                    field: 'time',
+                                    minWidth: 150,
+                                    title: '申请时间',
+                                }, {
+                                    field: 'number',
+                                    minWidth: 180,
+                                    title: '取款单号',
+                                }, {
+                                    field: 'name',
+                                    minWidth: 120,
+                                    title: '取款用户',
+                                }, {
+                                    field: 'money',
+                                    minWidth: 100,
+                                    title: '取款金额(点)',
+                                }, {
+                                    field: 'currencyCount',
+                                    title: '取款币额(个)',
+                                }, {
+                                    field: 'moneyAddress',
+                                    minWidth: 260,
+                                    title: '钱包地址',
+                                }, {
+                                    field: 'remark',
+                                    title: '备注',
+                                }, {
+                                    title: '操作',
+                                    fixed: 'right',
+                                    width: 150,
+                                    align: 'center',
+                                    toolbar: '#dealOrder',
+                                    unresize: true
+                                }]
+                            ],
+                            data: res.result
+                        });
+                    } else {
+                        hasOrder = false;
+                        $('#dealing').html('<div style="text-align: center;">暂无正在处理的订单</div>');
+                    }
+                } else {
+                    hasOrder = false;
+                    $('#dealing').html('<div style="text-align: center;">暂无正在处理的订单</div>');
+                }
+            }
+        });
+        $.ajaxSettings.async = true;
+    }
+});
+</script>

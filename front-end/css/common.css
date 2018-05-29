@@ -469,6 +469,7 @@ table .col-12 {
 .footinfo {
     color: rgb(255, 255, 255);
     font-family: STHeiti, "Microsoft YaHei", "微软雅黑", "SimSun", "宋体", arial;
+    width: 600px;
 }
 
 .article-menu {
@@ -481,12 +482,14 @@ table .col-12 {
 }
 
 .fo-text {
-    line-height: 20px;
+    /*line-height: 20px;*/
+    font-size: 14px;
 }
 
 .footer-Infomation {
     text-align: left;
     padding-top: 5px;
+    font-size: 14px;
 }
 
 

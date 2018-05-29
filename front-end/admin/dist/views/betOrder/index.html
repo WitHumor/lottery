@@ -1,0 +1,329 @@
+<script type="text/html" template>
+    <link rel="stylesheet" href="{{ layui.setter.base }}style/order.css?v={{ layui.admin.v }}-1" media="all">
+</script>
+<title>
+    下注单</title>
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">主页</a>
+        <a>
+            <cite>下注单</cite>
+        </a>
+    </div>
+</div>
+<style>
+/*.operateBtn {
+    width: 100px;
+}
+
+.errortips {
+    width: calc(100% + 40px);
+    line-height: 30px;
+    text-align: center;
+    color: #fff;
+    background-color: #FF6A6A;
+    margin-left: -20px;
+}*/
+</style>
+<div class="layui-fluid">
+    <div class="layui-form">
+        <div class="layui-inline">
+            <input id="allTime" type="text" readonly placeholder="下注时间区间" class="layui-input" style="width: 270px;" />
+        </div>
+        <div class="layui-inline">
+            <select id="betType">
+                <option value="">比赛类型</option>
+                <option value="RFT">足球</option>
+                <option value="REFT">滚球-足球</option>
+                <option value="RBK">篮球</option>
+                <option value="REBK">滚球-篮球</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <select id="betState">
+                <option value="">结算与否</option>
+                <option value="0">未结算</option>
+                <option value="1">已结算</option>
+                <option value="2">待结算</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <input id="keyword" type="text" placeholder="联赛名称/球队名称/下注单号/下注用户" class="layui-input" style="width: 270px;" />
+        </div>
+        <div class="layui-inline">
+            <button id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i>查询</button>
+        </div>
+    </div>
+    <table class="layui-hide" id="datalist"></table>
+</div>
+<!-- <script type="text/html" id="operateBar">
+    <a class="layui-btn layui-btn-sm" lay-event="cancel">取消注单</a>
+</script> -->
+<script>
+layui.use(['admin', 'table', 'laydate', 'common'], function() {
+    var $ = layui.$,
+        admin = layui.admin,
+        element = layui.element,
+        laydate = layui.laydate,
+        table = layui.table,
+        common = layui.common,
+        setter = layui.setter,
+        form = layui.form,
+        router = layui.router();
+    element.render();
+
+    form.render();
+    common.dtimeInit('#allTime');
+    common.getList({
+        elem: '#datalist',
+        url: '/member/single-note',
+        cols: [
+            [{
+                field: 'betTime',
+                minWidth: 150,
+                title: '下注时间',
+            }, {
+                field: 'number',
+                minWidth: 180,
+                title: '下注单号',
+            }, {
+                field: 'name',
+                minWidth: 120,
+                title: '下注用户',
+            }, {
+                field: 'betType',
+                title: '比赛类型',
+                templet: function(data) {
+                    var st = '';
+                    switch (data.betType) {
+                        case 'RFT':
+                            st = '足球';
+                            break;
+                        case 'REFT':
+                            st = '滚球-足球';
+                            break;
+                        case 'RBK':
+                            st = '篮球';
+                            break;
+                        case 'REBK':
+                            st = '滚球-篮球';
+                            break;
+                        default:
+                            st = '-';
+                    }
+                    return st;
+                }
+            }, {
+                field: 'league',
+                minWidth: 180,
+                title: '联赛名称',
+            }, {
+                field: 'teamh',
+                minWidth: 180,
+                title: '主场球队',
+            }, {
+                field: 'teamc',
+                minWidth: 180,
+                title: '客场球队',
+            }, {
+                field: 'money',
+                title: '下注金额',
+            }, {
+                field: 'state',
+                title: '类型',
+                templet: function(data) {
+                    var st = '';
+                    switch (data.state) {
+                        case '0':
+                            st = '未结算';
+                            break;
+                        case '1':
+                            st = '已结算';
+                            break;
+                        case '2':
+                            st = '待结算';
+                            break;
+                        default:
+                            st = '-';
+                    }
+                    return st;
+                }
+            }, {
+                field: 'resultRemark',
+                title: '审核建议',
+            }, {
+                title: '操作',
+                fixed: 'right',
+                width: 130,
+                align: 'center',
+                templet: function(data) {
+                    var html = '<a class="operateBtn layui-btn layui-btn-xs layui-btn-disabled">已结算</a>';
+                    if (data.state == '0') {
+                        html = '<a class="operateBtn layui-btn layui-btn-xs" lay-event="cancel">取消注单</a>';
+                    } else if (data.state == '2') {
+                        html = '<a class="operateBtn layui-btn layui-btn-xs" lay-event="handleClose">手动结算</a>';
+                    }
+                    return html;
+                },
+            }]
+        ],
+    });
+    $('#search').click(function() {
+        var allTime = $('#allTime').val().split(' 至 '),
+            betType = $('#betType').val(),
+            betState = $('#betState').val(),
+            keyword = $('#keyword').val();
+        table.reload('idAllTable', {
+            where: {
+                beginTime: allTime[0] || "",
+                endTime: allTime[1] || "",
+                betType: betType,
+                state: betState,
+                keyword: keyword
+            }
+        });
+    });
+
+    //监听工具条
+    table.on('tool()', function(obj) {
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+        if (layEvent === 'handleClose') { //手动结算
+            var html = '<div class="errortips hide"></div><div class="layui-form"><div class="layui-form-item"><label class="layui-form-label">赛事腰折</label><div class="layui-input-block"><input id="dropping" type="checkbox" name="close" lay-skin="switch" lay-filter="switchListen" lay-text="是|否"></div></div><div class="layui-form-item"><div class="layui-inline"><label class="layui-form-label">半场比分</label><div class="layui-input-inline" style="width: 100px;"><input type="text" name="hteamh" placeholder="主场得分" autocomplete="off" class="layui-input scores"></div><div class="layui-form-mid">:</div><div class="layui-input-inline" style="width: 100px;"><input type="text" name="hteamc" placeholder="客场得分" autocomplete="off" class="layui-input scores"></div></div></div><div class="layui-form-item"><div class="layui-inline"><label class="layui-form-label">全场比分</label><div class="layui-input-inline" style="width: 100px;"><input type="text" name="teamh" placeholder="主场得分" autocomplete="off" class="layui-input scores"></div><div class="layui-form-mid">:</div><div class="layui-input-inline" style="width: 100px;"><input type="text" name="teamc" placeholder="客场得分" autocomplete="off" class="layui-input scores"></div></div></div></div>';
+            layer.confirm(html, {
+                title: '比赛信息',
+                area: ['420px', '330px'],
+                move: false,
+                btn: ['结算', '取消'],
+                success: function(layero, index) {
+                    form.render();
+                    //监听指定开关
+                    form.on('switch(switchListen)', function(data) {
+                        if (this.checked) {
+                            $('.scores').attr('disabled', 'disabled').css('background-color', '#e6e6e6');
+                        } else {
+                            $('.scores').removeAttr('disabled').css('background-color', '#fff');
+                        }
+                    });
+                }
+            }, function(index) {
+                if (!$('#dropping').is(':checked') && !checkes([$('.scores')])) {
+                    console.log($($('.scores')[0]).val());
+                    return;
+                }
+                var param = {
+                    number: data.number,
+                    accident: $('#dropping').is(':checked'),
+                    hrTeamh: $($('.scores')[0]).val(),
+                    hrTeamc: $($('.scores')[1]).val(),
+                    fullTeamh: $($('.scores')[2]).val(),
+                    fullTeamc: $($('.scores')[3]).val(),
+                };
+                admin.req({
+                    url: setter.serviceUrl + '/member/account/single-note',
+                    type: 'post',
+                    data: param,
+                    done: function(res) {
+                        if (res.code == '2018') {
+                            layer.msg('注单手动结算成功', {
+                                offset: '15px',
+                                time: 1500,
+                                icon: 1
+                            });
+                            setTimeout(function() {
+                                $('#search').click();
+                            }, 2000);
+                        } else if (res.code == '1119') {
+                            layer.msg('注单已结算，请勿重复操作', {
+                                offset: '15px',
+                                time: 1500,
+                                icon: 0
+                            });
+                            // setTimeout(function() {
+                            //     $('#search').click();
+                            // }, 2000);
+                        } else {
+                            layer.msg('注单手动结算失败', {
+                                offset: '15px',
+                                time: 1500,
+                                icon: 2
+                            });
+                        }
+                    }
+                });
+            }, function(index) {
+                layer.close(index);
+            });
+        } else if (layEvent === 'cancel') { //取消注单
+            layer.confirm('确定要取消此注单吗？', {
+                title: '提示'
+            }, function(index) {
+                layer.close(index);
+                admin.req({
+                    url: setter.serviceUrl + '/member/cancel/single-note',
+                    type: 'post',
+                    data: {
+                        number: data.number
+                    },
+                    done: function(res) {
+                        if (res.code == '2018') {
+                            layer.msg('注单取消成功', {
+                                offset: '15px',
+                                time: 1500,
+                                icon: 1
+                            });
+                            setTimeout(function() {
+                                $('#search').click();
+                            }, 2000);
+                        } else if (res.code == '1119') {
+                            layer.msg('注单已被取消，请勿重复操作', {
+                                offset: '15px',
+                                time: 1500,
+                                icon: 0
+                            });
+                            setTimeout(function() {
+                                $('#search').click();
+                            }, 2000);
+                        } else {
+                            layer.msg('注单取消失败', {
+                                offset: '15px',
+                                time: 1500,
+                                icon: 2
+                            });
+                        }
+                    }
+                });
+            });
+        }
+    });
+
+    function checkes(inputArr) {
+        var regs = /^\d+$/,
+            type = true;
+        $.each(inputArr[0], function(i, item) {
+            var val = $(item).val();
+            if (!val) {
+                $('.errortips').text('得分不能为空！').show();
+                // setTimeout(function() {
+                //     $('.errortips').text('得分不能为空！').hide();
+                // }, 2000);
+                type = false;
+                return false;
+            } else if (!regs.test(val)) {
+                $('.errortips').text('得分数只能为0或者正整数！').show();
+                // setTimeout(function() {
+                //     $('.errortips').text('得分不能为空！').hide();
+                // }, 2000);
+                type = false;
+                return false;
+            }
+        });
+        if (type) {
+            $('.errortips').text('').hide();
+        }
+        return type;
+    }
+});
+</script>

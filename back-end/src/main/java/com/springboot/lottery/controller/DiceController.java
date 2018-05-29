@@ -220,7 +220,11 @@ public class DiceController {
 		db.setTerm(DiceBetUtil.current_term);
 		db.setWin(null);
 		db.setBet_time(new Date());
-		diceService.addDiceBet(db,member.getMid());
+		int updateSum = diceService.addDiceBet(db,member.getMid());
+		if(updateSum < 0) {
+			result.setCode(MessageUtil.MONEY_EXCEED);
+			return result;
+		}
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("bet",db.getBet());

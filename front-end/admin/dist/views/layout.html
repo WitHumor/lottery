@@ -12,11 +12,11 @@
           控制台
         </a>
       </li>-->
-      <li class="layui-nav-item layui-hide-xs" lay-unselect>
+      <!-- <li class="layui-nav-item layui-hide-xs" lay-unselect>
         <a href="http://www.layui.com/admin/" target="_blank" title="前台">
           <i class="layui-icon layui-icon-website"></i>
         </a>
-      </li>
+      </li> -->
       <li class="layui-nav-item" lay-unselect>
         <a href="javascript:;" layadmin-event="refresh" title="刷新">
           <i class="layui-icon layui-icon-refresh-3"></i>
@@ -24,74 +24,77 @@
       </li>
     </ul>
     <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
-      
-      <li class="layui-nav-item" lay-unselect>
+
+      <!-- <li class="layui-nav-item" lay-unselect>
         <a lay-href="app/message/" layadmin-event="message">
-          <i class="layui-icon layui-icon-notice"></i>
-          
+          <i class="layui-icon layui-icon-notice"></i> -->
+
           <!-- 如果有新消息，则显示小圆点 -->
-          <script type="text/html" template lay-url="./json/message/new.js">
-          {{# if(d.data.newmsg){ }} 
+          <!-- <script type="text/html" template lay-url="./json/message/new.js">
+          {{# if(d.data.newmsg){ }}
             <span class="layui-badge-dot"></span>
           {{# } }}
           </script>
-          
+
         </a>
-      </li>
-      <li class="layui-nav-item layui-hide-xs" lay-unselect>
-        <a href="javascript:;" layadmin-event="theme">
-          <i class="layui-icon layui-icon-theme"></i>
-        </a>
-      </li>
-      <li class="layui-nav-item layui-hide-xs" lay-unselect>
+      </li> -->
+
+      <!-- <li class="layui-nav-item layui-hide-xs" lay-unselect>
         <a href="javascript:;" layadmin-event="note">
           <i class="layui-icon layui-icon-note"></i>
         </a>
-      </li>
+      </li> -->
       <li class="layui-nav-item" lay-unselect>
-        <script type="text/html" template lay-url="./json/user/session.js" 
+        <script type="text/html" template lay-url=""
         lay-done="layui.element.render('nav', 'layadmin-layout-right');">
           <a href="javascript:;">
-            <cite>{{ d.data.username }}</cite>
+            <!-- d.result.username -->
+            <cite>{{ layui.sessionData('adminInfo').uinfo.name }}</cite>
           </a>
           <dl class="layui-nav-child">
-            <dd><a lay-href="set/user/info">基本资料</a></dd>
-            <dd><a lay-href="set/user/password">修改密码</a></dd>
+            <!-- <dd><a lay-href="set/user/info">基本资料</a></dd>
+            <dd><a lay-href="set/user/password">修改密码</a></dd> -->
             <hr>
             <dd layadmin-event="logout" style="text-align: center;"><a>退出</a></dd>
           </dl>
         </script>
       </li>
-      
+
       <li class="layui-nav-item layui-hide-xs" lay-unselect>
-        <a href="javascript:;" layadmin-event="about"><i class="layui-icon layui-icon-more-vertical"></i></a>
+        <a href="javascript:;" layadmin-event="theme">
+          <i class="layui-icon layui-icon-theme"></i>
+        </a>
       </li>
+
+      <!-- <li class="layui-nav-item layui-hide-xs" lay-unselect>
+        <a href="javascript:;" layadmin-event="about"><i class="layui-icon layui-icon-more-vertical"></i></a>
+      </li> -->
       <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect>
         <a href="javascript:;" layadmin-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>
       </li>
     </ul>
   </div>
-  
+
   <!-- 侧边菜单 -->
   <div class="layui-side layui-side-menu">
     <div class="layui-side-scroll">
-      <script type="text/html" template lay-url="./json/menu.js?v={{ layui.admin.v }}" 
+      <script type="text/html" template lay-url="./json/menu.js?v={{ layui.admin.v }}"
       lay-done="layui.element.render('nav', 'layadmin-system-side-menu');" id="TPL_layout">
-      
+
         <div class="layui-logo" lay-href="">
-          <span>{{ layui.setter.name || 'layuiAdmin' }}</span>
+          <span style="font-style: italic;">{{ layui.setter.name || 'yhm-backstage' }}</span>
         </div>
-        
+
         <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
-        {{# 
+        {{#
           var path =  layui.router().path
           ,pathURL = layui.admin.correctRouter(path.join('/'))
           ,dataName = layui.setter.response.dataName;
-          
-          layui.each(d[dataName], function(index, item){ 
+
+          layui.each(d[dataName], function(index, item){
             var hasChildren = typeof item.list === 'object' && item.list.length > 0
             ,classSelected = function(){
-              var match = path[0] == item.name || (index == 0 && !path[0]) 
+              var match = path[0] == item.name || (index == 0 && !path[0])
               || (item.jump && pathURL == layui.admin.correctRouter(item.jump)) || item.spread;
               if(match){
                 return hasChildren ? 'layui-nav-itemed' : 'layui-this';
@@ -107,33 +110,33 @@
             </a>
             {{# if(hasChildren){ }}
               <dl class="layui-nav-child">
-              {{# layui.each(item.list, function(index2, item2){ 
+              {{# layui.each(item.list, function(index2, item2){
                 var hasChildren2 = typeof item2.list == 'object' && item2.list.length > 0
                 ,classSelected2 = function(){
-                  var match = (path[0] == item.name && path[1] == item2.name) 
+                  var match = (path[0] == item.name && path[1] == item2.name)
                   || (item2.jump && pathURL == layui.admin.correctRouter(item2.jump)) || item2.spread;
                   if(match){
                     return hasChildren2 ? 'layui-nav-itemed' : 'layui-this';
                   }
                   return '';
                 }
-                ,url2 = (item2.jump && typeof item2.jump === 'string') 
-                  ? item2.jump 
+                ,url2 = (item2.jump && typeof item2.jump === 'string')
+                  ? item2.jump
                 : [item.name, item2.name, ''].join('/');
               }}
-                <dd  data-name="{{ item2.name || '' }}"  data-jump="{{ item2.jump || '' }}" 
+                <dd  data-name="{{ item2.name || '' }}"  data-jump="{{ item2.jump || '' }}"
                 {{ classSelected2() ? ('class="'+ classSelected2() +'"') : '' }}>
                   <a href="javascript:;" {{ hasChildren2 ? '' : 'lay-href="'+ url2 +'"' }}>{{ item2.title }}</a>
                   {{# if(hasChildren2){ }}
                     <dl class="layui-nav-child">
-                      {{# layui.each(item2.list, function(index3, item3){ 
-                        var match = (path[0] == item.name && path[1] == item2.name && path[2] == item3.name) 
+                      {{# layui.each(item2.list, function(index3, item3){
+                        var match = (path[0] == item.name && path[1] == item2.name && path[2] == item3.name)
                         || (item3.jump && pathURL == layui.admin.correctRouter(item3.jump))
-                        ,url3 = (item3.jump && typeof item3.jump === 'string') 
-                          ? item3.jump 
+                        ,url3 = (item3.jump && typeof item3.jump === 'string')
+                          ? item3.jump
                         : [item.name, item2.name, item3.name].join('/')
                       }}
-                        <dd data-name="{{ item3.name || '' }}"  data-jump="{{ item3.jump || '' }}" 
+                        <dd data-name="{{ item3.name || '' }}"  data-jump="{{ item3.jump || '' }}"
                         {{ match ? 'class="layui-this"' : '' }}>
                           <a href="javascript:;" lay-href="{{ url3 }}" {{ item3.iframe ? 'lay-iframe="true"' : '' }}>{{ item3.title }}</a>
                         </dd>
@@ -150,7 +153,7 @@
       </script>
     </div>
   </div>
-  
+
 
   <!-- 页面标签 -->
   <script type="text/html" template lay-done="layui.element.render('nav', 'layadmin-pagetabs-nav')">
@@ -178,14 +181,14 @@
     </div>
     {{# } }}
   </script>
-  
-  
+
+
   <!-- 主体内容 -->
   <div class="layui-body" id="LAY_app_body">
     <div class="layadmin-tabsbody-item layui-show"></div>
   </div>
-  
+
   <!-- 辅助元素，一般用于移动设备下遮罩 -->
   <div class="layadmin-body-shade" layadmin-event="shade"></div>
-  
+
 </div>
