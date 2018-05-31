@@ -13,6 +13,28 @@ public class DiceDraw {
 	private Integer result;
 	
 	private Date end_time;
+	
+	private Integer bet_total;
+	
+	private Integer win_total;
+	
+	
+
+	public Integer getBet_total() {
+		return bet_total;
+	}
+
+	public void setBet_total(Integer bet_total) {
+		this.bet_total = bet_total;
+	}
+
+	public Integer getWin_total() {
+		return win_total;
+	}
+
+	public void setWin_total(Integer win_total) {
+		this.win_total = win_total;
+	}
 
 	public int getId() {
 		return id;

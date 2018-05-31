@@ -1,10 +1,10 @@
 package com.springboot.lottery.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +66,13 @@ public class DiceServiceImpl implements DiceService {
 		u.put("result", result);
 		u.put("end_time", now);
 		u.put("id", current.getId());
+		
+		Random rand = new Random();
+		Integer bet_total = rand.nextInt(1000) + 100;
+		Integer win_total = rand.nextInt(10000) + 2000;	
+		u.put("bet_total", bet_total);
+		u.put("win_total", win_total);
+		
 		diceDao.updateDiceDraw(u);
 		
 		/*
