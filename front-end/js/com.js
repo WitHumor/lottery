@@ -1,4 +1,4 @@
-var ServerUrl = 'http://www.xrp-candy.com/springBoot'; //192.168.31.254  43.20
+var ServerUrl = 'http://192.168.43.20:8080'; //192.168.31.254  43.20 http://www.xrp-candy.com/springBoot
 var HttpService = function() {
     this.MAX_VALUE = 100000;
     var TYPE = {
@@ -106,7 +106,7 @@ var common = {
             time: 2000
         });
     },
-    openlayer: function(types) {
+    openlayer: function(types, flags) {
         var log = {
                 tt: '<div class="lorcss">&nbsp;&nbsp;&nbsp;登&nbsp;录</div>',
                 ar: ['350px', '320px'],
@@ -119,7 +119,7 @@ var common = {
                     '<label class="loginName-error tip vh"></label>' +
                     '</div>' +
                     '<div class="fgroup"><div class="input-group"><input id="loginpass" type="password" placeholder="请输入密码" maxlength="12" iType="l_password" iStr="登录密码"/><span class="icon-pass"></span></div><label class="loginPass-error tip vh"></label></div>' +
-                    '<div class="fgroup"><div class="input-group"><input type="button" class="btn-submit" value="登录" onclick="common.login();"/></div></div>' +
+                    '<div class="fgroup"><div class="input-group"><input type="button" class="btn-submit" value="登录" onclick="common.login(\'' + flags + '\');"/></div></div>' +
                     '<div class="last-group f12"><a class="btn-forget-password fl hide">忘记密码？</a><span class="fr">没有账号？<a class="btn-sign-up" onclick="layer.closeAll();common.openlayer(\'R\');">在此注册</a></span></div></div>'
             },
             reg = {
@@ -160,7 +160,7 @@ var common = {
             }
         });
     },
-    login: function() {
+    login: function(flags) {
         var logName = $('#loginname').val(),
             logPass = $('#loginpass').val();
         var thisArr = [$('#loginname'), $('#loginpass')];
@@ -179,7 +179,12 @@ var common = {
                     });
                     setTimeout(function() {
                         layer.closeAll();
-                        window.location.reload();
+                        if (flags == 'bet') {
+                            window.location.href = 'http://www.xrp-candy.com/dice/home.html';
+                        } else {
+                            window.location.reload();
+                        }
+
                     }, 2000);
                 } else {
                     layer.msg('用户名或密码错误', {
@@ -370,6 +375,24 @@ var common = {
 
         // 在线咨询
         $('body').append('<script>var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?bdcca757f17f3439b840ebb0a44084a2";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();</script>');
+
+        if ($('.lotteryBetting').length > 0) {
+            $('.lotteryBetting').click(function() {
+                var userinfo = sessionStorage.getItem("userinfo");
+                if (userinfo && JSON.parse(userinfo).token) {
+                    // window.open("http://www.xrp-candy.com/dice/home.html");
+                    window.location.href = 'http://www.xrp-candy.com/dice/home.html';
+                } else {
+                    layer.msg("请先登录", {
+                        icon: 0,
+                        time: 2000
+                    });
+                    setTimeout(function() {
+                        common.openlayer('L','bet');
+                    }, 2000);
+                }
+            });
+        }
     },
 
     inviteCode: function() {

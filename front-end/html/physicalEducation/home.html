@@ -76,22 +76,6 @@
         $("#carousel").FtCarousel({
             time: 3000
         });
-        var userinfo = sessionStorage.getItem("userinfo");
-
-        $('.lotteryBetting').click(function() {
-            if (userinfo && JSON.parse(userinfo).token) {
-                // window.open("http://www.xrp-candy.com/dice/home.html");
-                window.location.href = 'http://www.xrp-candy.com/dice/home.html';
-            } else {
-                layer.msg("请先登录", {
-                    icon: 0,
-                    time: 2000
-                });
-                setTimeout(function() {
-                    common.openlayer('L');
-                }, 2000);
-            }
-        });
     });
     </script>
 </body>

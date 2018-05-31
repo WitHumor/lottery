@@ -835,3 +835,31 @@ input.btn-submit {
     vertical-align: middle;
     cursor: pointer;
 }
+
+.transfer2 {
+    color: #009F95;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.transfer3 {
+    color: #BE4822;
+    font-weight: bold;
+}
+
+.hyperchannel {
+    position: fixed;
+    left: 0;
+    top: 160px;
+}
+
+.hyperchannel li {
+    width: 90px;
+    margin-bottom: 10px;
+    list-style: none;
+    background-color: #44A1D1;
+    padding: 8px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    text-align: center;
+}

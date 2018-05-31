@@ -31,14 +31,24 @@ var DW = {
                         time: 2000
                     });
                 } else {
-                    if (DW.booltf) {
-                        DW.booltf = false;
-                        DW.currency('verify');
-                    } else {
-                        layer.msg('订单正在处理，请勿重复提交', {
-                            time: 2000
-                        });
-                    }
+                    layer.confirm('<div class="f14">请再次确认您的钱包地址: <br><span class="transfer2">' + $('#purseaddress').val() + '</span> <br><span class="transfer3">Tip: 请仔细核对钱包地址，如果由于您自己的失误造成的转账错误本网站概不负责！</span></div>', {
+                        btn: ['地址没错', '我要修改'],
+                        title: '钱包地址核对'
+                    }, function(index) {
+                        layer.close(index);
+                        if (DW.booltf) {
+                            DW.booltf = false;
+                            DW.currency('verify');
+                        } else {
+                            layer.msg('订单正在处理，请勿重复提交', {
+                                time: 2000
+                            });
+                        }
+                    }, function(index) {
+                        layer.close(index);
+                        $('#purseaddress').focus();
+                    });
+
                 }
             }
         });
@@ -84,7 +94,7 @@ var DW = {
                     DW.booltf = true;
                 }
             } else {
-                layer.msg('汇率异常，请刷新后再试', {
+                layer.msg('汇率异常，请稍后后再试', {
                     time: 2000,
                     icon: 2
                 });
@@ -111,11 +121,13 @@ var DW = {
         this.ajax.post('/member/member-withdrawn', param, function(data) {
             console.log(data);
             if (data.code == '2018') {
+                $('.btn-submit').attr('disabled', 'disabled');
                 layer.msg('成功生成取款订单', {
                     time: 2000,
                     icon: 1
                 });
                 setTimeout(function() {
+                    $('.btn-submit').removeAttr('disabled');
                     window.location.href = 'tradingrecord.html';
                 }, 2000);
             } else if (data.code == '1103') {
@@ -145,7 +157,7 @@ var DW = {
         if (e[0] == $('#rechargebtb')[0]) {
             var current = parseFloat($('#rechargebtb').val()),
                 btbrate = parseFloat($('.cny-rate').text());
-            console.log(!regs.test(current),isNaN(btbrate));
+            console.log(!regs.test(current), isNaN(btbrate));
             if (!regs.test(current) || isNaN(btbrate)) {
                 $('#btb-rmb').val('');
                 return;

@@ -134,6 +134,7 @@
     line-height: 38px;
     padding: 0;
     opacity: .9;
+    border: none;
 }
 
 .form-group .btn-submit:hover {

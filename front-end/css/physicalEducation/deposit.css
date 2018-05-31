@@ -265,17 +265,6 @@ button:disabled,
     padding: 10px;
 }
 
-.transfer2 {
-    color: #009F95;
-    font-weight: bold;
-    font-size: 16px;
-}
-
-.transfer3 {
-    color: #BE4822;
-    font-weight: bold;
-}
-
 .form-control + .form-control-right {
     color: #594333;
 }

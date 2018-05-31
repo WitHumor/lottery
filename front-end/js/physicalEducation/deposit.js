@@ -203,7 +203,7 @@ var DE = {
                 $('#pay-rmb').text(rmb + '点');
                 $('#firsts').hide();
                 $('#nexts').show();
-                $('#nexts .finish-div').html('<a class="btn-submit btn-finish" onclick="DE.finishPay();">完成支付</a>');
+                $('#nexts .finish-div').html('<button class="btn-submit btn-finish" onclick="DE.finishPay();">完成支付</button>');
                 layer.alert('<span class="transfer2">转账时请务必在备注中填写您的订单号</span>，转账时请务必在备注中填写您的订单号，转账时请务必在备注中填写您的订单号；<br>重要的事情说三遍，<span class="transfer3">请务必记住！！！</span><br><span  class="transfer3">若由于您的错误操作导致了损失，本网站概不负责！', {
                     skin: 'layui-layer-molv',
                     title: '转账须知',
@@ -231,6 +231,7 @@ var DE = {
         DE.ajax.post('/member/member-pay', {
             number: orderNum
         }, function(data) {
+            $('.btn-finish').attr('disabled', 'disabled');
             if (data.code == '2018') {
                 layer.msg('完成支付提交成功，请耐心等待工作人员处理', {
                     time: 2000,
@@ -244,8 +245,12 @@ var DE = {
                     time: 2000,
                     icon: 0
                 });
-                setTimeout(function() {window.location.reload();}, 2000);
+                setTimeout(function() {
+                    $('.btn-finish').removeAttr('disabled');
+                    window.location.reload();
+                }, 2000);
             } else {
+                $('.btn-finish').removeAttr('disabled');
                 layer.msg('完成支付提交失败', {
                     time: 2000,
                     icon: 1
