@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,11 +45,11 @@ import com.springboot.lottery.util.JsoupUtil;
 public class MemberController {
 
 	@Autowired
-	private MemberService memberService;
+	private MemberService memberService;// service
 	@Autowired
-	private EhCacheCacheManager manager;
+	private EhCacheCacheManager manager;// ehcache缓存
 	@Autowired
-	private HttpServletRequest request;
+	private HttpServletRequest request;// 请求
 
 	/**
 	 * 20180428会员开户
@@ -60,44 +61,13 @@ public class MemberController {
 	@ResponseBody
 	public ObjectResult addMemberAll(Member member) {
 		ObjectResult result = new ObjectResult();
-		// 根据请求头x-forwarded-for信息获取IP地址
-		String ipAddress = request.getHeader("x-forwarded-for");
-		// 判断IP地址是否为unknown或者为空，换为请求头Proxy-Client-IP信息
-		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-			ipAddress = request.getHeader("Proxy-Client-IP");
+		// 获取IP地址
+		String ipAddress = getIpAddress();
+		if(ipAddress.equals(MessageUtil.IP_ADDRESS)) {
+			// IP地址获取失败
+			result.setCode(MessageUtil.IP_ADDRESS);
+			return result;
 		}
-		// 判断IP地址是否为unknown或者为空，换为请求头WL-Proxy-Client-IP信息
-		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-			ipAddress = request.getHeader("WL-Proxy-Client-IP");
-		}
-		// 判断IP地址是否为unknown或者为空，换为获取客户端的IP地址的方法
-		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-			ipAddress = request.getRemoteAddr();
-			// 判断IP是否为真实IP，如果不是则根据网卡获取配置IP
-			if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")) {
-				// 根据网卡取本机配置的IP
-				InetAddress inet = null;
-				try {
-					inet = InetAddress.getLocalHost();
-				} catch (UnknownHostException e) {
-					// IP地址获取失败！
-					result.setCode(MessageUtil.IP_ADDRESS);
-					return result;
-				}
-				ipAddress = inet.getHostAddress();
-			}
-		}
-		// 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
-		// if(ipAddress!=null && ipAddress.length()>15){
-		// if(ipAddress.indexOf(",")>0){
-		// ipAddress = ipAddress.substring(0,ipAddress.indexOf(","));
-		// }
-		// }else {
-		// System.out.println("ssss");
-		// // IP地址获取失败！
-		// result.setCode(MessageUtil.IP_ADDRESS);
-		// return result;
-		// }
 		String name = member.getName();
 		String password = member.getPassword();
 		String bankPassword = member.getBank_password();
@@ -177,20 +147,14 @@ public class MemberController {
 		String name = member.getName();
 		// 获取登录密码
 		String password = member.getPassword();
-		Map<String, Object> map = new HashMap<String, Object>();
 		ObjectResult result = new ObjectResult();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("name", name);
 		List<Member> list = memberService.queryMember(map);
 		// 判断list对象是否为空
-		if (list == null || list.size() == 0) {
+		if (list == null || list.size() != 1) {
 			// 会员不存在
 			result.setCode(MessageUtil.MEMBER_NOT);
-			return result;
-		}
-		// 判断list集合中是否只有一条数据
-		if (list.size() != 1) {
-			// 数据库出现多条数据
-			result.setCode(MessageUtil.DATABASE_DADA_ERROR);
 			return result;
 		}
 		// 获取数据匹配密码
@@ -206,11 +170,51 @@ public class MemberController {
 			result.setCode(MessageUtil.PASSWORD_ERROR);
 			return result;
 		}
+		// 获取IP地址
+		String ipAddress = getIpAddress();
+		if(ipAddress.equals(MessageUtil.IP_ADDRESS)) {
+			// IP地址获取失败
+			result.setCode(MessageUtil.IP_ADDRESS);
+			return result;
+		}
+		if(cache.get(member.getMid()) != null) {
+			// 获取token
+			String cacheToken = (String)cache.get(member.getMid()).get();
+			// 获取token中会员信息
+			Member tokenMember = (Member)cache.get(cacheToken).get();
+			if(member.getMid().equals(tokenMember.getMid())) {
+				// 移除mid缓存
+				cache.evict(tokenMember.getMid());
+				// 移除IP地址缓存
+				cache.evict(tokenMember.getAddress());
+				// 移除token缓存
+				cache.evict(cacheToken);
+			}
+		}
+		if(cache.get(ipAddress) != null) {
+			// 获取token
+			String cacheToken = (String)cache.get(ipAddress).get();
+			// 获取token中会员信息
+			Member tokenMember = (Member)cache.get(cacheToken).get();
+			if(ipAddress.equals(tokenMember.getAddress())) {
+				// 移除mid缓存
+				cache.evict(tokenMember.getMid());
+				// 移除IP地址缓存
+				cache.evict(tokenMember.getAddress());
+				// 移除token缓存
+				cache.evict(cacheToken);
+			}
+		}
 		// 产生token
 		token = BeanLoad.getUUID();
-		// 把token做为key放入ehcache缓存
-		cache.put(token, member);
 		member.setToken(token);
+		member.setAddress(ipAddress);
+		// 把token做为key放入ehcache缓存中
+		cache.put(token, member);
+		// 把mid作为key放入ehcache缓存中
+		cache.put(member.getMid(), token);
+		// 把IP地址作为key放入ehcache缓存中
+		cache.put(ipAddress, token);
 		result.setResult(toMapByMember(member));
 		return result;
 	}
@@ -234,21 +238,14 @@ public class MemberController {
 		String name = member.getName();
 		// 获取登录密码
 		String password = member.getPassword();
-		Map<String, Object> map = new HashMap<String, Object>();
 		ObjectResult result = new ObjectResult();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("name", name);
 		List<Member> list = memberService.queryMember(map);
-
 		// 判断list对象是否为空
-		if (list == null || list.size() == 0) {
+		if (list == null || list.size() != 1) {
 			// 会员不存在
 			result.setCode(MessageUtil.MEMBER_NOT);
-			return result;
-		}
-		// 判断list集合中是否只有一条数据
-		if (list.size() != 1) {
-			// 数据库出现多条数据
-			result.setCode(MessageUtil.DATABASE_DADA_ERROR);
 			return result;
 		}
 		// 获取数据匹配密码
@@ -264,11 +261,33 @@ public class MemberController {
 			result.setCode(MessageUtil.PASSWORD_ERROR);
 			return result;
 		}
+		// 获取IP地址
+		String ipAddress = getIpAddress();
+		if(ipAddress.equals(MessageUtil.IP_ADDRESS)) {
+			// IP地址获取失败
+			result.setCode(MessageUtil.IP_ADDRESS);
+			return result;
+		}
+		if(cache.get(member.getMid()) != null) {
+			// 获取token
+			String cacheToken = (String)cache.get(member.getMid()).get();
+			// 获取token中会员信息
+			Member tokenMember = (Member)cache.get(cacheToken).get();
+			if(member.getMid().equals(tokenMember.getMid())) {
+				// 移除mid缓存
+				cache.evict(tokenMember.getMid());
+				// 移除token缓存
+				cache.evict(cacheToken);
+			}
+		}
 		// 产生token
 		token = BeanLoad.getUUID();
-		// 把token做为key放入ehcache缓存
-		cache.put(token, member);
 		member.setToken(token);
+		member.setAddress(ipAddress);
+		// 把token做为key放入ehcache缓存中
+		cache.put(token, member);
+		// 把mid作为key放入ehcache缓存中
+		cache.put(member.getMid(), token);
 		result.setResult(toMapByMember(member));
 		return result;
 	}
@@ -294,6 +313,7 @@ public class MemberController {
 		}
 		// 移除token
 		cache.evict(token);
+		cache.evict("ipAddress");
 		// 判断token是否被移除
 		if (cache.get(token) != null) {
 			return result;
@@ -312,19 +332,18 @@ public class MemberController {
 		String token = request.getHeader("token");
 		ObjectResult result = new ObjectResult();
 		Cache cache = getCache();
-		// // 判断token是否为空
-		// if (StringUtils.isBlank(token)) {
-		// // 空值
-		// result.setCode(MessageUtil.NULL_ERROR);
-		// return result;
-		// }
-		// // 判断token是否过期
-		// if (cache.get(token) == null) {
-		// // token过期
-		// result.setCode(MessageUtil.TOKEN_OVERDUE);
-		// return result;
-		// }
-		System.out.println("aaaaaaaaaaaaaaaaaaa");
+		// 判断token是否为空
+		if (StringUtils.isBlank(token)) {
+			// 空值
+			result.setCode(MessageUtil.NULL_ERROR);
+			return result;
+		}
+		// 判断token是否过期
+		if (cache.get(token) == null) {
+			// token过期
+			result.setCode(MessageUtil.TOKEN_OVERDUE);
+			return result;
+		}
 		// 获取缓存中的数据
 		Member member = (Member) cache.get(token).get();
 		// 获取缓存中的会员id
@@ -469,7 +488,6 @@ public class MemberController {
 		String replace = split[0].replace(",", "");
 		// 换算金额
 		Float currencyCount = Float.parseFloat(money) / Float.parseFloat(replace);
-		// 根据会员id获取余额
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 设置会员id
 		map.put("mid", mid);
@@ -500,23 +518,17 @@ public class MemberController {
 		memberFundRecord.setDiscounts(null);// 优惠金额
 		memberFundRecord.setState("0");// 状态
 		memberFundRecord.setRemark(remark); // 备注
-		int addFundRecord = memberService.addFundRecord(memberFundRecord);
+		map.put("memberFundRecord", memberFundRecord);
+		int addFundRecord = memberService.memberWithdrawn(map);
 		// 判断是否添加成功
-		if (addFundRecord <= 0) {
+		if (addFundRecord == 0) {
 			// 添加失败
 			result.setCode(MessageUtil.INSERT_ERROR);
 			return result;
 		}
-		// 设置余额
-		map.put("money", String.format("%.2f", 0 - Float.parseFloat(money)));
-		// 根据会员id修改账户余额
-		int updateSum = memberService.updateSum(map);
-		// 判断余额是否修改成功，如果不成功，则删除资金记录
-		if (updateSum <= 0) {
-			// 根据id删除资金记录
-			memberService.deleteFundRecord(memberFundRecord.getFrid());
-			// 修改失败
-			result.setCode(MessageUtil.UPDATE_ERROR);
+		if (addFundRecord == -1) {
+			// 余额不足
+			result.setCode(MessageUtil.MONEY_EXCEED);
 			return result;
 		}
 		return result;
@@ -712,46 +724,13 @@ public class MemberController {
 		}
 		map.put("state", state);// 状态
 		map.put("resultRemark", resultRemark);// 结果备注
+		map.put("record", record);// 记录类型：充值、取款
+		map.put("fundRecordDTO", fundRecordDTO);
 		// 根据订单号修改状态
-		int updateFundRecord = memberService.updateFundRecord(map);
+		int updateFundRecord = alterFundRecord(map);
 		if (updateFundRecord <= 0) {
 			result.setCode(MessageUtil.UPDATE_ERROR);
 			return result;
-		}
-		Map<String, Object> memberMap = new HashMap<String, Object>();
-		String mid = fundRecordDTO.getMid();// 获取mid
-		String money = fundRecordDTO.getMoney();// 获取金额
-		memberMap.put("mid", mid);
-		// 如果充值成功向账户中添加金额
-		if (record.equals("0") && state.equals("2")) {
-			String discounts = fundRecordDTO.getDiscounts();// 获取优惠金额
-			memberMap.put("money", String.format("%.2f", Float.valueOf(money) + Float.valueOf(discounts)));
-			int updateSum = memberService.updateSum(memberMap);
-			if (updateSum > 0) {
-				return result;
-			} else {
-				map.put("state", fundRecordDTO.getState());// 状态
-				map.put("resultRemark", "--");// 结果备注
-				// 根据订单号修改状态
-				memberService.updateFundRecord(map);
-				result.setCode(MessageUtil.UPDATE_ERROR);
-				return result;
-			}
-		}
-		// 如果提款失败向账户返回金额
-		if (record.equals("1") && (state.equals("-1") || state.equals("-2"))) {
-			memberMap.put("money", String.format("%.2f", Float.valueOf(money)));
-			int updateSum = memberService.updateSum(memberMap);
-			if (updateSum > 0) {
-				return result;
-			} else {
-				map.put("state", fundRecordDTO.getState());// 状态
-				map.put("resultRemark", "--");// 结果备注
-				// 根据订单号修改状态
-				memberService.updateFundRecord(map);
-				result.setCode(MessageUtil.UPDATE_ERROR);
-				return result;
-			}
 		}
 		return result;
 	}
@@ -1048,21 +1027,21 @@ public class MemberController {
 			result.setCode(MessageUtil.DATA_ERROR_OVERSIZE);
 			return result;
 		}
-		Map<String, Object> memberMap = new HashMap<String, Object>();
-		memberMap.put("mid", mid);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("mid", mid);
 		// 查询会员余额是否够下注
-		List<Member> memberList = memberService.queryMember(memberMap);
+		List<Member> memberList = memberService.queryMember(map);
 		if (memberList == null || memberList.size() != 1) {
 			// 数据匹配错误
 			result.setCode(MessageUtil.DATA_NOT_FOUND);
 			return result;
 		}
 		member = memberList.get(0);
-		if (Float.parseFloat(member.getSum()) < Float.parseFloat(money)) {
-			// 超过自己的余额
-			result.setCode(MessageUtil.MONEY_EXCEED);
-			return result;
-		}
+//		if (Float.parseFloat(member.getSum()) < Float.parseFloat(money)) {
+//			// 超过自己的余额
+//			result.setCode(MessageUtil.MONEY_EXCEED);
+//			return result;
+//		}
 		// 获取比率
 		if (StringUtils.isBlank(iorRatio) || mapData.get(iorRatio).equals("单") || mapData.get(iorRatio).equals("双")) {
 			iorRatio = null;
@@ -1135,24 +1114,17 @@ public class MemberController {
 		memberSingleNote.setLeague(league);// 设置联赛
 		memberSingleNote.setMoney(money);// 设置下注金额
 		memberSingleNote.setValid_money(String.format("%.2f", validMoney));// 设置有效金额
-		int betMember = memberService.betMember(memberSingleNote);
+		map.put("memberSingleNote", memberSingleNote);
+		int betMember = memberService.betMember(map);
 		// 判断数据是否添加成功
-		if (betMember <= 0) {
+		if (betMember == 0) {
 			// 添加失败
 			result.setCode(MessageUtil.INSERT_ERROR);
 			return result;
 		}
-		// 修改账户余额
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("mid", mid);// 设置mid
-		map.put("money", String.format("%.2f", 0 - Float.parseFloat(money)));// 设置余额
-		// 根据mid修改余额
-		int updateSum = memberService.updateSum(map);
-		// 判断余额是否修改成功，如果不成功则删除添加的下注订单
-		if (updateSum <= 0) {
-			// 修改失败
-			result.setCode(MessageUtil.UPDATE_ERROR);
-			memberService.deleteSingleNote(snid);
+		if (betMember == -1) {
+			// 超过自己的余额
+			result.setCode(MessageUtil.MONEY_EXCEED);
 			return result;
 		}
 		return result;
@@ -1264,27 +1236,13 @@ public class MemberController {
 		}
 		String money = singleNoteDTO.getMoney();// 获取下注金额
 		String snid = singleNoteDTO.getSnid();// 获取注单id
-		Map<String, Object> singleNoteMap = new HashMap<String, Object>();
+		
 		map.put("mid", singleNoteDTO.getMid());// 设置会员id
 		map.put("money", String.format("%.2f", Float.parseFloat(money)));// 设置余额
+		map.put("snid", snid);// 设置注单id
 		// 根据mid修改余额
 		int updateSum = memberService.updateSum(map);
 		if (updateSum <= 0) {
-			result.setCode(MessageUtil.UPDATE_ERROR);
-			return result;
-		}
-		// 根据snid修改数据
-		singleNoteMap.put("snid", snid);
-		// 往map里添加需要修改的字段
-		singleNoteMap.put("state", "1");
-		singleNoteMap.put("winLose", "0");
-		singleNoteMap.put("dealMoney", "0");
-		// 根据snid修改注单状态
-		int singleNoteAccount = memberService.singleNoteAccount(singleNoteMap);
-		// 如果注单表修改失败则把账户余额修改回去
-		if (singleNoteAccount <= 0) {
-			map.put("money", 0 - Float.parseFloat(money));// 设置余额
-			memberService.updateSum(map);// 修改账户余额
 			result.setCode(MessageUtil.UPDATE_ERROR);
 			return result;
 		}
@@ -1350,7 +1308,7 @@ public class MemberController {
 			Float memberByMoney = Float.parseFloat(singleNoteDTO.getSum());// 获取用户余额
 			Float money = Float.parseFloat(singleNoteDTO.getMoney());// 获取下注金额
 			Float sum = memberByMoney + money;
-			boolean stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNoteDTO, "0");
+			boolean stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNoteDTO, "0");
 			if (stateUpdate) {
 				return result;
 			}
@@ -1461,7 +1419,7 @@ public class MemberController {
 					Float money = Float.parseFloat(singleNote.getMoney());// 获取下注金额
 					// 返回下注金额到账户余额
 					Float sum = memberByMoney + money;
-					stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
+					stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
 					if (stateUpdate) {
 						System.out.println("注单结算成功");
 						continue;
@@ -1502,7 +1460,7 @@ public class MemberController {
 					Float money = Float.parseFloat(singleNote.getMoney());// 获取下注金额
 					// 返回下注金额到账户余额
 					Float sum = memberByMoney + money;
-					stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
+					stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
 					if (stateUpdate) {
 						System.out.println("注单结算成功");
 						continue;
@@ -1557,13 +1515,13 @@ public class MemberController {
 			// 全输
 			if ((scoreTeamc + scoreTeamh) % 2 == 0) {
 				sum = memberByMoney;
-				stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+				stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 				return stateUpdate ? true : false;
 			}
 			// 全赢
 			if ((scoreTeamc + scoreTeamh) % 2 == 1) {
 				sum = memberByMoney + validMoney;
-				stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+				stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 				return stateUpdate ? true : false;
 			}
 		}
@@ -1571,13 +1529,13 @@ public class MemberController {
 			// 全赢
 			if ((scoreTeamc + scoreTeamh) % 2 == 0) {
 				sum = memberByMoney + validMoney;
-				stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+				stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 				return stateUpdate ? true : false;
 			}
 			// 全输
 			if ((scoreTeamc + scoreTeamh) % 2 == 1) {
 				sum = memberByMoney;
-				stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+				stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 				return stateUpdate ? true : false;
 			}
 		}
@@ -1589,38 +1547,38 @@ public class MemberController {
 					// 既不是大球也不是小球，买大球的人赢一半
 					if ((scoreTeamc + scoreTeamh) - Integer.parseInt(split[1]) == 0) {
 						sum = memberByMoney + money + (validMoney / 2);
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if ((scoreTeamc + scoreTeamh) < Integer.parseInt(split[1])) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 全赢
 					if ((scoreTeamc + scoreTeamh) > Integer.parseInt(split[1])) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 				} else if (split[1].contains(".")) {
 					// 既不是大球也不是小球，买大球的人输一半
 					if ((scoreTeamc + scoreTeamh) - Integer.parseInt(split[0]) == 0) {
 						sum = memberByMoney + (money / 2);
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if ((scoreTeamc + scoreTeamh) < Integer.parseInt(split[0])) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 全赢
 					if ((scoreTeamc + scoreTeamh) > Integer.parseInt(split[0])) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 				}
@@ -1628,32 +1586,32 @@ public class MemberController {
 				// 全赢
 				if ((scoreTeamc + scoreTeamh) > Float.parseFloat(ratio)) {
 					sum = memberByMoney + money + validMoney;
-					stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+					stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 					return stateUpdate ? true : false;
 				}
 				// 全输
 				if ((scoreTeamc + scoreTeamh) < Float.parseFloat(ratio)) {
 					sum = memberByMoney;
-					stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+					stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 					return stateUpdate ? true : false;
 				}
 			} else if (!ratio.contains(".") && !ratio.contains("/")) {
 				// 全赢
 				if ((scoreTeamc + scoreTeamh) > Integer.parseInt(ratio)) {
 					sum = memberByMoney + money + validMoney;
-					stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+					stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 					return stateUpdate ? true : false;
 				}
 				// 全输
 				if ((scoreTeamc + scoreTeamh) < Integer.parseInt(ratio)) {
 					sum = memberByMoney;
-					stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+					stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 					return stateUpdate ? true : false;
 				}
 				// 不输不赢
 				if ((scoreTeamc + scoreTeamh) - Integer.parseInt(ratio) == 0) {
 					sum = memberByMoney + money;
-					stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
+					stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
 					return stateUpdate ? true : false;
 				}
 			}
@@ -1666,38 +1624,38 @@ public class MemberController {
 					// 既不是大球也不是小球，买小球的人输一半
 					if ((scoreTeamc + scoreTeamh) - Integer.parseInt(split[1]) == 0) {
 						sum = memberByMoney + (money / 2);
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if ((scoreTeamc + scoreTeamh) > Integer.parseInt(split[1])) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 全赢
 					if ((scoreTeamc + scoreTeamh) < Integer.parseInt(split[1])) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 				} else if (split[1].contains(".")) {
 					// 既不是大球也不是小球，买小球的人赢一半
 					if ((scoreTeamc + scoreTeamh) - Integer.parseInt(split[0]) == 0) {
 						sum = memberByMoney + money + (validMoney / 2);
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if ((scoreTeamc + scoreTeamh) > Integer.parseInt(split[0])) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 全赢
 					if ((scoreTeamc + scoreTeamh) < Integer.parseInt(split[0])) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 				}
@@ -1705,32 +1663,32 @@ public class MemberController {
 				// 全赢
 				if ((scoreTeamc + scoreTeamh) < Float.parseFloat(ratio)) {
 					sum = memberByMoney + money + validMoney;
-					stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+					stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 					return stateUpdate ? true : false;
 				}
 				// 全输
 				if ((scoreTeamc + scoreTeamh) > Float.parseFloat(ratio)) {
 					sum = memberByMoney;
-					stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+					stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 					return stateUpdate ? true : false;
 				}
 			} else if (!ratio.contains(".") && !ratio.contains("/")) {
 				// 全赢
 				if ((scoreTeamc + scoreTeamh) < Integer.parseInt(ratio)) {
 					sum = memberByMoney + money + validMoney;
-					stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+					stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 					return stateUpdate ? true : false;
 				}
 				// 全输
 				if ((scoreTeamc + scoreTeamh) > Integer.parseInt(ratio)) {
 					sum = memberByMoney;
-					stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+					stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 					return stateUpdate ? true : false;
 				}
 				// 不输不赢
 				if ((scoreTeamc + scoreTeamh) - Integer.parseInt(ratio) == 0) {
 					sum = memberByMoney + money;
-					stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
+					stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
 					return stateUpdate ? true : false;
 				}
 			}
@@ -1741,32 +1699,32 @@ public class MemberController {
 					// 全赢
 					if (scoreTeamh > Float.parseFloat(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if (scoreTeamh < Float.parseFloat(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 				} else if (!ratio.contains(".")) {
 					// 全赢
 					if (scoreTeamh > Integer.parseInt(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if (scoreTeamh < Integer.parseInt(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 不输不赢
 					if (scoreTeamh - Integer.parseInt(ratio) == 0) {
 						sum = memberByMoney + money;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
 						return stateUpdate ? true : false;
 					}
 				}
@@ -1776,32 +1734,32 @@ public class MemberController {
 					// 全赢
 					if (scoreTeamc > Float.parseFloat(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if (scoreTeamc < Float.parseFloat(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 				} else if (!ratio.contains(".")) {
 					// 全赢
 					if (scoreTeamc > Integer.parseInt(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if (scoreTeamc < Integer.parseInt(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 不输不赢
 					if (scoreTeamc - Integer.parseInt(ratio) == 0) {
 						sum = memberByMoney + money;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
 						return stateUpdate ? true : false;
 					}
 				}
@@ -1813,32 +1771,32 @@ public class MemberController {
 					// 全赢
 					if (scoreTeamh < Float.parseFloat(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if (scoreTeamh > Float.parseFloat(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 				} else if (!ratio.contains(".")) {
 					// 全赢
 					if (scoreTeamh < Integer.parseInt(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if (scoreTeamh > Integer.parseInt(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 不输不赢
 					if (scoreTeamh - Integer.parseInt(ratio) == 0) {
 						sum = memberByMoney + money;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
 						return stateUpdate ? true : false;
 					}
 				}
@@ -1848,32 +1806,32 @@ public class MemberController {
 					// 全赢
 					if (scoreTeamc < Float.parseFloat(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if (scoreTeamc > Float.parseFloat(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 				} else if (!ratio.contains(".")) {
 					// 全赢
 					if (scoreTeamc < Integer.parseInt(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if (scoreTeamc > Integer.parseInt(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 不输不赢
 					if (scoreTeamc - Integer.parseInt(ratio) == 0) {
 						sum = memberByMoney + money;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
 						return stateUpdate ? true : false;
 					}
 				}
@@ -1888,38 +1846,38 @@ public class MemberController {
 						// 赢一半
 						if (score - Integer.parseInt(split[1]) == 0) {
 							sum = memberByMoney + money + (validMoney / 2);
-							stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+							stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 							return stateUpdate ? true : false;
 						}
 						// 全输
 						if (score < Integer.parseInt(split[1])) {
 							sum = memberByMoney;
-							stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+							stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 							return stateUpdate ? true : false;
 						}
 						// 全赢
 						if (score > Integer.parseInt(split[1])) {
 							sum = memberByMoney + money + validMoney;
-							stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+							stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 							return stateUpdate ? true : false;
 						}
 					} else if (split[1].contains(".")) {
 						// 输一半
 						if (score - Integer.parseInt(split[0]) == 0) {
 							sum = memberByMoney + (money / 2);
-							stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+							stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 							return stateUpdate ? true : false;
 						}
 						// 全输
 						if (score < Integer.parseInt(split[0])) {
 							sum = memberByMoney;
-							stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+							stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 							return stateUpdate ? true : false;
 						}
 						// 全赢
 						if (score > Integer.parseInt(split[0])) {
 							sum = memberByMoney + money + validMoney;
-							stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+							stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 							return stateUpdate ? true : false;
 						}
 					}
@@ -1927,32 +1885,32 @@ public class MemberController {
 					// 全输
 					if (score < Float.parseFloat(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 全赢
 					if (score > Float.parseFloat(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 				} else if (!ratio.contains(".") && !ratio.contains("/")) {
 					// 全输
 					if (score < Integer.parseInt(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 全赢
 					if (score > Integer.parseInt(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 不输不赢
 					if (score - Integer.parseInt(ratio) == 0) {
 						sum = memberByMoney + money;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
 						return stateUpdate ? true : false;
 					}
 				}
@@ -1965,38 +1923,38 @@ public class MemberController {
 						// 输一半
 						if (score - Integer.parseInt(split[1]) == 0) {
 							sum = memberByMoney + (money / 2);
-							stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+							stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 							return stateUpdate ? true : false;
 						}
 						// 全赢
 						if (score < Integer.parseInt(split[1])) {
 							sum = memberByMoney + money + validMoney;
-							stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+							stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 							return stateUpdate ? true : false;
 						}
 						// 全输
 						if (score > Integer.parseInt(split[1])) {
 							sum = memberByMoney;
-							stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+							stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 							return stateUpdate ? true : false;
 						}
 					} else if (split[1].contains(".")) {
 						// 赢一半
 						if (score - Integer.parseInt(split[0]) == 0) {
 							sum = memberByMoney + money + (validMoney / 2);
-							stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+							stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 							return stateUpdate ? true : false;
 						}
 						// 全赢
 						if (score < Integer.parseInt(split[0])) {
 							sum = memberByMoney + money + validMoney;
-							stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+							stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 							return stateUpdate ? true : false;
 						}
 						// 全输
 						if (score > Integer.parseInt(split[0])) {
 							sum = memberByMoney;
-							stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+							stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 							return stateUpdate ? true : false;
 						}
 					}
@@ -2004,32 +1962,32 @@ public class MemberController {
 					// 全赢
 					if (score < Float.parseFloat(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if (score > Float.parseFloat(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 				} else if (!ratio.contains(".") && !ratio.contains("/")) {
 					// 全赢
 					if (score < Integer.parseInt(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if (score > Integer.parseInt(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 不输不赢
 					if (score - Integer.parseInt(ratio) == 0) {
 						sum = memberByMoney + money;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
 						return stateUpdate ? true : false;
 					}
 				}
@@ -2041,32 +1999,32 @@ public class MemberController {
 					// 全赢
 					if (score > Float.parseFloat(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if (score < Float.parseFloat(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 				} else if (!ratio.contains(".")) {
 					// 全赢
 					if (score > Integer.parseInt(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 全输
 					if (score < Integer.parseInt(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 不输不赢
 					if (score - Integer.parseInt(ratio) == 0) {
 						sum = memberByMoney + money;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
 						return stateUpdate ? true : false;
 					}
 				}
@@ -2076,32 +2034,32 @@ public class MemberController {
 					// 全输
 					if (score > Float.parseFloat(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 全赢
 					if (score < Float.parseFloat(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 				} else if (!ratio.contains(".")) {
 					// 全输
 					if (score > Integer.parseInt(ratio)) {
 						sum = memberByMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 						return stateUpdate ? true : false;
 					}
 					// 全赢
 					if (score < Integer.parseInt(ratio)) {
 						sum = memberByMoney + money + validMoney;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 						return stateUpdate ? true : false;
 					}
 					// 不输不赢
 					if (score - Integer.parseInt(ratio) == 0) {
 						sum = memberByMoney + money;
-						stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
+						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0");
 						return stateUpdate ? true : false;
 					}
 				}
@@ -2112,7 +2070,7 @@ public class MemberController {
 			if (iorType.equals("独赢")) {
 				// 下注金额与有效金额都返回账户余额
 				sum = memberByMoney + validMoney;
-				stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
+				stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1");
 				return stateUpdate ? true : false;
 			}
 		}
@@ -2120,61 +2078,10 @@ public class MemberController {
 		if (!bet.equals(singleNote.getBet())) {
 			// 返回下注金额到账户余额
 			sum = memberByMoney;
-			stateUpdate = stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
+			stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1");
 			return stateUpdate ? true : false;
 		}
 		return false;
-	}
-
-	/**
-	 * 修改状态
-	 * 
-	 * @param mid
-	 * @param sum
-	 * @param memberByMoney
-	 * @param singleNote
-	 * @param winLose
-	 * @return
-	 */
-	public boolean stateUpdate(String mid, Float sum, Float memberByMoney, Float money, SingleNoteDTO singleNote,
-			String winLose) {
-		Map<String, Object> singleNoteMap = new HashMap<String, Object>();
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("mid", mid);// 设置mid
-		map.put("money", String.format("%.2f", sum - memberByMoney));// 设置余额
-		// 根据mid修改余额
-		int updateSum = memberService.updateSum(map);
-		if (updateSum <= 0) {
-			System.err.println("修改余额失败！");
-			return false;
-		}
-		// 根据snid修改数据
-		singleNoteMap.put("snid", singleNote.getSnid());
-		// 往map里添加需要修改的字段
-		singleNoteMap.put("state", "1");
-		singleNoteMap.put("winLose", winLose);
-		money = sum - (memberByMoney + money);
-		// 保留两位小数
-		String dealMoney = String.format("%.2f", money);
-		// 如果赢就拼接加号
-		dealMoney = winLose.equals("1") ? "+" + dealMoney : dealMoney;
-		// 如果输就拼接减号
-		dealMoney = winLose.equals("-1") ? "-" + dealMoney : dealMoney;
-		// 如果不输不赢,则什么都不要加
-		dealMoney = winLose.equals("0") ? String.format("%.0f", money) : dealMoney;
-		singleNoteMap.put("dealMoney", dealMoney);
-		// 根据snid修改注单状态
-		int singleNoteAccount = memberService.singleNoteAccount(singleNoteMap);
-		// 如果注单表修改失败则把账户余额修改回去
-		if (singleNoteAccount <= 0) {
-			System.err.println("修改注单状态失败！");
-			map.put("money", String.format("%.2f", 0 - (sum - memberByMoney)));// 设置余额
-			memberService.updateSum(map);// 修改账户余额
-			return false;
-		} else {
-			System.out.println("注单" + singleNote.getNumber() + "结算成功！");
-		}
-		return true;
 	}
 
 	/**
@@ -2224,7 +2131,6 @@ public class MemberController {
 			singleNoteMap.put("state", "2");
 			// 根据snid修改注单状态
 			int singleNoteAccount = memberService.singleNoteAccount(singleNoteMap);
-			// 如果注单表修改失败则把账户余额修改回去
 			if (singleNoteAccount <= 0) {
 				System.err.println("修改注单状态失败！");
 				continue;
@@ -2233,6 +2139,84 @@ public class MemberController {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * 充值/取款结算-事务
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Transactional
+	public int alterFundRecord(Map<String, Object> map) {
+		int alertFundRecord = 0;
+		// 根据订单号修改状态
+		alertFundRecord = memberService.updateFundRecord(map);
+		// 获取记录DTO
+		FundRecordDTO fundRecordDTO = (FundRecordDTO) map.get("fundRecordDTO");
+		Map<String, Object> memberMap = new HashMap<String, Object>();
+		String mid = fundRecordDTO.getMid();// 获取mid
+		String money = fundRecordDTO.getMoney();// 获取金额
+		memberMap.put("mid", mid);
+		// 获取状态
+		String state = (String) map.get("state");
+		// 获取记录类型：充值、取款
+		String record = (String) map.get("record");
+		// 如果充值成功向账户中添加金额
+		if (record.equals("0") && state.equals("2")) {
+			String discounts = fundRecordDTO.getDiscounts();// 获取优惠金额
+			memberMap.put("money", String.format("%.2f", Float.valueOf(money) + Float.valueOf(discounts)));
+			alertFundRecord = memberService.updateSum(memberMap);
+			return alertFundRecord;
+		}
+		// 如果提款失败向账户返回金额
+		if (record.equals("1") && (state.equals("-1") || state.equals("-2"))) {
+			memberMap.put("money", String.format("%.2f", Float.valueOf(money)));
+			alertFundRecord = memberService.updateSum(memberMap);
+			return alertFundRecord;
+		}
+		return alertFundRecord;
+	}
+	
+	/**
+	 * 获取IP地址
+	 * 
+	 * @return
+	 */
+	public String getIpAddress() {
+		// 根据请求头x-forwarded-for信息获取IP地址
+		String ipAddress = request.getHeader("x-forwarded-for");
+		// 判断IP地址是否为unknown或者为空，换为请求头Proxy-Client-IP信息
+		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getHeader("Proxy-Client-IP");
+		}
+		// 判断IP地址是否为unknown或者为空，换为请求头WL-Proxy-Client-IP信息
+		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getHeader("WL-Proxy-Client-IP");
+		}
+		// 判断IP地址是否为unknown或者为空，换为获取客户端的IP地址的方法
+		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getRemoteAddr();
+			// 判断IP是否为真实IP，如果不是则根据网卡获取配置IP
+			if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")) {
+				// 根据网卡取本机配置的IP
+				InetAddress inet = null;
+				try {
+					inet = InetAddress.getLocalHost();
+				} catch (UnknownHostException e) {
+					// IP地址获取失败！
+					return MessageUtil.IP_ADDRESS;
+				}
+				ipAddress = inet.getHostAddress();
+			}
+		}
+		 // 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
+		 if(ipAddress!=null && ipAddress.length()>15){
+			 if(ipAddress.indexOf(",")>0){
+			 ipAddress = ipAddress.substring(0,ipAddress.indexOf(","));
+			 }
+		 }
+		 return ipAddress;
 	}
 
 	/**

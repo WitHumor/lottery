@@ -9,6 +9,8 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.springboot.lottery.dto.FundRecordDTO;
 import com.springboot.lottery.dto.SingleNoteDTO;
@@ -71,9 +73,10 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	@Override
 	public int betMember(MemberSingleNote memberSingleNote) {
-		return memberDao.betMember(memberSingleNote);
+		int betMember = memberDao.betMember(memberSingleNote);
+		return betMember;
 	}
-
+	
 	/**
 	 * 根据mid修改余额
 	 * 
@@ -87,7 +90,7 @@ public class MemberServiceImpl implements MemberService {
 			return 0;
 		}
 		// 获取money
-		Float money = Float.parseFloat((String) map.get("money"));
+		String money = (String) map.get("money");
 		int updateSum = 0;
 		for (int i = 0; i < 3; i++) {
 			// 查询会员信息
@@ -103,13 +106,17 @@ public class MemberServiceImpl implements MemberService {
 			map.put("version", version);
 			// 获取会员余额
 			Float sum = Float.parseFloat(member.getSum());
-			// 判断余额是否足够
-			if(sum < money) {
-				updateSum = -1;
-				break;
+			// 判断是否是扣减余额
+			if(money.contains("-")) {
+				String[] split = money.split("-");
+				// 判断余额是否足够
+				if(sum < Float.parseFloat(split[1])) {
+					updateSum = -1;
+					break;
+				}
 			}
 			// 设置余额
-			sum = sum + money;
+			sum = sum + Float.parseFloat(money);
 			map.put("sum", String.format("%.2f", sum));
 			updateSum = memberDao.updateSum(map);
 			if (updateSum > 0) {
@@ -311,6 +318,137 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	/**
+	 * 在线取款-事务
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Transactional
+	public int memberWithdrawn(Map<String, Object> map) {
+		int addFundRecord = 0;
+		MemberFundRecord memberFundRecord = (MemberFundRecord) map.get("memberFundRecord");
+		addFundRecord = addFundRecord(memberFundRecord);
+		if (addFundRecord <= 0) {
+			return addFundRecord;
+		}
+		String money = memberFundRecord.getMoney();
+		// 设置余额
+		map.put("money", String.format("%.2f", 0 - Float.parseFloat(money)));
+		// 根据会员id修改账户余额
+		addFundRecord = updateSum(map);
+		if(addFundRecord == 0 || addFundRecord == -1) {
+			// 手动回滚，这样上层就无需去处理异常（现在项目的做法）
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		}
+		return addFundRecord;
+	}
+	
+	/**
+	 * 注单取消-事务
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Transactional
+	public int cancelSingleNote(Map<String, Object> map) {
+		int cancelSingleNote = 0;
+		Map<String, Object> singleNoteMap = new HashMap<String, Object>();
+		// 根据snid修改数据
+		singleNoteMap.put("snid", map.get("snid"));
+		// 往map里添加需要修改的字段
+		singleNoteMap.put("state", "1");
+		singleNoteMap.put("winLose", "0");
+		singleNoteMap.put("dealMoney", "0");
+		// 根据snid修改注单状态
+		cancelSingleNote = singleNoteAccount(singleNoteMap);
+		if(cancelSingleNote <= 0) {
+			return cancelSingleNote;
+		}
+		// 根据mid修改余额
+		cancelSingleNote = updateSum(map);
+		if(cancelSingleNote == 0 || cancelSingleNote == -1) {
+			// 手动回滚，这样上层就无需去处理异常（现在项目的做法）
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		}
+		return cancelSingleNote;
+	}
+
+	/**
+	 * 会员下注-事务
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Transactional
+	public int betMember(Map<String, Object> map) {
+		MemberSingleNote memberSingleNote = (MemberSingleNote)map.get("memberSingleNote");
+		int betMember = 0;
+		betMember = betMember(memberSingleNote);
+		// 判断余额是否修改成功，如果不成功则删除添加的下注订单
+		if(betMember <= 0) {
+			return betMember;
+		}
+		// 修改账户余额
+		map.put("money", String.format("%.2f", 0 - Float.parseFloat(memberSingleNote.getMoney())));// 设置余额
+		// 根据mid修改余额
+		betMember = updateSum(map);
+		if(betMember == 0 || betMember == -1) {
+			// 手动回滚，这样上层就无需去处理异常（现在项目的做法）
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		}
+		return betMember;
+	}
+	
+	/**
+	 * 修改状态
+	 * 
+	 * @param mid
+	 * @param sum
+	 * @param memberByMoney
+	 * @param singleNote
+	 * @param winLose
+	 * @return
+	 */
+	@Transactional
+	public boolean stateUpdate(String mid, Float sum, Float memberByMoney, Float money, SingleNoteDTO singleNote,
+			String winLose) {
+		Map<String, Object> singleNoteMap = new HashMap<String, Object>();
+		// 根据snid修改数据
+		singleNoteMap.put("snid", singleNote.getSnid());
+		// 往map里添加需要修改的字段
+		singleNoteMap.put("state", "1");
+		singleNoteMap.put("winLose", winLose);
+		money = sum - (memberByMoney + money);
+		// 保留两位小数
+		String dealMoney = String.format("%.2f", money);
+		// 如果赢就拼接加号
+		dealMoney = winLose.equals("1") ? "+" + dealMoney : dealMoney;
+		// 如果输就拼接减号
+		dealMoney = winLose.equals("-1") ? "-" + dealMoney : dealMoney;
+		// 如果不输不赢,则什么都不要加
+		dealMoney = winLose.equals("0") ? String.format("%.0f", money) : dealMoney;
+		singleNoteMap.put("dealMoney", dealMoney);
+		// 根据snid修改注单状态
+		int singleNoteAccount = singleNoteAccount(singleNoteMap);
+		// 如果注单表修改失败则把账户余额修改回去
+		if (singleNoteAccount <= 0) {
+			return false;
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("mid", mid);// 设置mid
+		map.put("money", String.format("%.2f", sum - memberByMoney));// 设置余额
+		// 根据mid修改余额
+		int updateSum = updateSum(map);
+		if(updateSum == 0 || updateSum == -1) {
+			// 手动回滚，这样上层就无需去处理异常（现在项目的做法）
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return false;
+		}
+		System.out.println("注单" + singleNote.getNumber() + "结算成功！");
+		return true;
+	}
+	
+	/**
 	 * List<FundRecordDTO> 转为 List<Map<String, Object>> 只保留前端需要的字段
 	 * 
 	 * @param dtos
@@ -326,7 +464,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return list;
 	}
-
+	
 	/**
 	 * FundRecordDTO 放入 Map<String, Object> 只保留前端需要的字段
 	 * 

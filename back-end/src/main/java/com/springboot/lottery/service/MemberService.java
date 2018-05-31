@@ -136,4 +136,41 @@ public interface MemberService {
 	 * @return
 	 */
 	Page<Map<String, Object>> listSingleNote(Map<String, Object> map);
+	
+	/**
+	 * 在线取款-事务
+	 * 
+	 * @param map
+	 * @return
+	 */
+	int memberWithdrawn(Map<String, Object> map);
+	
+	/**
+	 * 注单取消-事务
+	 * 
+	 * @param map
+	 * @return
+	 */
+	int cancelSingleNote(Map<String, Object> map);
+	
+	/**
+	 * 会员下注-事务
+	 * 
+	 * @param map
+	 * @return
+	 */
+	int betMember(Map<String, Object> map);
+	
+	/**
+	 * 修改状态
+	 * 
+	 * @param mid
+	 * @param sum
+	 * @param memberByMoney
+	 * @param singleNote
+	 * @param winLose
+	 * @return
+	 */
+	boolean stateUpdate(String mid, Float sum, Float memberByMoney, Float money, SingleNoteDTO singleNote,
+			String winLose);
 }
