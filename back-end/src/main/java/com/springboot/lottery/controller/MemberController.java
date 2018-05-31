@@ -725,7 +725,7 @@ public class MemberController {
 		// 如果充值成功向账户中添加金额
 		if (record.equals("0") && state.equals("2")) {
 			String discounts = fundRecordDTO.getDiscounts();// 获取优惠金额
-			memberMap.put("moeny", String.format("%.2f", Float.valueOf(money) + Float.valueOf(discounts)));
+			memberMap.put("money", String.format("%.2f", Float.valueOf(money) + Float.valueOf(discounts)));
 			int updateSum = memberService.updateSum(memberMap);
 			if (updateSum > 0) {
 				return result;
@@ -740,7 +740,7 @@ public class MemberController {
 		}
 		// 如果提款失败向账户返回金额
 		if (record.equals("1") && (state.equals("-1") || state.equals("-2"))) {
-			memberMap.put("moeny", String.format("%.2f", Float.valueOf(money)));
+			memberMap.put("money", String.format("%.2f", Float.valueOf(money)));
 			int updateSum = memberService.updateSum(memberMap);
 			if (updateSum > 0) {
 				return result;
