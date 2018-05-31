@@ -148,9 +148,14 @@ img {
     margin: 0 auto;
     position: absolute;
     z-index: 999;
-    top: 0.6em;
     left: 45px;
     color: #E4C468;
+	top:0;
+}
+.text ul{
+	height:5.5em;
+	line-height: 5.5em;
+	margin: 0px;
 }
 .text li, .text {
     width: 100%;
