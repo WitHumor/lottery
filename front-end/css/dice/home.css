@@ -6,7 +6,7 @@
 			line-height:12px;
 			background-color: #250A00;
 			    line-height: 1.6;
-				font-family: "Î¢ÈíÑÅºÚ";
+				font-family: "å¾®è½¯é›…é»‘";
 		}
 
 
@@ -347,7 +347,7 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
 	ul,li{padding:0px;}
 
         .flex-cont{
-            /*¶¨ÒåÎªflexbox*/display: -webkit-box;
+            /*å®šä¹‰ä¸ºflexbox*/display: -webkit-box;
             display: -webkit-flex;
             display: flex;
         }
@@ -357,17 +357,17 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
             flex: 1;
             width: 0%;
         }
-        /*µ¼º½*/
+        /*å¯¼èˆª*/
         .flex-nav{
             border-top: 1px solid #ddd;
             border-bottom: 1px solid #ddd;
             height: 80px;
             line-height: 44px;
-            /*¶¨Òå×ÓÔªËØ´¹Ö±¾ÓÖĞ*/
+            /*å®šä¹‰å­å…ƒç´ å‚ç›´å±…ä¸­*/
             -webkit-box-align: center;
             -webkit-align-items: center;
             align-items: center;
-            /*×ÓÔªËØÑØÖ÷Öá¶ÔÆë·½Ê½¾ù·Ö*/
+            /*å­å…ƒç´ æ²¿ä¸»è½´å¯¹é½æ–¹å¼å‡åˆ†*/
             -webkit-box-pack: justify;
             -webkit-justify-content: space-between;
             justify-content: space-between;
@@ -387,9 +387,9 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
             color:#aaa;
             font-size: 12px;
         }
-        /*ÁĞ±í*/
+        /*åˆ—è¡¨*/
         .flex-simple {
-            /*¶¨Òå×ÓÔªËØ´¹Ö±¾ÓÖĞ*/
+            /*å®šä¹‰å­å…ƒç´ å‚ç›´å±…ä¸­*/
             -webkit-box-align: center;
             -webkit-align-items: center;
             align-items: center;
