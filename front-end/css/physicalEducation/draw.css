@@ -167,7 +167,8 @@
 }
 
 .wdal-tip {
-    text-align: center;
+    text-align: left;
+    margin-left: 10px;
     font-size: 14px;
     color: #be4822;
     font-weight: bold;

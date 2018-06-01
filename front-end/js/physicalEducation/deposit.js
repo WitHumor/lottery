@@ -70,7 +70,8 @@ var DE = {
                 ETH: 0.03,
                 XRP: 30,
                 LTC: 0.2,
-                QTUM: 2
+                QTUM: 2,
+                AppleC: 100
             },
             rdata = {
                 type: false
@@ -107,6 +108,11 @@ var DE = {
             $('#charge-dis').val('');
             $('#total-charge').val('');
         }
+        if (ciontype == 'AppleC') {
+            $('.cny-btc-rate').text(1);
+            DE.toNext(sign,'1',(DE.firstpay ? '0' : ''));
+            return;
+        }
         this.ajax.post('/member/money-exchange', {
             record: '0',
             currency: ciontype.toLowerCase()
@@ -120,40 +126,7 @@ var DE = {
                         $('.dis-before').after('<div class="form-group"><label class="col-2 control-label">首存特惠：</label><div class="col-7"><input id="discounts" type="text" class="form-control" readonly placeholder="首存即送 188 点"></div><div class="col-3 btnA btnRed"><a class="pointer-link"><span class="hongb">188</span>点</a></div></div>');
                     }
                 } else {
-                    if (sign == 'sign') {
-                        $('.cny-btc-rate').text(real || '-');
-                        DE.allchange(data.result.total);
-                        DE.checks();
-                    } else {
-                        // if (real == $('.cny-btc-rate').text()) {
-                        //     DE.createOrder();
-                        // } else {
-                        //     layer.msg('汇率已发生变化，请重新提交', {
-                        //         time: 2000
-                        //     });
-                        // }
-                        var index = layer.open({
-                            type: 1,
-                            title: false,
-                            closeBtn: false,
-                            area: '300px;',
-                            shade: 0.8,
-                            id: 'LAY_layuipro',
-                            btn: ['接受', '拒绝'],
-                            content: '<div style="padding: 30px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">汇率实时变化可能会导致充值的点数有所变化，您是否接受？</div>',
-                            yes: function() {
-                                layer.close(index);
-                                DE.createOrder();
-                            },
-                            cancel: function() {
-                                if (real != $('.cny-btc-rate').text()) {
-                                    $('.cny-btc-rate').text(real || '-');
-                                    DE.allchange(data.result.total);
-                                }
-                            }
-                        });
-                        DE.booltf = true;
-                    }
+                    DE.toNext(sign, real, data.result.total);
                 }
             } else {
                 layer.msg('汇率异常，请刷新后再试', {
@@ -168,6 +141,42 @@ var DE = {
                 icon: 2
             });
         });
+    },
+    toNext: function(sign, real, total) {
+        if (sign == 'sign') {
+            $('.cny-btc-rate').text(real || '-');
+            DE.allchange(total);
+            DE.checks();
+        } else {
+            // if (real == $('.cny-btc-rate').text()) {
+            //     DE.createOrder();
+            // } else {
+            //     layer.msg('汇率已发生变化，请重新提交', {
+            //         time: 2000
+            //     });
+            // }
+            var index = layer.open({
+                type: 1,
+                title: false,
+                closeBtn: false,
+                area: '300px;',
+                shade: 0.8,
+                id: 'LAY_layuipro',
+                btn: ['接受', '拒绝'],
+                content: '<div style="padding: 30px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">汇率实时变化可能会导致充值的点数有所变化，您是否接受？</div>',
+                yes: function() {
+                    layer.close(index);
+                    DE.createOrder();
+                },
+                cancel: function() {
+                    if (real != $('.cny-btc-rate').text()) {
+                        $('.cny-btc-rate').text(real || '-');
+                        DE.allchange(total);
+                    }
+                }
+            });
+            DE.booltf = true;
+        }
     },
     allchange: function(fi) {
         var current = parseFloat($('#rechargebtb').val()),

@@ -61,38 +61,18 @@ var DW = {
             $('.cny-rate').text('-');
             $('#btb-rmb').val('');
         }
+        if (ciontype == 'AppleC') {
+            $('.cny-rate').text(1);
+            DW.toNext(sign, '1');
+            return;
+        }
         this.ajax.post('/member/money-exchange', {
             record: '1',
             currency: ciontype.toLowerCase()
         }, function(data) {
             if (data.code == '2018') {
                 var real = data.result.exchange.replace(' CNY', '').replace(/,/g, '');
-                if (!sign) {
-                    $('.cny-rate').text(real || '-');
-                    DW.allchanges($('#rechargebtb'));
-                } else {
-                    var index = layer.open({
-                        type: 1,
-                        title: false,
-                        closeBtn: false,
-                        area: '300px;',
-                        shade: 0.8,
-                        id: 'LAY_layuipro',
-                        btn: ['接受', '拒绝'],
-                        content: '<div style="padding: 30px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">汇率实时变化可能会导致充值的点数有所变化，您是否接受？</div>',
-                        yes: function() {
-                            layer.close(index);
-                            DW.withdrawal();
-                        },
-                        cancel: function() {
-                            if (real != $('.cny-rate').text()) {
-                                $('.cny-rate').text(real || '-');
-                                DW.allchanges($('#rechargebtb'));
-                            }
-                        }
-                    });
-                    DW.booltf = true;
-                }
+                DW.toNext(sign,real);
             } else {
                 layer.msg('汇率异常，请稍后后再试', {
                     time: 2000,
@@ -106,6 +86,35 @@ var DW = {
                 icon: 2
             });
         });
+    },
+    toNext: function(sign, real) {
+        if (!sign) {
+            $('.cny-rate').text(real || '-');
+            DW.allchanges($('#rechargebtb'));
+        } else {
+            var index = layer.open({
+                type: 1,
+                title: false,
+                closeBtn: false,
+                area: '300px;',
+                shade: 0.8,
+                id: 'LAY_layuipro',
+                btn: ['接受', '拒绝'],
+                content: '<div style="padding: 30px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">汇率实时变化可能会导致充值的点数有所变化，您是否接受？</div>',
+                yes: function() {
+                    layer.close(index);
+                    DW.withdrawal();
+                },
+                cancel: function() {
+                    if (real != $('.cny-rate').text()) {
+                        $('.cny-rate').text(real || '-');
+                        DW.allchanges($('#rechargebtb'));
+                    }
+                }
+            });
+            DE.booltf = true;
+        }
+
     },
     withdrawal: function() {
         var param = {

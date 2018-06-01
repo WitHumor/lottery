@@ -1,6 +1,7 @@
 body {
+  position: relative;
     background-color: #f0f3f4;
-    overflow: hidden;
+    /*overflow: hidden;*/
     font-size: 16px;
 }
 
@@ -125,6 +126,14 @@ textarea {
     }
 }
 
+button {
+  line-height: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 5px;
+  padding: 0 10px;
+}
+
 p {
     margin: 0;
     padding: 0;
@@ -154,7 +163,40 @@ em {
     visibility: hidden;
 }
 
+.mR5 {
+  margin-right: 5px;
+}
+
+.mR10 {
+  margin-right: 10px;
+}
+
+.f16 {
+  font-size: 16px;
+}
+
+.f18 {
+  font-size: 18px;
+}
+
+.f20 {
+  font-size: 20px;
+}
+
+.f24 {
+  font-size: 24px;
+}
+
+.f26 {
+  font-size: 26px;
+}
+
+.f30 {
+  font-size: 30px;
+}
+
 a {
+    color: rgb(0, 0, 0);
     text-decoration: none;
 }
 
@@ -178,4 +220,106 @@ a:focus {
     content: "";
     display: block;
     clear: both;
+}
+
+
+/*顶部导航栏*/
+
+.navTop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #DBCCC5;
+    color: #55402F;
+    height: 44px;
+    line-height: 44px;
+    font-size: 16px;
+}
+
+.navTop .leftBtn {
+    position: absolute;
+    top: 5px;
+    left: 15px;
+    line-height: 34px;
+}
+
+.navTop .rightBtn {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    line-height: 34px;
+}
+
+.navTop .ctitle {
+    text-align: center;
+    margin: 0 auto;
+    width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.navBottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  color: #55402F;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  border-top: 1px solid #DBCCC5;
+  background-color: #E8DED9;
+}
+
+.navBottom .items {
+  width: 32%;
+  vertical-align: middle;
+  padding: 2px 0;
+  display: inline-block;
+}
+
+.navBottom .items.active {
+  color: #FD6146;
+}
+
+.navBottom .iconfont {
+  display: block;
+  font-size: 22px;
+  line-height: 24px;
+}
+
+.navBottom .icon-name {
+  display: block;
+  line-height: 16px;
+}
+
+.navBottom .icon-jiahao {
+  font-size: 50px;
+  font-weight: bold;
+  line-height: 40px;
+  color: #FF874D;
+}
+
+.acontainer {
+  border-top: 50px solid transparent;
+  border-bottom: 50px solid transparent;
+  height: 100%;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+/*滚动条*/
+::-webkit-scrollbar-track {
+  background-color: #F5F5F5
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  background-color: #F5F5F5
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #999
 }

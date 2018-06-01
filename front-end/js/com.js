@@ -1,4 +1,4 @@
-var ServerUrl = 'http://192.168.43.20:8080'; //192.168.31.254  43.20 http://www.xrp-candy.com/springBoot
+var ServerUrl = 'http://192.168.43.20:8080'; //192.168.31.254  43.20  172.20.10.2:8080 http://www.xrp-candy.com/springBoot
 var HttpService = function() {
     this.MAX_VALUE = 100000;
     var TYPE = {
@@ -32,7 +32,23 @@ var HttpService = function() {
             },
             success: function(data) {
                 if (data.code == '1109' || data.code == '1114') {
+                    if ($('.mine').length > 0) {
+                        $('.mine').remove();
+                    }
                     layer.msg('登录超时，请重新登陆', {
+                        time: 2000,
+                        icon: 2
+                    });
+                    sessionStorage.setItem('userinfo', '');
+                    sessionStorage.setItem('toid', '');
+                    setTimeout(function() {
+                        window.location.href = 'home.html';
+                    }, 2000);
+                } else if (data.code == '1121') {
+                    if ($('.mine').length > 0) {
+                        $('.mine').remove();
+                    }
+                    layer.msg('您的账号已在其他地方登陆，请重新登录', {
                         time: 2000,
                         icon: 2
                     });
@@ -388,7 +404,7 @@ var common = {
                         time: 2000
                     });
                     setTimeout(function() {
-                        common.openlayer('L','bet');
+                        common.openlayer('L', 'bet');
                     }, 2000);
                 }
             });

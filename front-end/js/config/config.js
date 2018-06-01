@@ -109,6 +109,9 @@ var config = {
         }, {
             name: '量子币',
             value: 'QTUM',
+        }, {
+            name: '苹果币',
+            value: 'AppleC',
         }]
         // }
 }
