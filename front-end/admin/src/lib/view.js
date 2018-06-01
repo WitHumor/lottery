@@ -82,9 +82,30 @@ layui.define(['laytpl', 'layer'], function(exports) {
             type: 'get',
             dataType: 'json',
             success: function(res) {
+                console.log(res);
                 var statusCode = response.statusCode;
                 if (statusCode.logout.indexOf(res[response.statusName]) > -1) {
                     layer.msg('登录超时，请重新登陆', {
+                        offset: '15px',
+                        time: 1500,
+                        icon: 2
+                    });
+                    setTimeout(function() {
+                        view.exit();
+                    }, 2000);
+                    return;
+                } else if (res[setter.response.statusName] == '1121') {
+                    layer.msg('您的账号已在其他地方登陆，请重新登录', {
+                        offset: '15px',
+                        time: 1500,
+                        icon: 2
+                    });
+                    setTimeout(function() {
+                        view.exit();
+                    }, 2000);
+                    return;
+                } else if (res[setter.response.statusName] == '1122') {
+                    layer.msg('同网络下只能有一个账户活跃，您已被迫下线', {
                         offset: '15px',
                         time: 1500,
                         icon: 2

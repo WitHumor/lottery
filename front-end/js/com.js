@@ -31,33 +31,38 @@ var HttpService = function() {
                 });
             },
             success: function(data) {
-                if (data.code == '1109' || data.code == '1114') {
+                if (data.code != '2018') {
                     if ($('.mine').length > 0) {
-                        $('.mine').remove();
+                        setTimeout(function() {
+                            $('.mine').remove();
+                        }, 500);
                     }
-                    layer.msg('登录超时，请重新登陆', {
-                        time: 2000,
-                        icon: 2
-                    });
+                    if (data.code == '1109' || data.code == '1114') {
+                        layer.msg('登录超时，请重新登陆', {
+                            time: 2000,
+                            icon: 2
+                        });
+
+                    } else if (data.code == '1121') {
+                        layer.msg('您的账号已在其他地方登陆，请重新登录', {
+                            time: 2000,
+                            icon: 2
+                        });
+                    } else if(data.code == '1122') {
+                        layer.msg('同网络下只能有一个账户活跃，您已被迫下线', {
+                            time: 2000,
+                            icon: 2
+                        });
+                    }
                     sessionStorage.setItem('userinfo', '');
                     sessionStorage.setItem('toid', '');
                     setTimeout(function() {
                         window.location.href = 'home.html';
                     }, 2000);
-                } else if (data.code == '1121') {
-                    if ($('.mine').length > 0) {
-                        $('.mine').remove();
-                    }
-                    layer.msg('您的账号已在其他地方登陆，请重新登录', {
-                        time: 2000,
-                        icon: 2
-                    });
-                    sessionStorage.setItem('userinfo', '');
-                    sessionStorage.setItem('toid', '');
-                    setTimeout(function() {
-                        window.location.href = 'home.html';
-                    }, 2000);
-                } else if (typeof(succ) == "function") {
+                    return;
+                }
+
+                if (typeof(succ) == "function") {
                     return succ(data);
                 } else {
                     console.log("the method is no a function!");

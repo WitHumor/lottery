@@ -157,6 +157,9 @@ var TD = {
                 field: 'betTime',
                 title: '下注时间',
             }, {
+                field: 'number',
+                title: '下注单号',
+            }, {
                 field: 'league',
                 title: '联赛名称',
             }, {
@@ -167,10 +170,16 @@ var TD = {
                 title: '客场队伍',
             }, {
                 field: 'money',
+                width: 90,
+                minWidth: 90,
+                align: 'center',
                 title: '下注金额',
             }, {
                 field: 'betType',
                 title: '比赛类型',
+                width: 95,
+                minWidth: 95,
+                align: 'center',
                 templet: function(data) {
                     var st = '';
                     switch (data.betType) {
@@ -192,8 +201,39 @@ var TD = {
                     return st;
                 }
             }, {
+                title: '注单选项',
+                minWidth: 280,
+                templet: function(data) {
+                    var st = '';
+                    if(data.iorType == '大' || data.iorType == '小') {
+                        st = '大小'
+                    } else if(data.iorType == '单大' || data.iorType == '单小') {
+                        st = '积分大小'
+                    } else if(data.iorType == '单' || data.iorType == '双') {
+                        st = '单双'
+                    } else {
+                        st = data.iorType;
+                    }
+                    var bs = '';
+                    if(data.iorType == '让球' || data.iorType == '让分') {
+                        if(data.bet == data.strong) {
+                            bs = '(让方)';
+                        } else {
+                            bs = '(受让方)';
+                        }
+                        if(data.bet == 'N') {
+                            bs = '';
+                        }
+                    }
+                    return '<span style="color:red;">'+ (data.bet == 'H' ? '主场' : '客场') + bs +'</span>' + ' - ' + st + ' [ '+ (data.iorRatio ? data.iorRatio : "") +'&nbsp;<span style="color:red;">@'+ data.ratio +'</span> ]';
+                }
+            }, {
                 field: 'state',
                 title: '类型',
+                width: 85,
+                minWidth: 85,
+                align: 'center',
+                fixed: 'right',
                 templet: function(data) {
                     var st = '';
                     switch (data.state) {
@@ -214,8 +254,23 @@ var TD = {
             }, {
                 field: 'dealMoney',
                 title: '盈亏',
+                fixed: 'right',
+                width: 100,
+                minWidth: 100,
+                align: 'center',
                 templet: function(data) {
                     return data.dealMoney == null ? ' - ' : data.dealMoney;
+                }
+            }, {
+                field: 'winLose',
+                title: '状态',
+                width: 60,
+                minWidth: 60,
+                align: 'center',
+                fixed: 'right',
+                templet: function(data) {
+
+                    return data.winLose == '1' ? '<span style="color:green;">赢</span>' : (data.winLose == '0' ? '<span style="color:orange;">平</span>' : '<span style="color:red;">输</span>');
                 }
             }]
         ],

@@ -1,16 +1,58 @@
-
 .login-btn {
-  background-color: transparent;
-  border: 1px solid #FF8A0B;
-  color: #FF8A0B;
-  line-height: 26px;
-  height: 26px;
+    background-color: transparent;
+    border: 1px solid #FF4100;
+    color: #FF4100;
+    line-height: 24px;
+    height: 24px;
+    font-size: 12px;
 }
 
 .register-btn {
-  background-color: #FF8A0B;
-  border: 1px solid #FF8A0B;
-  color: #fff;
-  line-height: 26px;
-  height: 26px;
+    background-color: #FF4100;
+    border: 1px solid #FF4100;
+    color: #fff;
+    line-height: 24px;
+    height: 24px;
+    font-size: 12px;
+}
+
+.car-item > div {
+    background: url(../img/lottery_banner1.png) no-repeat 100%;
+}
+
+.car-item > div:nth-of-type(1) {
+    background: url(../img/football_banner1.png) no-repeat 100%;
+}
+
+.car-item > div:nth-of-type(2) {
+    background: url(../img/basketball_banner1.png) no-repeat 100%;
+}
+
+.iconbtnbox {
+    margin: 5px 0 10px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.iconbtnbox a {
+    padding: 5px 0;
+    color: #55402F;
+    display: block;
+}
+
+.iconbtnbox i {
+  font-size: 45px;
+  margin-bottom: 5px;
+}
+
+.ft i {
+    color: #FF5300;
+}
+
+.bk i {
+    color: #B52EBC;
+}
+
+.lt i {
+    color: #4738C9;
 }
