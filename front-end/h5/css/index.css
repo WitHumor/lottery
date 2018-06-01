@@ -1,0 +1,16 @@
+
+.login-btn {
+  background-color: transparent;
+  border: 1px solid #FF8A0B;
+  color: #FF8A0B;
+  line-height: 26px;
+  height: 26px;
+}
+
+.register-btn {
+  background-color: #FF8A0B;
+  border: 1px solid #FF8A0B;
+  color: #fff;
+  line-height: 26px;
+  height: 26px;
+}
