@@ -529,6 +529,9 @@ public class MemberServiceImpl implements MemberService {
 		map.put("league", singleNote.getLeague());// 联赛
 		map.put("teamh", singleNote.getTeam_h());// 主场
 		map.put("teamc", singleNote.getTeam_c());// 客场
+		map.put("iorType", singleNote.getIor_type());// 比率类型
+		map.put("strong", singleNote.getStrong());// 让球方与受让方
+		map.put("iorRatio", singleNote.getIor_ratio());// 比率
 		map.put("betType", singleNote.getBet_type());// 下注类型 足球|篮球
 		map.put("ratio", singleNote.getRatio());// 赔率
 		map.put("bet", singleNote.getBet());// 下注赢方
@@ -573,6 +576,9 @@ public class MemberServiceImpl implements MemberService {
 		map.put("league", singleNote.getLeague());// 联赛
 		map.put("teamh", singleNote.getTeam_h());// 主场
 		map.put("teamc", singleNote.getTeam_c());// 客场
+		map.put("iorType", singleNote.getIor_type());// 比率类型
+		map.put("iorRatio", singleNote.getIor_ratio());// 比率
+		map.put("strong", singleNote.getStrong());// 让球方与受让方
 		map.put("ratio", singleNote.getRatio());// 赔率
 		map.put("bet", singleNote.getBet());// 下注赢方
 		map.put("betType", singleNote.getBet_type());// 下注类型 足球|篮球

@@ -101,9 +101,14 @@ public class MemberController {
 		}
 		// 产生token
 		String token = BeanLoad.getUUID();
-		// 把token做为key放入ehcache缓存
-		cache.put(token, member);
 		member.setToken(token);
+		member.setAddress(ipAddress);
+		// 把token做为key放入ehcache缓存中
+		cache.put(token, member);
+		// 把mid作为key放入ehcache缓存中
+		cache.put(member.getMid(), token);
+		// 把IP地址作为key放入ehcache缓存中
+		cache.put(ipAddress, token);
 		result.setResult(toMapByMember(member));
 		return result;
 	}
@@ -187,8 +192,6 @@ public class MemberController {
 				cache.evict(tokenMember.getMid());
 				// 移除IP地址缓存
 				cache.evict(tokenMember.getAddress());
-				// 移除token缓存
-				cache.evict(cacheToken);
 			}
 		}
 		if(cache.get(ipAddress) != null) {
@@ -201,8 +204,6 @@ public class MemberController {
 				cache.evict(tokenMember.getMid());
 				// 移除IP地址缓存
 				cache.evict(tokenMember.getAddress());
-				// 移除token缓存
-				cache.evict(cacheToken);
 			}
 		}
 		// 产生token
@@ -276,8 +277,20 @@ public class MemberController {
 			if(member.getMid().equals(tokenMember.getMid())) {
 				// 移除mid缓存
 				cache.evict(tokenMember.getMid());
-				// 移除token缓存
-				cache.evict(cacheToken);
+				// 移除IP地址缓存
+				cache.evict(tokenMember.getAddress());
+			}
+		}
+		if(cache.get(ipAddress) != null) {
+			// 获取token
+			String cacheToken = (String)cache.get(ipAddress).get();
+			// 获取token中会员信息
+			Member tokenMember = (Member)cache.get(cacheToken).get();
+			if(ipAddress.equals(tokenMember.getAddress())) {
+				// 移除mid缓存
+				cache.evict(tokenMember.getMid());
+				// 移除IP地址缓存
+				cache.evict(tokenMember.getAddress());
 			}
 		}
 		// 产生token
@@ -288,6 +301,8 @@ public class MemberController {
 		cache.put(token, member);
 		// 把mid作为key放入ehcache缓存中
 		cache.put(member.getMid(), token);
+		// 把IP地址作为key放入ehcache缓存中
+		cache.put(ipAddress, token);
 		result.setResult(toMapByMember(member));
 		return result;
 	}
@@ -311,13 +326,12 @@ public class MemberController {
 		if (cache.get(token) == null) {
 			return result;
 		}
+		// 获取缓存中的数据
+		Member member = (Member) cache.get(token).get();
+		cache.evict(member.getMid());
+		cache.evict(member.getAddress());
 		// 移除token
 		cache.evict(token);
-		cache.evict("ipAddress");
-		// 判断token是否被移除
-		if (cache.get(token) != null) {
-			return result;
-		}
 		return result;
 	}
 
@@ -345,9 +359,24 @@ public class MemberController {
 			return result;
 		}
 		// 获取缓存中的数据
-		Member member = (Member) cache.get(token).get();
+		Member tokenMember = (Member) cache.get(token).get();
+		// 判断是否在其他地方登录
+		if(cache.get(tokenMember.getMid()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录会员挤掉
+			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
+			return result;
+		}
+		if(cache.get(tokenMember.getAddress()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录IP挤掉
+			result.setCode(MessageUtil.LOGIN_IP_OUT);
+			return result;
+		}
 		// 获取缓存中的会员id
-		String mid = member.getMid();
+		String mid = tokenMember.getMid();
 		// 创建一个map对象
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 根据id查询账户余额
@@ -359,7 +388,7 @@ public class MemberController {
 			result.setCode(MessageUtil.DATA_NOT_FOUND);
 			return result;
 		}
-		member = memberList.get(0);
+		Member member = memberList.get(0);
 		map.remove("mid");
 		// 往map中添加键值对返回
 		map.put("name", member.getName());
@@ -393,6 +422,23 @@ public class MemberController {
 		if (cache.get(token) == null) {
 			// token过期
 			result.setCode(MessageUtil.TOKEN_OVERDUE);
+			return result;
+		}
+		// 获取缓存中的数据
+		Member tokenMember = (Member) cache.get(token).get();
+		// 判断是否在其他地方登录
+		if(cache.get(tokenMember.getMid()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录会员挤掉
+			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
+			return result;
+		}
+		if(cache.get(tokenMember.getAddress()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录IP挤掉
+			result.setCode(MessageUtil.LOGIN_IP_OUT);
 			return result;
 		}
 		String exchange = JsoupUtil.getExchange(currency);
@@ -473,9 +519,24 @@ public class MemberController {
 			return result;
 		}
 		// 获取缓存中的数据
-		Member member = (Member) cache.get(token).get();
+		Member tokenMember = (Member) cache.get(token).get();
+		// 判断是否在其他地方登录
+		if(cache.get(tokenMember.getMid()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录会员挤掉
+			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
+			return result;
+		}
+		if(cache.get(tokenMember.getAddress()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录IP挤掉
+			result.setCode(MessageUtil.LOGIN_IP_OUT);
+			return result;
+		}
 		// 获取缓存中的会员id
-		String mid = member.getMid();
+		String mid = tokenMember.getMid();
 		// 获取汇率
 		String exchange = JsoupUtil.getExchange(currency);
 		if (exchange == null) {
@@ -497,7 +558,7 @@ public class MemberController {
 			result.setCode(MessageUtil.DATA_NOT_FOUND);
 			return result;
 		}
-		member = memberList.get(0);
+		Member member = memberList.get(0);
 		// 判断取款密码是否正确
 		if (!member.getBank_password().equals(password)) {
 			// 密码错误
@@ -566,9 +627,24 @@ public class MemberController {
 			return result;
 		}
 		// 获取缓存中的数据
-		Member member = (Member) cache.get(token).get();
+		Member tokenMember = (Member) cache.get(token).get();
+		// 判断是否在其他地方登录
+		if(cache.get(tokenMember.getMid()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录会员挤掉
+			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
+			return result;
+		}
+		if(cache.get(tokenMember.getAddress()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录IP挤掉
+			result.setCode(MessageUtil.LOGIN_IP_OUT);
+			return result;
+		}
 		// 获取缓存中的会员id
-		String mid = member.getMid();
+		String mid = tokenMember.getMid();
 		String exchange = JsoupUtil.getExchange(currency);
 		if (exchange == null) {
 			// 网络连接失败
@@ -636,6 +712,23 @@ public class MemberController {
 		if (cache.get(token) == null) {
 			// token过期
 			result.setCode(MessageUtil.TOKEN_OVERDUE);
+			return result;
+		}
+		// 获取缓存中的数据
+		Member tokenMember = (Member) cache.get(token).get();
+		// 判断是否在其他地方登录
+		if(cache.get(tokenMember.getMid()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录会员挤掉
+			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
+			return result;
+		}
+		if(cache.get(tokenMember.getAddress()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录IP挤掉
+			result.setCode(MessageUtil.LOGIN_IP_OUT);
 			return result;
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -708,6 +801,23 @@ public class MemberController {
 			result.setCode(MessageUtil.TOKEN_OVERDUE);
 			return result;
 		}
+		// 获取缓存中的数据
+		Member tokenMember = (Member) cache.get(token).get();
+		// 判断是否在其他地方登录
+		if(cache.get(tokenMember.getMid()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录会员挤掉
+			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
+			return result;
+		}
+		if(cache.get(tokenMember.getAddress()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录IP挤掉
+			result.setCode(MessageUtil.LOGIN_IP_OUT);
+			return result;
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("number", number);// 订单号
 		List<FundRecordDTO> queryFundRecordDTO = memberService.queryFundRecordDTO(map);
@@ -763,9 +873,24 @@ public class MemberController {
 			return result;
 		}
 		// 获取缓存中的数据
-		Member member = (Member) cache.get(token).get();
+		Member tokenMember = (Member) cache.get(token).get();
+		// 判断是否在其他地方登录
+		if(cache.get(tokenMember.getMid()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录会员挤掉
+			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
+			return result;
+		}
+		if(cache.get(tokenMember.getAddress()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录IP挤掉
+			result.setCode(MessageUtil.LOGIN_IP_OUT);
+			return result;
+		}
 		// 获取缓存中的会员id
-		String mid = member.getMid();
+		String mid = tokenMember.getMid();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("number", number);// 订单号
 		List<FundRecordDTO> queryFundRecordDTO = memberService.queryFundRecordDTO(map);
@@ -828,9 +953,24 @@ public class MemberController {
 			return result;
 		}
 		// 获取缓存中的数据
-		Member member = (Member) cache.get(token).get();
+		Member tokenMember = (Member) cache.get(token).get();
+		// 判断是否在其他地方登录
+		if(cache.get(tokenMember.getMid()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录会员挤掉
+			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
+			return result;
+		}
+		if(cache.get(tokenMember.getAddress()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录IP挤掉
+			result.setCode(MessageUtil.LOGIN_IP_OUT);
+			return result;
+		}
 		// 获取缓存中的会员id
-		String mid = member.getMid();
+		String mid = tokenMember.getMid();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("dispose", mid);// 处理人员
 		map.put("record", record);// 存取款状态
@@ -980,6 +1120,23 @@ public class MemberController {
 		if (cache.get(token) == null) {
 			// token过期
 			result.setCode(MessageUtil.TOKEN_OVERDUE);
+			return result;
+		}
+		// 获取缓存中的数据
+		Member tokenMember = (Member) cache.get(token).get();
+		// 判断是否在其他地方登录
+		if(cache.get(tokenMember.getMid()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录会员挤掉
+			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
+			return result;
+		}
+		if(cache.get(tokenMember.getAddress()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录IP挤掉
+			result.setCode(MessageUtil.LOGIN_IP_OUT);
 			return result;
 		}
 		// 判断下注金额是否超过规定的金额
@@ -1171,12 +1328,27 @@ public class MemberController {
 			return page;
 		}
 		// 获取缓存中的数据
-		Member member = (Member) cache.get(token).get();
+		Member tokenMember = (Member) cache.get(token).get();
+		// 判断是否在其他地方登录
+		if(cache.get(tokenMember.getMid()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录会员挤掉
+			page.setCode(MessageUtil.LOGIN_MEMBER_OUT);
+			return page;
+		}
+		if(cache.get(tokenMember.getAddress()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录IP挤掉
+			page.setCode(MessageUtil.LOGIN_IP_OUT);
+			return page;
+		}
 		// 获取缓存中的会员id
-		String mid = member.getMid();
+		String mid = tokenMember.getMid();
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("mid", mid = member.getRole().equals("0") ? mid : null);// 会员id
+		map.put("mid", mid = tokenMember.getRole().equals("0") ? mid : null);// 会员id
 		map.put("beginTime", StringUtils.isBlank(beginTime) ? null : beginTime);// 开始时间
 		map.put("endTime", StringUtils.isBlank(endTime) ? null : endTime);// 结束时间
 		map.put("keyword", keyword);// 关键字查询
@@ -1218,6 +1390,23 @@ public class MemberController {
 		if (cache.get(token) == null) {
 			// token过期
 			result.setCode(MessageUtil.TOKEN_OVERDUE);
+			return result;
+		}
+		// 获取缓存中的数据
+		Member tokenMember = (Member) cache.get(token).get();
+		// 判断是否在其他地方登录
+		if(cache.get(tokenMember.getMid()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录会员挤掉
+			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
+			return result;
+		}
+		if(cache.get(tokenMember.getAddress()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录IP挤掉
+			result.setCode(MessageUtil.LOGIN_IP_OUT);
 			return result;
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1283,6 +1472,23 @@ public class MemberController {
 		if (cache.get(token) == null) {
 			// token过期
 			result.setCode(MessageUtil.TOKEN_OVERDUE);
+			return result;
+		}
+		// 获取缓存中的数据
+		Member tokenMember = (Member) cache.get(token).get();
+		// 判断是否在其他地方登录
+		if(cache.get(tokenMember.getMid()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录会员挤掉
+			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
+			return result;
+		}
+		if(cache.get(tokenMember.getAddress()) == null) {
+			// 移除token
+			cache.evict(token);
+			// 登录IP挤掉
+			result.setCode(MessageUtil.LOGIN_IP_OUT);
 			return result;
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
