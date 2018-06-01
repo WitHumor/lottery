@@ -400,6 +400,43 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	/**
+	 * 充值/取款结算-事务
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Transactional
+	public int alterFundRecord(Map<String, Object> map) {
+		int alertFundRecord = 0;
+		// 根据订单号修改状态
+		alertFundRecord = updateFundRecord(map);
+		// 获取记录DTO
+		FundRecordDTO fundRecordDTO = (FundRecordDTO) map.get("fundRecordDTO");
+		Map<String, Object> memberMap = new HashMap<String, Object>();
+		String mid = fundRecordDTO.getMid();// 获取mid
+		String money = fundRecordDTO.getMoney();// 获取金额
+		memberMap.put("mid", mid);
+		// 获取状态
+		String state = (String) map.get("state");
+		// 获取记录类型：充值、取款
+		String record = (String) map.get("record");
+		// 如果充值成功向账户中添加金额
+		if (record.equals("0") && state.equals("2")) {
+			String discounts = fundRecordDTO.getDiscounts();// 获取优惠金额
+			memberMap.put("money", String.format("%.2f", Float.valueOf(money) + Float.valueOf(discounts)));
+			alertFundRecord = updateSum(memberMap);
+			return alertFundRecord;
+		}
+		// 如果提款失败向账户返回金额
+		if (record.equals("1") && (state.equals("-1") || state.equals("-2"))) {
+			memberMap.put("money", String.format("%.2f", Float.valueOf(money)));
+			alertFundRecord = updateSum(memberMap);
+			return alertFundRecord;
+		}
+		return alertFundRecord;
+	}
+	
+	/**
 	 * 修改状态
 	 * 
 	 * @param mid
@@ -423,8 +460,6 @@ public class MemberServiceImpl implements MemberService {
 		String dealMoney = String.format("%.2f", money);
 		// 如果赢就拼接加号
 		dealMoney = winLose.equals("1") ? "+" + dealMoney : dealMoney;
-		// 如果输就拼接减号
-		dealMoney = winLose.equals("-1") ? "-" + dealMoney : dealMoney;
 		// 如果不输不赢,则什么都不要加
 		dealMoney = winLose.equals("0") ? String.format("%.0f", money) : dealMoney;
 		singleNoteMap.put("dealMoney", dealMoney);
@@ -529,6 +564,9 @@ public class MemberServiceImpl implements MemberService {
 		map.put("league", singleNote.getLeague());// 联赛
 		map.put("teamh", singleNote.getTeam_h());// 主场
 		map.put("teamc", singleNote.getTeam_c());// 客场
+		map.put("iorType", singleNote.getIor_type());// 比率类型
+		map.put("strong", singleNote.getStrong());// 让球方与受让方
+		map.put("iorRatio", singleNote.getIor_ratio());// 比率
 		map.put("betType", singleNote.getBet_type());// 下注类型 足球|篮球
 		map.put("ratio", singleNote.getRatio());// 赔率
 		map.put("bet", singleNote.getBet());// 下注赢方
@@ -573,6 +611,9 @@ public class MemberServiceImpl implements MemberService {
 		map.put("league", singleNote.getLeague());// 联赛
 		map.put("teamh", singleNote.getTeam_h());// 主场
 		map.put("teamc", singleNote.getTeam_c());// 客场
+		map.put("iorType", singleNote.getIor_type());// 比率类型
+		map.put("iorRatio", singleNote.getIor_ratio());// 比率
+		map.put("strong", singleNote.getStrong());// 让球方与受让方
 		map.put("ratio", singleNote.getRatio());// 赔率
 		map.put("bet", singleNote.getBet());// 下注赢方
 		map.put("betType", singleNote.getBet_type());// 下注类型 足球|篮球

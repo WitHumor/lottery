@@ -47,4 +47,8 @@ public class MessageUtil {
 	public final static String SINGLE_NOTE_ERROR = "1119";
 	// 充值/取款结算错误
 	public final static String FUND_RECORD_ERROR = "1120";
+	// 登录IP挤掉
+	public final static String LOGIN_IP_OUT = "1121";
+	// 登录会员挤掉
+	public final static String LOGIN_MEMBER_OUT = "1122";
 }

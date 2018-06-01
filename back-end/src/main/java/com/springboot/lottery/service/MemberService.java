@@ -162,6 +162,14 @@ public interface MemberService {
 	int betMember(Map<String, Object> map);
 	
 	/**
+	 * 充值/取款结算-事务
+	 * 
+	 * @param map
+	 * @return
+	 */
+	int alterFundRecord(Map<String, Object> map);
+	
+	/**
 	 * 修改状态
 	 * 
 	 * @param mid
