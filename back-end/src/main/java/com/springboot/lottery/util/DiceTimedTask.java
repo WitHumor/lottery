@@ -169,7 +169,6 @@ public class DiceTimedTask {
 		q.put("term", current.getCurrent_term());
 		List<DiceBet> dbs = diceService.queryDiceBet(q);
 		for(DiceBet db:dbs) {
-			
 			diceService.rewardMember(current, draw, db);
 		}
 		

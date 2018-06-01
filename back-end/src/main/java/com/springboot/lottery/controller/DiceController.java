@@ -278,6 +278,8 @@ public class DiceController {
 		
 	}
 	
+
+	
 	/**
 	 * 20180428会员开户
 	 * 
@@ -290,7 +292,7 @@ public class DiceController {
 	public ObjectResult getDiceDrawInfo(boolean init) {
 		ObjectResult result = new ObjectResult();
 		Map<String, Object> returnMap = new HashMap<String, Object>();
-		Map<String,Double> betMap = new HashMap<String,Double>();
+		Map<String,DiceBet> betMap = new HashMap<String,DiceBet>();
 		if(!DiceBetUtil.drawing) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("beginIndex", 0);
@@ -311,7 +313,8 @@ public class DiceController {
 					}
 					returnMap.put("drawTime",leftTime);
 					returnMap.put("currentTerm",current.getCurrent_term());
-					
+					returnMap.put("betTotal",last.getBet_total());
+					returnMap.put("betWinTotal",last.getWin_total());
 					//
 					
 					//check token
@@ -339,14 +342,11 @@ public class DiceController {
 					}else {
 						map.put("term", last.getCurrent_term());
 					}
+					
 					List<DiceBet> bets = diceService.queryDiceBet(map);
 					
 					for(DiceBet bet : bets) {
-						if(init) {
-							betMap.put(bet.getBet().toString(),bet.getBet_value());
-						}else {
-							betMap.put(bet.getBet().toString(),bet.getWin_money());
-						}
+						betMap.put(bet.getBet().toString(),bet);
 					}
 					returnMap.put("bet", betMap);
 					//
@@ -363,6 +363,8 @@ public class DiceController {
 			returnMap.put("drawTime",0);
 			returnMap.put("currentTerm",DiceBetUtil.current_term);
 			returnMap.put("bet", betMap);
+			returnMap.put("betTotal",0);
+			returnMap.put("betWinTotal",0);
 		}
 		result.setResult(returnMap);
 		

@@ -52,7 +52,7 @@
 		UPDATE
 			dice_draw d
 		SET
-		   d.result = #{result}, d.end_time=#{end_time}
+		   d.result = #{result}, d.end_time=#{end_time}, d.bet_total=#{bet_total}, d.win_total=#{win_total}
 		WHERE
 		    d.id = #{id}
 	</update>

@@ -42,4 +42,5 @@ public class DiceBetUtil {
 	public static boolean drawing = false;
 	
 	public static final int page_size = 5;
+	
 }

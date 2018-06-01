@@ -162,7 +162,18 @@ var dice = {
            
         });
 	},
-
+	noticeUp: function (obj,top,time) {
+		$(obj).animate({
+			marginTop: top
+		}, time, function () {
+			$(this).css({marginTop:"0"}).find(":first").appendTo(this);
+		})
+	} ,
+	genBetNotice:function(term, betTotal,winTotal){
+		$('#betWinNotice').remove();
+		$('#noticeul').append("<li id='betWinNotice'>第"+term+"期，共"+betTotal+"人下注，共中奖"+winTotal+"!</li>");
+		
+	},
 	initPage: function (isInit){
 		if(dice.dicewait == 0){
 			this.ajax.get('/dice/dice-draw', {"init":isInit}, function(data) {
@@ -177,6 +188,7 @@ var dice = {
 					}else{
 						$('#second_show').html("<span id='miao'>"+data.result.drawTime +"</span>秒");
 						$("#result_dice").attr("class", 'dice dice_'+data.result.lastResult);
+						dice.genBetNotice(data.result.lastTerm,data.result.betTotal,data.result.betWinTotal);
 						if(!isInit){
 							$(".bet-mask").hide();
 							$(".bet-value-num").text("0");
@@ -186,35 +198,15 @@ var dice = {
 								var winMsg = "";
 								betkeys.forEach(function(key) {
 									if(key == "1" || key == "2" || key == "3" || key == "4" || key == "5" || key == "6"){
-										if(data.result.bet[key] > 0){
-											winMsg = winMsg + "下注" +　key + "赢："+data.result.bet[key] + "<br/>";
-										}else{
-											winMsg = winMsg + "下注" +　key + "没有中奖<br/>";
-										}
+										winMsg = winMsg + "下注" +　key + ": "+data.result.bet[key].bet_value+", 返回："+data.result.bet[key].win_money + "<br/>";
 									}else if(key == dice.dan){
-										if(data.result.bet[key] > 0){
-											winMsg = winMsg + "下注单赢："+data.result.bet[key]+ "<br/>";
-										}else{
-											winMsg = winMsg + "下注单没有中奖<br/>";
-										}
+										winMsg = winMsg + "下注单: "+data.result.bet[key].bet_value+", 返回："+data.result.bet[key].win_money+ "<br/>";
 									}else if(key == dice.shuang){
-										if(data.result.bet[key] > 0){
-											winMsg = winMsg + "下注双赢："+data.result.bet[key]+ "<br/>";
-										}else{
-											winMsg = winMsg + "下注双没有中奖<br/>";
-										}
+										winMsg = winMsg + "下注双: "+data.result.bet[key].bet_value+", 返回："+data.result.bet[key].win_money+ "<br/>";
 									}else if(key == dice.da){
-										if(data.result.bet[key] > 0){
-											winMsg = winMsg + "下注大赢："+data.result.bet[key]+ "<br/>";
-										}else{
-											winMsg = winMsg + "下注大没有中奖<br/>";
-										}
+										winMsg = winMsg + "下注大: "+data.result.bet[key].bet_value+", 返回："+data.result.bet[key].win_money+ "<br/>";
 									}else if(key == dice.xiao){
-										if(data.result.bet[key] > 0){
-											winMsg = winMsg + "下注小赢："+data.result.bet[key]+ "<br/>";
-										}else{
-											winMsg = winMsg + "下注小没有中奖<br/>";
-										}
+										winMsg = winMsg + "下注小: "+data.result.bet[key].bet_value+", 返回："+data.result.bet[key].win_money+ "<br/>";
 									}
 
 									layer.msg(resultMsg + "<br/> " + winMsg, {
@@ -227,7 +219,7 @@ var dice = {
 
 						}else{
 							Object.keys(data.result.bet).forEach(function(key) {
-								dice.update_bet(key,data.result.bet[key]);
+								dice.update_bet(key,data.result.bet[key].bet_value);
 							});
 							
 						}
@@ -277,6 +269,11 @@ var dice = {
 
 $(function() {
     dice.initPage(true);
+
+	$(function () {
+        // 调用 公告滚动函数
+        setInterval("dice.noticeUp('#text-slideTo ul','-5.5em',1000)", 4000);
+    });
 });
 
 

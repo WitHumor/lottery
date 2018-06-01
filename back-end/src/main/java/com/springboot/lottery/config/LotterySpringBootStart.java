@@ -31,7 +31,7 @@ public class LotterySpringBootStart extends SpringBootServletInitializer {
 	// 获取jdbc.properties文件中的数据
 	@Value("${spring.datasource.driver}")
 	private String jdbcDriverClassName;
-	@Value("${spring.datasource.url}")
+	@Value("${spring.datasource.url}") 
 	private String jdbcUrl;
 	@Value("${spring.datasource.username}")
 	private String jdbcUserName;
