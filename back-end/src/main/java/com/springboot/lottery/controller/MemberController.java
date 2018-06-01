@@ -108,7 +108,7 @@ public class MemberController {
 		cache.put(member.getMid(), token);
 		// 把IP地址作为key放入ehcache缓存中
 		cache.put(ipAddress, token);
-		result.setResult(toMapByMember(member));
+		result.setResult(toMapByMember(member, token));
 		return result;
 	}
 
@@ -174,12 +174,26 @@ public class MemberController {
 			result.setCode(MessageUtil.PASSWORD_ERROR);
 			return result;
 		}
+		// 产生token
+		token = BeanLoad.getUUID();
 		// 获取IP地址
 		String ipAddress = getIpAddress();
 		if(ipAddress.equals(MessageUtil.IP_ADDRESS)) {
 			// IP地址获取失败
 			result.setCode(MessageUtil.IP_ADDRESS);
 			return result;
+		}
+		if(cache.get(ipAddress) != null && cache.get(member.getMid()) != null) {
+			// 获取token
+			String cacheToken = (String)cache.get(member.getMid()).get();
+			// 获取token中会员信息
+			Member tokenMember = (Member)cache.get(cacheToken).get();
+			// 设置新token比较旧token
+			tokenMember.setToken(token);
+			// 移除旧token
+			cache.evict(cacheToken);
+			// 再添加旧token
+			cache.put(cacheToken, tokenMember);
 		}
 		if(cache.get(member.getMid()) != null) {
 			// 获取token
@@ -205,17 +219,17 @@ public class MemberController {
 				cache.evict(tokenMember.getAddress());
 			}
 		}
-		// 产生token
-		token = BeanLoad.getUUID();
-		member.setToken(token);
+		// 设置IP地址
 		member.setAddress(ipAddress);
+		// 设置token
+		member.setToken(token);
 		// 把token做为key放入ehcache缓存中
 		cache.put(token, member);
 		// 把mid作为key放入ehcache缓存中
 		cache.put(member.getMid(), token);
 		// 把IP地址作为key放入ehcache缓存中
 		cache.put(ipAddress, token);
-		result.setResult(toMapByMember(member));
+		result.setResult(toMapByMember(member, token));
 		return result;
 	}
 
@@ -261,12 +275,26 @@ public class MemberController {
 			result.setCode(MessageUtil.PASSWORD_ERROR);
 			return result;
 		}
+		// 产生token
+		token = BeanLoad.getUUID();
 		// 获取IP地址
 		String ipAddress = getIpAddress();
 		if(ipAddress.equals(MessageUtil.IP_ADDRESS)) {
 			// IP地址获取失败
 			result.setCode(MessageUtil.IP_ADDRESS);
 			return result;
+		}
+		if(cache.get(ipAddress) != null && cache.get(member.getMid()) != null) {
+			// 获取token
+			String cacheToken = (String)cache.get(member.getMid()).get();
+			// 获取token中会员信息
+			Member tokenMember = (Member)cache.get(cacheToken).get();
+			// 设置新token比较旧token
+			tokenMember.setToken(token);
+			// 移除旧token
+			cache.evict(cacheToken);
+			// 再添加旧token
+			cache.put(cacheToken, tokenMember);
 		}
 		if(cache.get(member.getMid()) != null) {
 			// 获取token
@@ -292,17 +320,17 @@ public class MemberController {
 				cache.evict(tokenMember.getAddress());
 			}
 		}
-		// 产生token
-		token = BeanLoad.getUUID();
-		member.setToken(token);
+		// 设置IP地址
 		member.setAddress(ipAddress);
+		// 设置token
+		member.setToken(token);
 		// 把token做为key放入ehcache缓存中
 		cache.put(token, member);
 		// 把mid作为key放入ehcache缓存中
 		cache.put(member.getMid(), token);
 		// 把IP地址作为key放入ehcache缓存中
 		cache.put(ipAddress, token);
-		result.setResult(toMapByMember(member));
+		result.setResult(toMapByMember(member, token));
 		return result;
 	}
 
@@ -367,7 +395,7 @@ public class MemberController {
 			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
 			return result;
 		}
-		if(cache.get(tokenMember.getAddress()) == null) {
+		if(cache.get(tokenMember.getAddress()) == null || !token.equals(tokenMember.getToken())) {
 			// 移除token
 			cache.evict(token);
 			// 登录IP挤掉
@@ -433,7 +461,7 @@ public class MemberController {
 			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
 			return result;
 		}
-		if(cache.get(tokenMember.getAddress()) == null) {
+		if(cache.get(tokenMember.getAddress()) == null || !token.equals(tokenMember.getToken())) {
 			// 移除token
 			cache.evict(token);
 			// 登录IP挤掉
@@ -527,7 +555,7 @@ public class MemberController {
 			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
 			return result;
 		}
-		if(cache.get(tokenMember.getAddress()) == null) {
+		if(cache.get(tokenMember.getAddress()) == null || !token.equals(tokenMember.getToken())) {
 			// 移除token
 			cache.evict(token);
 			// 登录IP挤掉
@@ -635,7 +663,7 @@ public class MemberController {
 			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
 			return result;
 		}
-		if(cache.get(tokenMember.getAddress()) == null) {
+		if(cache.get(tokenMember.getAddress()) == null || !token.equals(tokenMember.getToken())) {
 			// 移除token
 			cache.evict(token);
 			// 登录IP挤掉
@@ -723,7 +751,7 @@ public class MemberController {
 			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
 			return result;
 		}
-		if(cache.get(tokenMember.getAddress()) == null) {
+		if(cache.get(tokenMember.getAddress()) == null || !token.equals(tokenMember.getToken())) {
 			// 移除token
 			cache.evict(token);
 			// 登录IP挤掉
@@ -810,7 +838,7 @@ public class MemberController {
 			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
 			return result;
 		}
-		if(cache.get(tokenMember.getAddress()) == null) {
+		if(cache.get(tokenMember.getAddress()) == null || !token.equals(tokenMember.getToken())) {
 			// 移除token
 			cache.evict(token);
 			// 登录IP挤掉
@@ -881,7 +909,7 @@ public class MemberController {
 			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
 			return result;
 		}
-		if(cache.get(tokenMember.getAddress()) == null) {
+		if(cache.get(tokenMember.getAddress()) == null || !token.equals(tokenMember.getToken())) {
 			// 移除token
 			cache.evict(token);
 			// 登录IP挤掉
@@ -961,7 +989,7 @@ public class MemberController {
 			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
 			return result;
 		}
-		if(cache.get(tokenMember.getAddress()) == null) {
+		if(cache.get(tokenMember.getAddress()) == null || !token.equals(tokenMember.getToken())) {
 			// 移除token
 			cache.evict(token);
 			// 登录IP挤掉
@@ -1131,7 +1159,7 @@ public class MemberController {
 			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
 			return result;
 		}
-		if(cache.get(tokenMember.getAddress()) == null) {
+		if(cache.get(tokenMember.getAddress()) == null || !token.equals(tokenMember.getToken())) {
 			// 移除token
 			cache.evict(token);
 			// 登录IP挤掉
@@ -1336,7 +1364,7 @@ public class MemberController {
 			page.setCode(MessageUtil.LOGIN_MEMBER_OUT);
 			return page;
 		}
-		if(cache.get(tokenMember.getAddress()) == null) {
+		if(cache.get(tokenMember.getAddress()) == null || !token.equals(tokenMember.getToken())) {
 			// 移除token
 			cache.evict(token);
 			// 登录IP挤掉
@@ -1401,7 +1429,7 @@ public class MemberController {
 			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
 			return result;
 		}
-		if(cache.get(tokenMember.getAddress()) == null) {
+		if(cache.get(tokenMember.getAddress()) == null || !token.equals(tokenMember.getToken())) {
 			// 移除token
 			cache.evict(token);
 			// 登录IP挤掉
@@ -1483,7 +1511,7 @@ public class MemberController {
 			result.setCode(MessageUtil.LOGIN_MEMBER_OUT);
 			return result;
 		}
-		if(cache.get(tokenMember.getAddress()) == null) {
+		if(cache.get(tokenMember.getAddress()) == null || !token.equals(tokenMember.getToken())) {
 			// 移除token
 			cache.evict(token);
 			// 登录IP挤掉
@@ -2403,12 +2431,12 @@ public class MemberController {
 	 * @param member
 	 * @return
 	 */
-	private Map<String, Object> toMapByMember(Member member) {
+	private Map<String, Object> toMapByMember(Member member, String token) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("mid", member.getMid());// mid
 		map.put("name", member.getName());// 姓名
 		map.put("address", member.getAddress());// ip地址
-		map.put("token", member.getToken()); // token
+		map.put("token", token); // token
 		map.put("real_name", member.getReal_name());// 真实姓名
 		return map;
 	}
