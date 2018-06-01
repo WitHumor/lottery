@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -837,7 +836,7 @@ public class MemberController {
 		map.put("record", record);// 记录类型：充值、取款
 		map.put("fundRecordDTO", fundRecordDTO);
 		// 根据订单号修改状态
-		int updateFundRecord = alterFundRecord(map);
+		int updateFundRecord = memberService.alterFundRecord(map);
 		if (updateFundRecord <= 0) {
 			result.setCode(MessageUtil.UPDATE_ERROR);
 			return result;
@@ -2347,43 +2346,6 @@ public class MemberController {
 		return true;
 	}
 
-	/**
-	 * 充值/取款结算-事务
-	 * 
-	 * @param map
-	 * @return
-	 */
-	@Transactional
-	public int alterFundRecord(Map<String, Object> map) {
-		int alertFundRecord = 0;
-		// 根据订单号修改状态
-		alertFundRecord = memberService.updateFundRecord(map);
-		// 获取记录DTO
-		FundRecordDTO fundRecordDTO = (FundRecordDTO) map.get("fundRecordDTO");
-		Map<String, Object> memberMap = new HashMap<String, Object>();
-		String mid = fundRecordDTO.getMid();// 获取mid
-		String money = fundRecordDTO.getMoney();// 获取金额
-		memberMap.put("mid", mid);
-		// 获取状态
-		String state = (String) map.get("state");
-		// 获取记录类型：充值、取款
-		String record = (String) map.get("record");
-		// 如果充值成功向账户中添加金额
-		if (record.equals("0") && state.equals("2")) {
-			String discounts = fundRecordDTO.getDiscounts();// 获取优惠金额
-			memberMap.put("money", String.format("%.2f", Float.valueOf(money) + Float.valueOf(discounts)));
-			alertFundRecord = memberService.updateSum(memberMap);
-			return alertFundRecord;
-		}
-		// 如果提款失败向账户返回金额
-		if (record.equals("1") && (state.equals("-1") || state.equals("-2"))) {
-			memberMap.put("money", String.format("%.2f", Float.valueOf(money)));
-			alertFundRecord = memberService.updateSum(memberMap);
-			return alertFundRecord;
-		}
-		return alertFundRecord;
-	}
-	
 	/**
 	 * 获取IP地址
 	 * 
