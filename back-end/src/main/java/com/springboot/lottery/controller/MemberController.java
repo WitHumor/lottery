@@ -468,7 +468,13 @@ public class MemberController {
 			result.setCode(MessageUtil.LOGIN_IP_OUT);
 			return result;
 		}
-		String exchange = JsoupUtil.getExchange(currency);
+		String exchange = null;
+		// 获取汇率
+		if(currency.equals("AppleC")) {
+			exchange = "1.00";
+		} else {
+			exchange = JsoupUtil.getExchange(currency);
+		}
 		if (exchange == null) {
 			// 网络连接失败
 			result.setCode(MessageUtil.NETWORK_CONNECTION);
@@ -564,18 +570,23 @@ public class MemberController {
 		}
 		// 获取缓存中的会员id
 		String mid = tokenMember.getMid();
+		String exchange = null;
 		// 获取汇率
-		String exchange = JsoupUtil.getExchange(currency);
-		if (exchange == null) {
-			// 网络连接失败
-			result.setCode(MessageUtil.NETWORK_CONNECTION);
-			return result;
+		if(currency.equals("AppleC")) {
+			exchange = "1.00";
+		} else {
+			exchange = JsoupUtil.getExchange(currency);
+			if (exchange == null) {
+				// 网络连接失败
+				result.setCode(MessageUtil.NETWORK_CONNECTION);
+				return result;
+			}
+			// 利用字符串切割和替换，改变为纯数字
+			String[] split = exchange.split(" ");
+			exchange = split[0].replace(",", "");
 		}
-		// 利用字符串切割和替换，改变为纯数字
-		String[] split = exchange.split(" ");
-		String replace = split[0].replace(",", "");
 		// 换算金额
-		Float currencyCount = Float.parseFloat(money) / Float.parseFloat(replace);
+		Float currencyCount = Float.parseFloat(money) / Float.parseFloat(exchange);
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 设置会员id
 		map.put("mid", mid);
@@ -672,17 +683,23 @@ public class MemberController {
 		}
 		// 获取缓存中的会员id
 		String mid = tokenMember.getMid();
-		String exchange = JsoupUtil.getExchange(currency);
-		if (exchange == null) {
-			// 网络连接失败
-			result.setCode(MessageUtil.NETWORK_CONNECTION);
-			return result;
+		String exchange = null;
+		// 获取汇率
+		if(currency.equals("AppleC")) {
+			exchange = "1.00";
+		} else {
+			exchange = JsoupUtil.getExchange(currency);
+			if (exchange == null) {
+				// 网络连接失败
+				result.setCode(MessageUtil.NETWORK_CONNECTION);
+				return result;
+			}
+			// 利用字符串切割和替换，改变为纯数字
+			String[] split = exchange.split(" ");
+			exchange = split[0].replace(",", "");
 		}
-		// 利用字符串切割和替换，改变为纯数字
-		String[] split = exchange.split(" ");
-		String replace = split[0].replace(",", "");
 		// 换算金额
-		Float money = Float.parseFloat(replace) * Float.parseFloat(currencyCount);
+		Float money = Float.parseFloat(exchange) * Float.parseFloat(currencyCount);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("record", "0");
 		// 查询充值是否有记录
