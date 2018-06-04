@@ -58,7 +58,7 @@
 			win_lose)
 	    VALUES(#{snid},
 			#{mid},
-			now(),
+			#{bet_time},
 			#{number},
 			#{type},
 			#{league},
@@ -100,7 +100,7 @@
 	    VALUES(#{frid},
 			#{mid},
 			#{dispose},
-			now(),
+			#{time},
 			#{number},
 			#{phone_code},
 			#{money_address},
@@ -143,6 +143,22 @@
 		    m.mid = #{mid}
 		AND
 			m.version = ${version}
+	</update>
+	
+	<!-- 20180604根据mid修改用户信息 -->
+	<update id="updateMember" parameterType="java.util.Map">
+		UPDATE
+			member m
+		SET
+			m.mid = #{mid}
+			<if test="password != null and password != ''">
+				,m.password = #{password}
+			</if>
+		   	<if test="bankPassword != null and bankPassword != ''">
+				,bank_password = #{bankPassword}
+			</if>
+		WHERE
+		    m.mid = #{mid}
 	</update>
 	
 	<!-- 20180503注单结算 -->
