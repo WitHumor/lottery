@@ -1,4 +1,4 @@
-var ServerUrl = 'http://192.168.43.20:8080'; //192.168.31.254  43.20  172.20.10.2:8080 http://www.xrp-candy.com/springBoot
+var ServerUrl = 'http://localhost:8080'; //192.168.31.254  43.20  172.20.10.2:8080 http://www.xrp-candy.com/springBoot
 var HttpService = function() {
     this.MAX_VALUE = 100000;
     var TYPE = {
