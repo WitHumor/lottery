@@ -2,7 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.springboot.lottery.mybatis.DiceDao">
-	
+	<resultMap type="com.springboot.lottery.dto.DiceBetDTO" id="diceBetDTOResult">
+        <result column="mid" property="mid" />
+        <result column="term" property="term" />
+        <result column="bet" property="bet" />
+        <result column="bet_value" property="bet_value" />
+        <result column="win" property="win" />
+        <result column="bet_time" property="bet_time" />
+        <result column="draw_time" property="draw_time" />
+        <result column="draw_term" property="draw_term" />
+        <result column="win_money" property="win_money" />
+    </resultMap>
+    
+    <resultMap type="com.springboot.lottery.dto.DiceDrawDTO" id="diceDrawDTOResult">
+        <id column="id" property="id" />
+        <result column="current_term" property="current_term" />
+        <result column="result" property="result" />
+        <result column="end_time" property="end_time" />
+        <result column="bet_total" property="bet_total" />
+        <result column="win_total" property="win_total" />
+        <collection property="diceBetDTOs" resultMap="diceBetDTOResult" />
+    </resultMap>
+    
 	<insert id="addDiceDraw" parameterType="com.springboot.lottery.entity.DiceDraw">
 		INSERT INTO 
 			dice_draw(current_term,
@@ -98,59 +119,27 @@
 			order by id desc limit ${beginIndex},${pageSize}
 		</if>	
 	</select>
-	<select id="queryDiceBetDTO" resultType="com.springboot.lottery.dto.DiceBetDTO" parameterType="java.util.Map">
-		SELECT b.*,d.result FROM 
-		dice_bet b,dice_draw d
-		where b.term=d.current_term
-		<if test="mid != null">
-			and mid = #{mid}
-		</if>
-		<if test="history != null">
-			and win is not null
-		</if>
-		<if test="term != null and term != 0">
-			and term = ${term}
-		</if>
-		<if test="beginIndex != null and pageSize != null and pageSize != 0">
-			order by id desc limit ${beginIndex},${pageSize}
-		</if>	
+	<select id="queryDiceDrawWithBetDTO" resultMap="diceDrawDTOResult" parameterType="java.util.Map">
+		select m.id, m.current_term, m.end_time,m.result,m.bet_total,m.win_total,b.mid,b.term,b.bet,b.bet_value,b.win,b.bet_time,b.draw_time,b.draw_term,b.win_money from
+			(select d.id, d.current_term,d.end_time,d.result,d.bet_total,d.win_total from dice_draw d where d.current_term in 
+				(select b.term from dice_bet b where b.mid=#{mid} and win is not null)
+					order by d.id desc limit ${beginIndex},${pageSize}) m, dice_bet b
+					where m.current_term = b.term and b.mid=#{mid}
 	</select>	
-	<select id="queryDiceBetTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
-		SELECT count(*) FROM 
-		dice_bet 
-		WHERE 1 = 1
-		<if test="mid != null">
-			and mid = #{mid}
-		</if>
-		<if test="history != null">
-			and win is not null
-		</if>
-		<if test="term != null and term != 0">
-			and term = ${term}
-		</if>
+	<select id="queryDiceDrawWithBetDTOTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(*) from dice_draw d where d.current_term in 
+			(select b.term from dice_bet b where b.mid=#{mid} and win is not null)
 	</select>
 	
-	<select id="queryDiceDrawBetDTO" resultType="com.springboot.lottery.dto.DiceDrawBetDTO" parameterType="java.util.Map">
-		SELECT  d.id,
-	mid,
-	 d.current_term,
-	 bet,
-	bet_value,
-	win,
-	bet_time,
-	d.end_time,
-	 draw_term,
-	win_money,
-	 result  FROM dice_draw d left outer join dice_bet b
-		on d.current_term=b.term and b.mid=#{mid}
+	<select id="queryDiceDrawBetDTO" resultMap="diceDrawDTOResult" parameterType="java.util.Map">
+		select m.id, m.current_term, m.end_time,m.result,m.bet_total,m.win_total,b.mid,b.term,b.bet,b.bet_value,b.win,b.bet_time,b.draw_time,b.draw_term,b.win_money from
+		(SELECT d.id, d.current_term,d.end_time,d.result,d.bet_total,d.win_total FROM dice_draw d 
 		where d.result is not null
-		<if test="beginIndex != null and pageSize != null and pageSize != 0">
-			order by d.id desc limit ${beginIndex},${pageSize}
-		</if>	
+        order by d.id desc limit ${beginIndex},${pageSize}) m left outer join dice_bet b 
+        on m.current_term=b.term and b.mid=#{mid}	
 	</select>	
 	<select id="queryDiceDrawBetTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
-		SELECT count(*) FROM dice_draw d left outer join dice_bet b
-		on d.current_term=b.term and b.mid=#{mid}
+		SELECT count(*) FROM dice_draw d 
 		where d.result is not null
 	</select>
 	<update id="updateSum" parameterType="java.util.Map">

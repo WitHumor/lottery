@@ -15,6 +15,7 @@ var dice = {
 	shuang : "8",
 	xiao : "9",
 	da : "10",
+	bet_term:0,
 	select_num: function (number,name){
 			this.ajax.get('/dice/account-info', {}, function(data) {
 			if (data.code == '2018') {
@@ -107,7 +108,7 @@ var dice = {
 						});
 					}else{
 						if (data.code == '2018') {
-						
+							dice.bet_term = dice.term;
 							dice.update_bet(dice.bet,dice.bet_value);
 							dice.bet=0;
 							dice.bet_name = '';
@@ -193,7 +194,13 @@ var dice = {
 							$(".bet-mask").hide();
 							$(".bet-value-num").text("0");
 							$('.bet-info' ).removeAttr( "style");
+							//
 							var betkeys  = Object.keys(data.result.bet);
+							if(dice.current_term == dice.bet_term){
+								betkeys.forEach(function(key) {
+									dice.update_bet(key,data.result.bet[key].bet_value);
+								});
+							}
 							if(betkeys.length > 0){
 								var winMsg = "";
 								betkeys.forEach(function(key) {

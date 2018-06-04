@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.springboot.lottery.dto.DiceBetDTO;
-import com.springboot.lottery.dto.DiceDrawBetDTO;
+import com.springboot.lottery.dto.DiceDrawDTO;
 import com.springboot.lottery.entity.DiceBet;
 import com.springboot.lottery.entity.DiceDraw;
 import com.springboot.lottery.mybatis.DiceDao;
@@ -105,16 +104,16 @@ public class DiceServiceImpl implements DiceService {
 		return diceDao.queryDiceBet(map);
 	}
 
-	public Integer queryDiceBetTotal(Map<String, Object> map) {
-		return diceDao.queryDiceBetTotal(map);
+	public Integer queryDiceDrawWithBetDTOTotal(Map<String, Object> map) {
+		return diceDao.queryDiceDrawWithBetDTOTotal(map);
 	}
 	
-	public List<DiceBetDTO> queryDiceBetDTO(Map<String, Object> map){
+	public List<DiceDrawDTO> queryDiceDrawWithBetDTO(Map<String, Object> map){
 		
-		return diceDao.queryDiceBetDTO(map);
+		return diceDao.queryDiceDrawWithBetDTO(map);
 	}
 	
-	public List<DiceDrawBetDTO> queryDiceDrawBetDTO(Map<String, Object> map){
+	public List<DiceDrawDTO> queryDiceDrawBetDTO(Map<String, Object> map){
 		
 		return diceDao.queryDiceDrawBetDTO(map);
 	}
@@ -192,7 +191,6 @@ public class DiceServiceImpl implements DiceService {
 			}
 			
 			db.setDraw_term(current.getCurrent_term());
-			db.setDraw_time(new Date());
 			db.setWin_money(win);
 			diceDao.updateDiceBet(db);
 			

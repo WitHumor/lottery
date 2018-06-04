@@ -6,7 +6,6 @@ import java.util.Date;
 import com.springboot.lottery.util.DiceBetUtil;
 
 public class DiceBetDTO {
-	private Integer id;
 	private String mid;
 	private Integer term;
 	private Integer bet;
@@ -16,13 +15,6 @@ public class DiceBetDTO {
 	private Date draw_time;
 	private Integer draw_term;
 	private Double win_money;
-	private Integer result;
-	public Integer getResult() {
-		return result;
-	}
-	public void setResult(Integer result) {
-		this.result = result;
-	}
 	public String getWin() {
 		return win;
 	}
@@ -79,12 +71,6 @@ public class DiceBetDTO {
 	}
 	public void setWin(String win) {
 		this.win = win;
-	}
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getMid() {
