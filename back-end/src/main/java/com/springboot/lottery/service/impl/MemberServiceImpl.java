@@ -127,6 +127,16 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	/**
+	 * 根据mid修改用户信息
+	 * 
+	 * @param map
+	 */
+	@Override
+	public int updateMember(Map<String, Object> map) {
+		return memberDao.updateMember(map);
+	}	
+	
+	/**
 	 * 根据snid删除注单
 	 * 
 	 * @param string
@@ -225,7 +235,7 @@ public class MemberServiceImpl implements MemberService {
 		if (StringUtils.isNotBlank(betType)) {
 			// 根据FT与BK查询滚球
 			if (betType.equals("FT") || betType.equals("BK")) {
-				if (StringUtils.isBlank(state) && state.equals("0")) {
+				if (StringUtils.isNotBlank(state) && state.equals("0")) {
 					String states = "'0','2'";
 					map.put("states", states);
 				}
@@ -570,6 +580,7 @@ public class MemberServiceImpl implements MemberService {
 		map.put("betType", singleNote.getBet_type());// 下注类型 足球|篮球
 		map.put("ratio", singleNote.getRatio());// 赔率
 		map.put("bet", singleNote.getBet());// 下注赢方
+		map.put("occasion", singleNote.getOccasion());// 下注场次 全场 |半场
 		map.put("state", singleNote.getState());// 结算状态
 		map.put("money", singleNote.getMoney());// 下注金额
 		map.put("dealMoney", singleNote.getDeal_money());// 交易金额
@@ -616,6 +627,7 @@ public class MemberServiceImpl implements MemberService {
 		map.put("strong", singleNote.getStrong());// 让球方与受让方
 		map.put("ratio", singleNote.getRatio());// 赔率
 		map.put("bet", singleNote.getBet());// 下注赢方
+		map.put("occasion", singleNote.getOccasion());// 下注场次 全场 |半场
 		map.put("betType", singleNote.getBet_type());// 下注类型 足球|篮球
 		map.put("state", singleNote.getState());// 结算状态
 		map.put("money", singleNote.getMoney());// 下注金额

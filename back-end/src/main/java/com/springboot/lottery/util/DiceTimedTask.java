@@ -1,6 +1,7 @@
 package com.springboot.lottery.util;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,12 +164,14 @@ public class DiceTimedTask {
 			
 		}
 		
+		Date drawTime = new Date();
 		
 		diceService.genereateNewDiceDraw(current, draw,win);
 		q = new HashMap<String,Object>();
 		q.put("term", current.getCurrent_term());
 		List<DiceBet> dbs = diceService.queryDiceBet(q);
 		for(DiceBet db:dbs) {
+			db.setDraw_time(drawTime);
 			diceService.rewardMember(current, draw, db);
 		}
 		

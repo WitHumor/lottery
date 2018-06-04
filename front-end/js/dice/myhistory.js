@@ -6,24 +6,26 @@ var dicemyhistory = {
 		this.ajax.get('/dice/bet-history', {"page":page}, function(data) {
 				if (data.code == '2018') {
 					var historyHtml = "<section>" +
-								'<div class="content">' + 
+								'<div class="content history">' + 
 									'<ul class="betRecord-ul">' + 
 										'<div class="lists">' ;
 									for(var r in data.result.result){
 										var obj = data.result.result[r];
 										historyHtml = historyHtml + "<li>" + 
-											'<div class="flex-cont flex-simple">' + 
-											'<div class="flex-item s-word">' + 
-											'<p class="p-money">第'+obj.term+'期</p>' + 
-											'</div>' + 
-											'<div class="flex-item s-word">' + 
-											'<p class="s-tit">开奖号码：'+obj.result+'点, ' + (obj.result>3?"大":"小") + ", " + (obj.result%2==0?"双":"单")+'</p>' + 
-											'<p class="s-desc">'+obj.bet_time_str+'</p>' + 
-											'</div>' + 
-											'<div class="flex-item s-word" style="text-align:right;">' + 
-											'<p class="s-tit">下注：'+obj.bet_value+', '+obj.bet_name+'</p>' + 
-											'<p class="s-desc">赢：'+(obj.win_money>0?obj.win_money-obj.bet_value:0)+'</p>' + 
-											'</div></div></li> ';
+											'<div class="flex-simple">' + 
+												'<div>' + 
+													'<div class="term">第'+obj.current_term+'期</div>' + 
+													'<div class="bet-result">开奖号码：'+obj.result+'点, ' + (obj.result>3?"大":"小") + ", " + (obj.result%2==0?"双":"单")+'</div>' + 
+												'</div>' + 
+												
+													'<div class="detail term-time">' + 
+													'<div>开奖时间：'+obj.end_time_str+'</div>';
+													for(var betD in obj.diceBetDTOs){
+														historyHtml = historyHtml + '<div>下注 '+obj.diceBetDTOs[betD].bet_name+'：'+obj.diceBetDTOs[betD].bet_value+'， 返回：'+obj.diceBetDTOs[betD].win_money+'</div>';
+													}
+												historyHtml = historyHtml + '</div>'+
+											 '</div>'+
+											'</li> ';
 											
 									}
 

@@ -52,6 +52,13 @@ public interface MemberDao {
 	 * @param map
 	 */
 	int updateSum(Map<String, Object> map);
+	
+	/**
+	 * 根据mid修改用户信息
+	 * 
+	 * @param map
+	 */
+	int updateMember(Map<String, Object> map);
 
 	/**
 	 * 根据snid删除注单

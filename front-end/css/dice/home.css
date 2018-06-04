@@ -12,30 +12,62 @@
 
 @media screen and (min-width:320px){html{font-size:21.33px}
     body{font-size:11px}
+	.weui-btn_mini {
+		padding: 0 10px !important;
+	}
 }
 @media screen and (min-width:360px){html{font-size:24px}
     body{font-size:12px}
+
 }
 @media screen and (min-width:375px){html{font-size:25px}
     body{font-size:12px}
+	.betRecord-ul li{ 
+			font-size: 13px;
+	}
+	.history .term-time{
+		font-size:12px;
+	}
+	.weui-btn_mini {
+		padding: 0 1em !important;
+	}
 }
 @media screen and (min-width:384px){html{font-size:25.6px}
     body{font-size:14px}
+
 }
 @media screen and (min-width:400px){html{font-size:26.67px}
     body{font-size:14px}
+	.weui-btn_mini {
+		padding: 0 11px !important;
+	}
 }
 @media screen and (min-width:414px){html{font-size:27.6px}
     body{font-size:14px}
 }
 @media screen and (min-width:424px){html{font-size:28.27px}
     body{font-size:14px}
+	.betRecord-ul li{ 
+			font-size: 14px;
+	}
+	.history .term-time{
+		font-size:12px;
+	}
 }
 @media screen and (min-width:480px){html{font-size:32px}
     body{font-size:15.36px}
+	.betRecord-ul li{ 
+			font-size: 15px;
+	}
+	.history .term-time{
+		font-size:13px;
+	}
 }
 @media screen and (min-width:540px){html{font-size:36px}
     body{font-size:17.28px}
+	.weui-btn_mini {
+		padding: 0 1.23em !important;
+	}
 }
 @media screen and (min-width:720px){html{font-size:48px}
     body{font-size:23.04px}
@@ -328,10 +360,11 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
 
 .weui-btn_mini {
   display: inline-block;
-  padding: 0 1.32em;
   line-height: 2.3;
   font-size: 13px;
 }
+
+
 .myShare-icon-1 {
     background: url(../../img/dice/myShare-icon-1.png) no-repeat;
 }
@@ -394,7 +427,14 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
             align-items: center;
             padding: 10px 15px;
         }
-        .betRecord-ul li{ padding: 5px;  border:1px solid rgba(85, 85, 85, 0.08); margin: 10px; border-left: 5px solid #3D3459; border-radius: 5px; font-size: 15px;}
+        .betRecord-ul li{ 
+			padding: 5px;  
+			border:1px solid rgba(85, 85, 85, 0.08); 
+			margin: 10px; 
+			border-left: 5px solid #3D3459; 
+			border-radius: 5px; 
+		}
+
         .betRecord-ul li:last-child{ border-bottom: none;}
         .s-tit{
             font-size: 14px;
@@ -445,4 +485,38 @@ a, button, input, textarea {
 }
 
 .bet-mask .bet-value{
+}
+
+.history .term{
+	color: #3D3459;
+	font-weight: 700;
+	float:left;
+}
+
+.history .bet-result{
+	float:right;
+	color: #3D3459;
+	font-weight: 700;
+}
+
+
+
+
+
+.history .detail{
+	clear:both;
+	margin-left:20px;
+	
+}
+
+.history-container{
+	border-radius: 15px;
+	margin-top:20px;
+	background-color: #fff;
+	margin-bottom:60px;
+	min-height:480px;
+}
+
+.history-body{
+	background-color: #071D32;
 }

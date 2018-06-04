@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.springboot.lottery.dto.DiceBetDTO;
 import com.springboot.lottery.dto.DiceDrawBetDTO;
+import com.springboot.lottery.dto.DiceDrawDTO;
 import com.springboot.lottery.entity.DiceBet;
 import com.springboot.lottery.entity.DiceDraw;
 import com.springboot.lottery.entity.Member;
@@ -36,6 +36,7 @@ import com.springboot.lottery.util.ObjectResult;
  */
 @Controller
 @RequestMapping("dice")
+@CrossOrigin(origins = "*")
 public class DiceController {
 
 	@Autowired
@@ -50,7 +51,7 @@ public class DiceController {
 	@Autowired
 	private HttpServletRequest request;
 
-	@CrossOrigin(origins = "*")
+	
 	@RequestMapping(value = "member-info", method = RequestMethod.GET)
 	@ResponseBody
 	public ObjectResult memberInfo() throws InterruptedException {
@@ -91,7 +92,6 @@ public class DiceController {
 	}
 	
 	
-	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "bet-draw-history", method = RequestMethod.GET)
 	@ResponseBody
 	public ObjectResult betDrawHistory(int page) throws InterruptedException {
@@ -121,7 +121,7 @@ public class DiceController {
 		map.put("pageSize", DiceBetUtil.page_size);
 		Integer total = diceService.queryDiceDrawBetTotal(map);
 		Integer pages= total%DiceBetUtil.page_size == 0? total/DiceBetUtil.page_size: total/DiceBetUtil.page_size +  1;
-		List<DiceDrawBetDTO> dbs =  diceService.queryDiceDrawBetDTO(map);
+		List<DiceDrawDTO> dbs =  diceService.queryDiceDrawBetDTO(map);
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("total", total);
@@ -134,7 +134,6 @@ public class DiceController {
 	}
 	
 	
-	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "bet-history", method = RequestMethod.GET)
 	@ResponseBody
 	public ObjectResult betHistory(int page) throws InterruptedException {
@@ -162,9 +161,9 @@ public class DiceController {
 		map.put("history", "true");
 		map.put("beginIndex", (page-1)*DiceBetUtil.page_size);
 		map.put("pageSize", DiceBetUtil.page_size);
-		Integer total = diceService.queryDiceBetTotal(map);
+		Integer total = diceService.queryDiceDrawWithBetDTOTotal(map);
 		Integer pages= total%DiceBetUtil.page_size == 0? total/DiceBetUtil.page_size: total/DiceBetUtil.page_size +  1;
-		List<DiceBetDTO> dbs =  diceService.queryDiceBetDTO(map);
+		List<DiceDrawDTO> dbs =  diceService.queryDiceDrawWithBetDTO(map);
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("total", total);
@@ -177,9 +176,6 @@ public class DiceController {
 	}
 	
 	
-	
-	
-	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "dice-bet", method = RequestMethod.POST)
 	@ResponseBody
 	public ObjectResult addBet(int term, int bet, double bet_value) throws InterruptedException {
@@ -242,7 +238,6 @@ public class DiceController {
 	 * @param member
 	 * @return
 	 */
-	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "account-info", method = RequestMethod.GET)
 	@ResponseBody
 	public ObjectResult getAccountInfo() {
@@ -286,7 +281,6 @@ public class DiceController {
 	 * @param member
 	 * @return
 	 */
-	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "dice-draw", method = RequestMethod.GET)
 	@ResponseBody
 	public ObjectResult getDiceDrawInfo(boolean init) {
