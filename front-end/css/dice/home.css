@@ -508,3 +508,15 @@ a, button, input, textarea {
 	margin-left:20px;
 	
 }
+
+.history-container{
+	border-radius: 15px;
+	margin-top:20px;
+	background-color: #fff;
+	margin-bottom:60px;
+	min-height:480px;
+}
+
+.history-body{
+	background-color: #071D32;
+}
