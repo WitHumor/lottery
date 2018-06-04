@@ -1,5 +1,5 @@
-var ServerUrl = 'http://localhost:8080'; //192.168.31.254
-//var ServerUrl = 'http://www.xrp-candy.com/springBoot'; //192.168.31.254
+//var ServerUrl = 'http://localhost:8080'; //192.168.31.254
+var ServerUrl = 'http://www.xrp-candy.com/springBoot'; //192.168.31.254
 var HttpService = function() {
     this.MAX_VALUE = 100000;
     var TYPE = {
