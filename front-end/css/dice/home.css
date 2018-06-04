@@ -12,9 +12,13 @@
 
 @media screen and (min-width:320px){html{font-size:21.33px}
     body{font-size:11px}
+	.weui-btn_mini {
+		padding: 0 10px !important;
+	}
 }
 @media screen and (min-width:360px){html{font-size:24px}
     body{font-size:12px}
+
 }
 @media screen and (min-width:375px){html{font-size:25px}
     body{font-size:12px}
@@ -24,6 +28,9 @@
 	.history .term-time{
 		font-size:12px;
 	}
+	.weui-btn_mini {
+		padding: 0 1em !important;
+	}
 }
 @media screen and (min-width:384px){html{font-size:25.6px}
     body{font-size:14px}
@@ -31,6 +38,9 @@
 }
 @media screen and (min-width:400px){html{font-size:26.67px}
     body{font-size:14px}
+	.weui-btn_mini {
+		padding: 0 11px !important;
+	}
 }
 @media screen and (min-width:414px){html{font-size:27.6px}
     body{font-size:14px}
@@ -347,10 +357,11 @@ i.weui-tabbar__icon, .weui-tabbar__icon > i {
 
 .weui-btn_mini {
   display: inline-block;
-  padding: 0 1.32em;
   line-height: 2.3;
   font-size: 13px;
 }
+
+
 .myShare-icon-1 {
     background: url(../../img/dice/myShare-icon-1.png) no-repeat;
 }
