@@ -112,7 +112,7 @@ var DW = {
                     }
                 }
             });
-            DE.booltf = true;
+            DW.booltf = true;
         }
 
     },
@@ -128,7 +128,6 @@ var DW = {
             param.remark = $('#beizhu').val();
         }
         this.ajax.post('/member/member-withdrawn', param, function(data) {
-            console.log(data);
             if (data.code == '2018') {
                 $('.btn-submit').attr('disabled', 'disabled');
                 layer.msg('成功生成取款订单', {
@@ -166,7 +165,6 @@ var DW = {
         if (e[0] == $('#rechargebtb')[0]) {
             var current = parseFloat($('#rechargebtb').val()),
                 btbrate = parseFloat($('.cny-rate').text());
-            console.log(!regs.test(current), isNaN(btbrate));
             if (!regs.test(current) || isNaN(btbrate)) {
                 $('#btb-rmb').val('');
                 return;

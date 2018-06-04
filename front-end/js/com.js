@@ -1,4 +1,4 @@
-var ServerUrl = 'http://192.168.43.20:8080'; //192.168.31.254  43.20  172.20.10.2:8080 http://www.xrp-candy.com/springBoot
+var ServerUrl = 'http://www.xrp-candy.com/springBoot'; //192.168.31.254  43.20  172.20.10.2:8080 http://www.xrp-candy.com/springBoot
 var HttpService = function() {
     this.MAX_VALUE = 100000;
     var TYPE = {
@@ -31,7 +31,8 @@ var HttpService = function() {
                 });
             },
             success: function(data) {
-                if (data.code != '2018') {
+                var codeArr = ['1109', '1114', '1121', '1122'];
+                if (codeArr.indexOf(data.code) > -1) {
                     if ($('.mine').length > 0) {
                         setTimeout(function() {
                             $('.mine').remove();
@@ -48,7 +49,7 @@ var HttpService = function() {
                             time: 2000,
                             icon: 2
                         });
-                    } else if(data.code == '1122') {
+                    } else if (data.code == '1122') {
                         layer.msg('同网络下只能有一个账户活跃，您已被迫下线', {
                             time: 2000,
                             icon: 2
@@ -173,7 +174,6 @@ var common = {
             success: function(layero, index) {
                 var inputDeal = $('.input-group>input[type="text"],.input-group>input[type="password"]');
                 // inputDeal.focus(function() {
-                //     console.log('11122');
                 // });
                 inputDeal.blur(function() {
                     common.checkinput([$(this)]);
@@ -323,7 +323,7 @@ var common = {
             }
             if (iType == 'r_password') {
                 if (!regTwo.test(iValue)) {
-                    tips.text('密码由6~12个字母和数字组合的字符，区分大小写').removeClass('vh');
+                    tips.text('密码由6~12个字母和数字组合的字符，以字母开头').removeClass('vh');
                     reBool = false;
                     return;
                 }
@@ -414,6 +414,10 @@ var common = {
                 }
             });
         }
+
+        if($('#thisishome').length == 0 && $('#thisisft').length == 0 && $('#thisisbk').length == 0) {
+            $('body').append('<div class="hyperchannel"><li><a href="football.html"><i class="iconfont icon-xiaoyuan-"></i>&nbsp;足球</a></li><li><a href="basketball.html"><i class="iconfont icon-lanqiu"></i>&nbsp;篮球</a></li><li><a href="javascript:void(0);" class="lotteryBetting"><i class="iconfont icon-taiqiu"></i></i>&nbsp;彩票</a></li></div>');
+        }
     },
 
     inviteCode: function() {
@@ -464,7 +468,7 @@ var common = {
     },
 
     mine: function() {
-        $('body').prepend('<div class="mine"><div class="myinfos"><img src="../../img/icon_user_o_lg.png"><p>账户：<label id="myAccount" class="fwb">-</label></p><p>余额：<label id="remainSum" class="fwb">0.00</label> 点</p><p><button class="refresh-credit" onclick="common.getANS();"><i class="iconfont icon-msnui-refresh-circle alignmid"></i> 刷新额度</button></p><div class="milist"><div onclick="window.location.href=\'tradingrecord.html\'">资金交易记录<i class="iconfont icon-more fr f20"></i></div><div onclick="common.inviteCode();">获取代理邀请码<i class="iconfont icon-more fr f20"></i></div></div><a href="javascript:void(0);" onclick="common.loginout();"><i class="iconfont icon-tuichu alignmid"></i> 安全退出</a></div></div>');
+        $('body').prepend('<div class="mine"><div class="myinfos"><img src="../../img/icon_user_o_lg.png"><p>账户：<label id="myAccount" class="fwb">-</label></p><p>余额：<label id="remainSum" class="fwb">0.00</label> 点</p><p><button class="refresh-credit" onclick="common.getANS();"><i class="iconfont icon-msnui-refresh-circle alignmid"></i> 刷新额度</button></p><div class="milist"><div onclick="window.location.href=\'tradingrecord.html\'">资金交易记录<i class="iconfont icon-more fr f20"></i></div><div onclick="window.location.href=\'managePass.html\'">密码管理<i class="iconfont icon-more fr f20"></i></div><div onclick="common.inviteCode();">获取代理邀请码<i class="iconfont icon-more fr f20"></i></div></div><a href="javascript:void(0);" onclick="common.loginout();"><i class="iconfont icon-tuichu alignmid"></i> 安全退出</a></div></div>');
         $('.mine').click(function(e) {
             var o = e.target;
             if ($(o).closest('.myinfos').length == 0) //不是特定区域
@@ -495,14 +499,13 @@ var common = {
     },
 
     getPourList: function(obj) {
-        console.log(obj);
         this.ajax.post('/member/single-note', obj, function(data) {
-            console.log(data);
             if (data.code == '2018') {
                 if (data.result.length == 0) {
                     $('.bottomPourList').html('<div class="noDeal fwb">暂时还没有下注单</div>');
                 } else {
                     var html = '<div class="alllist">';
+                    var strArr = ['大', '小', '单大', '单小', '单', '双'];
                     $.each(data.result, function(i, item) {
                         var btype = '-';
                         switch (item.betType) {
@@ -521,7 +524,61 @@ var common = {
                             default:
                                 btype = '-';
                         };
-                        html += '<div class="tinfo commons"><div class="dleague"><span>' + btype + '</span></div><p>' + item.league + '</p><p>下注时间：<span>' + item.betTime + '</span></p><div class="chsteam commons"><span class="tName">' + item.teamh + ' <font class="radio">vs</font> ' + item.teamc + '</span></div><div class="chsteam commons"><label class="c_red">' + (item.bet == 'H' ? item.teamh : item.teamc) + '</label> @ <strong class="light" id="ioradio_id">' + (item.ratio || '-') + '</strong></div><p>下注金额：<span class="pourMoney">' + (item.money || '0') + '</span></p></div>';
+                        var st = '';
+                        if (item.iorType == '大' || item.iorType == '小') {
+                            st = '大小'
+                        } else if (item.iorType == '单大' || item.iorType == '单小') {
+                            st = '积分大小'
+                        } else if (item.iorType == '单' || item.iorType == '双') {
+                            st = '单双'
+                        } else {
+                            st = item.iorType;
+                        }
+                        var alltype = item.iorType;
+                        if (strArr.indexOf(alltype) > -1) {
+                            if (alltype == '单大') {
+                                alltype = '大';
+                            }
+                            if (alltype == '单小') {
+                                alltype = '小';
+                            }
+                        } else {
+                            alltype = '';
+                        }
+                        var th = '',
+                            tc = '',
+                            thisfront = '[ <span class="fwb">' + alltype + (item.iorRatio ? item.iorRatio : "") + '</span> ]',
+                            chosedName = '';
+                        switch (item.bet) {
+                            case 'H':
+                                th = thisfront;
+                                chosedName = item.teamh;
+                                break;
+                            case 'C':
+                                tc = thisfront;
+                                chosedName = item.teamc;
+                                break;
+                            case 'N':
+                                chosedName = '和局';
+                                // thisfront = '';
+                                break;
+                        };
+                        if(!alltype && !item.iorRatio) {
+                            thisfront = '';
+                        }
+                        var bs = '';
+                        if (item.iorType == '让球' || item.iorType == '让分') {
+                            if (item.bet == item.strong) {
+                                bs = '(让方) ';
+                            } else {
+                                bs = '(受让方) ';
+                            }
+                            if (item.bet == 'N') {
+                                bs = '';
+                            }
+                        }
+
+                        html += '<div class="tinfo commons"><div class="dleague"><span>' + btype + '</span></div><p>' + item.league + '</p><p>下注时间：<span>' + item.betTime + '</span></p><div class="chsteam commons c_red fwb">' + st + '</div><div class="chsteam commons"><span class="tName">' + item.teamh + ' <font class="radio">vs</font> ' + item.teamc + '</span></div><div class="chsteam commons"><label class="c_red">' + chosedName +  ' ' + bs + thisfront + '</label> @ <strong class="light" id="ioradio_id">' + (item.ratio || '-') + '</strong></div><p>下注金额：<span class="pourMoney">' + (item.money || '0') + '</span></p></div>';
                     });
                     html += '</div>';
                     $('.bottomPourList').html(html);

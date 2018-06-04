@@ -656,10 +656,10 @@ input.btn-submit {
 }
 
 .myinfos>img {
-    margin: 5px auto 15px;
+    margin: 5px auto 10px;
     display: block;
-    width: 65px;
-    height: 65px;
+    width: 60px;
+    height: 60px;
 }
 
 .refresh-credit {
@@ -682,8 +682,8 @@ input.btn-submit {
 }
 
 .milist>div {
-    height: 35px;
-    line-height: 35px;
+    /*height: 35px;*/
+    line-height: 25px;
     margin-bottom: 5px;
     padding: 0 10px;
     color: #dbcec6;
@@ -862,4 +862,20 @@ input.btn-submit {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     text-align: center;
+}
+
+#newBridge .nb-nodeboard-base .nb-nodeboard-contain-base .nb-success-icon {
+    /*background: #fff url() no-repeat center center !important;*/
+    background-image: none !important;
+}
+
+#newBridge .nb-invite-wrap .nb-invite-text {
+    left: 26px !important;
+    right: 128px !important;
+}
+
+#newBridge .customer-invite-style .nb-invite-cancel.nb-invite-cancel-base {
+    background-color: transparent !important;
+    color: #fff !important;
+    border: 1px solid #fff !important;
 }
