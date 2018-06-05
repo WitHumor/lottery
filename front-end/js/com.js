@@ -172,6 +172,7 @@ var common = {
             area: (types == 'L' ? log.ar : reg.ar),
             content: (types == 'L' ? log.co : reg.co),
             success: function(layero, index) {
+                $('#regpass').val('');$('#withpass').val('');
                 var inputDeal = $('.input-group>input[type="text"],.input-group>input[type="password"]');
                 // inputDeal.focus(function() {
                 // });
@@ -424,7 +425,7 @@ var common = {
         $('.mine').remove();
         layer.closeAll();
         if (sessionStorage.getItem('toid') && sessionStorage.getItem('userinfo')) {
-            var h = '<div style="letter-spacing: 5px;font-size: 20px;text-align: center;color: #071D32;">' + JSON.parse(sessionStorage.getItem('userinfo')).name + '</div>';
+            var h = '<div style="letter-spacing: 5px;font-size: 20px;text-align: center;color: #071D32;">' + JSON.parse(sessionStorage.getItem('userinfo')).name + '</div><div style="margin-top: 10px;font-size: 12px; color: #FC6747;text-align: center;">Tip：受邀会员每月下注流水总额的1%作为推广返利</div>';
             layer.alert(h, {
                 skin: 'layui-layer-molv',
                 title: '您的代理邀请码',
@@ -468,7 +469,7 @@ var common = {
     },
 
     mine: function() {
-        $('body').prepend('<div class="mine"><div class="myinfos"><img src="../../img/icon_user_o_lg.png"><p>账户：<label id="myAccount" class="fwb">-</label></p><p>余额：<label id="remainSum" class="fwb">0.00</label> 点</p><p><button class="refresh-credit" onclick="common.getANS();"><i class="iconfont icon-msnui-refresh-circle alignmid"></i> 刷新额度</button></p><div class="milist"><div onclick="window.location.href=\'tradingrecord.html\'">资金交易记录<i class="iconfont icon-more fr f20"></i></div><div onclick="window.location.href=\'managePass.html\'">密码管理<i class="iconfont icon-more fr f20"></i></div><div onclick="common.inviteCode();">获取代理邀请码<i class="iconfont icon-more fr f20"></i></div></div><a href="javascript:void(0);" onclick="common.loginout();"><i class="iconfont icon-tuichu alignmid"></i> 安全退出</a></div></div>');
+        $('body').prepend('<div class="mine"><div class="myinfos"><img src="../../img/icon_user_o_lg.png"><p>账户：<label id="myAccount" class="fwb">-</label></p><p>本地余额：<label id="remainSum" class="fwb">0.00</label> 点</p><p>返利余额：<label id="returnSum" class="fwb">0.00</label> 点</p><p><button class="refresh-credit" onclick="common.getANS();"><i class="iconfont icon-msnui-refresh-circle alignmid"></i> 刷新额度</button></p><div class="milist"><div onclick="window.location.href=\'tradingrecord.html\'">资金交易记录<i class="iconfont icon-more fr f20"></i></div><div onclick="window.location.href=\'managePass.html\'">密码管理<i class="iconfont icon-more fr f20"></i></div><div onclick="common.inviteCode();">获取代理邀请码<i class="iconfont icon-more fr f20"></i></div></div><a href="javascript:void(0);" onclick="common.loginout();"><i class="iconfont icon-tuichu alignmid"></i> 安全退出</a></div></div>');
         $('.mine').click(function(e) {
             var o = e.target;
             if ($(o).closest('.myinfos').length == 0) //不是特定区域
@@ -482,6 +483,7 @@ var common = {
             if (data.code == '2018') {
                 $('#myAccount').text(data.result.name);
                 $('#remainSum').text(data.result.sum);
+                $('#returnSum').text(data.result.sum);
             }
             // else {
             //     layer.msg('数据获取失败', {

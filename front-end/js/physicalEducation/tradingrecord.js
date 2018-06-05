@@ -36,7 +36,7 @@ var TD = {
                 title: '钱包地址',
             }, {
                 field: 'money',
-                title: '提现金额',
+                title: '提现金额(点)',
             }, {
                 field: 'state',
                 title: '状态',
@@ -84,7 +84,10 @@ var TD = {
                 title: '充值单号',
             }, {
                 field: 'money',
-                title: '充值金额',
+                title: '充值金额(点)',
+            }, {
+                field: 'discounts',
+                title: '优惠金额(点)',
             }, {
                 field: 'type',
                 title: '充值类型',
@@ -170,10 +173,10 @@ var TD = {
                 title: '客场队伍',
             }, {
                 field: 'money',
-                width: 90,
-                minWidth: 90,
+                width: 110,
+                minWidth: 110,
                 align: 'center',
-                title: '下注金额',
+                title: '下注金额(点)',
             }, {
                 field: 'betType',
                 title: '比赛类型',

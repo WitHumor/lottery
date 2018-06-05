@@ -7,6 +7,7 @@ var DW = {
     ajax: new HttpService(),
     booltf: true,
     initPage: function() {
+        $('#withpass').val('');
         DW.currency();
         $('.forminput').bind('input propertychange', function() {
             DW.allchanges($(this));
@@ -15,6 +16,9 @@ var DW = {
             DW.checks([$(this)]);
         }).focus(function() {
             $(this).removeClass('deposit-m');
+        });
+        $('.wallet-type').click(function() {
+            $(this).addClass('active').siblings().removeClass('active');
         });
         $('#bitype').change(function() {
             DW.currency();

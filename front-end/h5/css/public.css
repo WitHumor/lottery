@@ -179,6 +179,10 @@ em {
   margin-bottom: 10px;
 }
 
+.f14 {
+  font-size: 14px;
+}
+
 .f16 {
   font-size: 16px;
 }
@@ -243,6 +247,7 @@ a:focus {
     height: 44px;
     line-height: 44px;
     font-size: 16px;
+    z-index: 99999;
 }
 
 .navTop .leftBtn {
@@ -311,11 +316,12 @@ a:focus {
 }
 
 .acontainer {
+  position: relative;
   border-top: 50px solid transparent;
-  border-bottom: 50px solid transparent;
+  border-bottom: 100px solid transparent;
   height: 100%;
   overflow: hidden;
-  overflow-y: scroll;
+  /*overflow-y: scroll;*/
 }
 
 /*滚动条*/
@@ -325,7 +331,8 @@ a:focus {
 
 ::-webkit-scrollbar {
   width: 6px;
-  background-color: #F5F5F5
+  background-color: #F5F5F5;
+  display: none;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -333,7 +340,12 @@ a:focus {
 }
 
 .footer {
+  position: absolute;
+  left: 0;
+  bottom: 50px;
   text-align: center;
   color: #55402F;
+  height: 30px;
   line-height: 30px;
+  width: 100%;
 }

@@ -41,8 +41,8 @@
 }
 
 .iconbtnbox i {
-  font-size: 45px;
-  margin-bottom: 5px;
+    font-size: 45px;
+    margin-bottom: 5px;
 }
 
 .ft i {
@@ -55,4 +55,46 @@
 
 .lt i {
     color: #4738C9;
+}
+
+.notice {
+  position: relative;
+  margin: 10px;
+  padding-left: 10px;
+  background-color: #fff;
+  border-radius: 20px;
+  line-height: 30px;
+}
+
+.notice .notice-name {
+  font-size: 14px;
+  vertical-align: middle;
+  color: #EF473A;
+}
+
+
+.notice .more {
+  position:absolute;
+  top: 0;
+  right: 10px;
+}
+
+.notice-con {
+    height: 30px;
+    line-height: 30px;
+    padding: 0 45px 0 10px;
+    overflow: hidden;
+}
+
+.notice-con li {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: .8
+}
+
+.latest-offers {
+  background-color: #BDDDC2;
+  text-align: center;
+  padding: 5px;
 }
