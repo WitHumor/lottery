@@ -63,34 +63,29 @@ layui.define(function(exports) {
                 limits: [10, 30, 60, 90],
                 cols: options.cols,
                 done: function(res, curr, count) {
-                    if (setter.response.statusCode['logout'].indexOf(res[setter.response.statusName]) > -1) {
-                        layer.msg('登录超时，请重新登陆', {
-                            offset: '15px',
-                            time: 1500,
-                            icon: 2
-                        });
+                    var codeArr = ['1109', '1114', '1121', '1122'];
+                    if (codeArr.indexOf(res[setter.response.statusName]) > -1) {
+                        if (setter.response.statusCode['logout'].indexOf(res[setter.response.statusName]) > -1) {
+                            layer.msg('登录超时，请重新登陆', {
+                                offset: '15px',
+                                time: 1500,
+                                icon: 2
+                            });
+                        } else if (res[setter.response.statusName] == '1121') {
+                            layer.msg('您的账号已在其他地方登陆，请重新登录', {
+                                offset: '15px',
+                                time: 1500,
+                                icon: 2
+                            });
+                        } else if (res[setter.response.statusName] == '1122') {
+                            layer.msg('同网络下只能有一个账户活跃，您已被迫下线', {
+                                offset: '15px',
+                                time: 1500,
+                                icon: 2
+                            });
+                        }
                         setTimeout(function() {
                             layui.view.exit();
-                        }, 2000);
-                        return;
-                    } else if (res[setter.response.statusName] == '1121') {
-                        layer.msg('您的账号已在其他地方登陆，请重新登录', {
-                            offset: '15px',
-                            time: 1500,
-                            icon: 2
-                        });
-                        setTimeout(function() {
-                            view.exit();
-                        }, 2000);
-                        return;
-                    } else if (res[setter.response.statusName] == '1122') {
-                        layer.msg('同网络下只能有一个账户活跃，您已被迫下线', {
-                            offset: '15px',
-                            time: 1500,
-                            icon: 2
-                        });
-                        setTimeout(function() {
-                            view.exit();
                         }, 2000);
                         return;
                     }

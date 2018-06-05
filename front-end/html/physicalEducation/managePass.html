@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>永利高 - 密码管理</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="Shortcut Icon" href="../../favicon.ico">
+    <link href="../../fonts/iconfont.css" rel="stylesheet">
+    <link href="../../plugins/layui/css/layui.css" rel="stylesheet">
+    <link href="../../css/common.css" rel="stylesheet">
+    <style type="text/css">
+    .thiscontent {
+        position: relative;
+        margin: 100px 350px 20px;
+        font-family: "Microsoft YaHei", Arial;
+        min-height: 300px;
+    }
+
+    .layui-tab-content {
+        background-color: #fff;
+    }
+
+    .layui-tab-title .layui-this {
+        color: #1E9FFF;
+    }
+
+    .layui-form-label {
+        width: 110px;
+    }
+
+    .layui-form-item {
+        margin-left: 80px;
+        margin-bottom: 10px;
+    }
+
+    .layui-input-inline,
+    .layui-btn {
+        width: 270px !important;
+    }
+
+    .layui-form {
+        padding: 20px 10px 10px;
+    }
+
+    .e-tip {
+        padding-left: 110px;
+        font-size: 12px;
+        color: #be4822;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="thiscontent">
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">登录密码更改</li>
+                <li>取款密码更改</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form login-draw">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">旧密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" name="login-old-pass" placeholder="请输入旧登录密码" autocomplete="off" class="layui-input" maxlength="12">
+                            </div>
+                        </div>
+                        <div class="layui-form-item e-tip"></div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">新密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" name="login-new-pass" placeholder="请输入新登录密码" autocomplete="off" class="layui-input" maxlength="12">
+                            </div>
+                        </div>
+                        <div class="layui-form-item e-tip"></div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">确认密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" name="login-sure-pass" placeholder="请再次输入新登录密码" autocomplete="off" class="layui-input" maxlength="12">
+                            </div>
+                        </div>
+                        <div class="layui-form-item e-tip"></div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn layui-btn-normal" state="1">确认修改</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form login-draw">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">旧密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" name="draw-old-pass" placeholder="请输入旧取款密码" autocomplete="off" class="layui-input" maxlength="4">
+                            </div>
+                        </div>
+                        <div class="layui-form-item e-tip"></div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">新密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" name="draw-new-pass" placeholder="请输入新取款密码" autocomplete="off" class="layui-input" maxlength="4">
+                            </div>
+                        </div>
+                        <div class="layui-form-item e-tip"></div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">确认密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" name="draw-sure-pass" placeholder="请再次输入新取款密码" autocomplete="off" class="layui-input" maxlength="4">
+                            </div>
+                        </div>
+                        <div class="layui-form-item e-tip"></div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn layui-btn-normal" state="0">确认修改</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hrs"></div>
+    <script src="../../lib/jquery-3.3.1.min.js"></script>
+    <!-- 页面配置文件 -->
+    <script src="../../js/config/config.js"></script>
+    <!-- 公共文件 -->
+    <script src="../../js/com.js"></script>
+    <script src="../../plugins/layer/layer.min.js"></script>
+    <script src="../../plugins/layui/layui.js"></script>
+    <script src="../../fonts/iconfont.js"></script>
+    <script>
+    layui.use('element', function() {
+        var $ = layui.jquery,
+            element = layui.element;
+        $('input').bind('input propertychange', function() {
+            checks($(this), $(this).parents('.layui-form').find('.layui-btn').attr('state'));
+        }).blur(function() {
+            checks($(this), $(this).parents('.layui-form').find('.layui-btn').attr('state'));
+        }).focus(function() {
+            $(this).removeClass('deposit-m');
+        });
+        $('.layui-btn').click(function() {
+            var state = $(this).attr('state'),
+                sign = state == '0' ? 'draw' : 'login';
+            if (checks(sign, state)) {
+                new HttpService().post('/member/update-password', {
+                    oldPassword: $('input[name="' + sign + '-old-pass"]').val(),
+                    newPassword: $('input[name="' + sign + '-new-pass"]').val(),
+                    state: state
+                }, function(data) {
+                    if (data.code == '2018') {
+                        layer.msg('密码修改成功', {
+                            time: 2000,
+                            icon: 1
+                        });
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 2000);
+                    } else if (data.code == '1123') {
+                        layer.msg('新密码与旧密码不能相同', {
+                            time: 2000,
+                            icon: 2
+                        });
+                    } else if (data.code == '1108') {
+                        layer.msg('旧密码错误', {
+                            time: 2000,
+                            icon: 2
+                        });
+                    } else {
+                        layer.msg('密码修改失败', {
+                            time: 2000,
+                            icon: 2
+                        });
+                    }
+                });
+            }
+        });
+
+        function checks(sign, state) {
+            var flag = true;
+            var text = {
+                old: '旧密码不能为空',
+                new: '新密码不能为空',
+                sure: '确认密码不能为空',
+                tb: '两次输入的密码不一致',
+                tl: '密码由6~12个字母和数字组合的字符，以字母开头',
+                td: '取款密码由4位纯数字组成',
+                ton: '新密码与旧密码不能相同'
+            };
+            var eachArr = '';
+            if (sign != 'draw' && sign != 'login') {
+                eachArr = sign;
+            } else {
+                eachArr = $('input[name|="' + sign + '"]')
+            }
+            $.each(eachArr, function(i, item) {
+                var type = $(item).attr('name').split('-')[1];
+                var value = $(item).val(),
+                    tip_HTML = $(item).parents('.layui-form-item').next('.e-tip');
+                if (!value) {
+                    tip_HTML.text(text[type]);
+                    flag = false;
+                } else {
+                    if (type == 'new') {
+                        if (state == '0') {
+                            if (!/^[0-9]{4}$/.test(value)) {
+                                tip_HTML.text(text['td']);
+                                flag = false;
+                            }
+                        } else if (state == '1') {
+                            if (!/^[a-zA-Z][a-zA-Z0-9]{5,11}$/.test(value)) {
+                                tip_HTML.text(text['tl']);
+                                flag = false;
+                            }
+                        } else {
+                            if ($('input[name="' + sign + '-old-pass"]').val() != value) {
+                                tip_HTML.text(text['ton']);
+                                flag = false;
+                            }
+                        }
+                    } else if (type == 'sure') {
+                        if ($('input[name="' + sign + '-new-pass"]').val() != value) {
+                            tip_HTML.text(text['tb']);
+                            flag = false;
+                        }
+                    }
+                }
+                if (flag) {
+                    tip_HTML.text('');
+                    $(item).removeClass('deposit-m');
+                } else {
+                    $(item).addClass('deposit-m');
+                }
+            });
+            return flag;
+        }
+    });
+    </script>
+</body>
+
+</html>

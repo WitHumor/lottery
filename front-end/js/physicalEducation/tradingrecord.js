@@ -136,7 +136,7 @@ var TD = {
                 templet: function(data) {
                     var html = '<a class="layui-btn layui-btn-xs layui-btn-disabled" style="width: 70px;">已支付</a>';
                     if (data.state == '0') {
-                        html = '<a class="layui-btn layui-btn-xs" onclick="TD.surePay(\''+ data.number +'\');" style="width: 70px;">确认支付</a>';
+                        html = '<a class="layui-btn layui-btn-xs" onclick="TD.surePay(\'' + data.number + '\');" style="width: 70px;">确认支付</a>';
                     } else if (data.state == '-1') {
                         html = '<a class="layui-btn layui-btn-xs layui-btn-disabled" style="width: 70px;">审核中</a>';
                     } else if (data.state == '2') {
@@ -204,28 +204,44 @@ var TD = {
                 title: '注单选项',
                 minWidth: 280,
                 templet: function(data) {
+                    var strArr = ['大','小','单大','单小','单','双'];
                     var st = '';
-                    if(data.iorType == '大' || data.iorType == '小') {
+                    if (data.iorType == '大' || data.iorType == '小') {
                         st = '大小'
-                    } else if(data.iorType == '单大' || data.iorType == '单小') {
+                    } else if (data.iorType == '单大' || data.iorType == '单小') {
                         st = '积分大小'
-                    } else if(data.iorType == '单' || data.iorType == '双') {
+                    } else if (data.iorType == '单' || data.iorType == '双') {
                         st = '单双'
                     } else {
                         st = data.iorType;
                     }
+                    var alltype = data.iorType;
+                    if(strArr.indexOf(alltype) > -1) {
+                        if(alltype == '单大') {
+                            alltype = '大';
+                        }
+                        if(alltype == '单小') {
+                            alltype = '小';
+                        }
+                    } else {
+                        alltype = '';
+                    }
                     var bs = '';
-                    if(data.iorType == '让球' || data.iorType == '让分') {
-                        if(data.bet == data.strong) {
+                    if (data.iorType == '让球' || data.iorType == '让分') {
+                        if (data.bet == data.strong) {
                             bs = '(让方)';
                         } else {
                             bs = '(受让方)';
                         }
-                        if(data.bet == 'N') {
+                        if (data.bet == 'N') {
                             bs = '';
                         }
                     }
-                    return '<span style="color:red;">'+ (data.bet == 'H' ? '主场' : '客场') + bs +'</span>' + ' - ' + st + ' [ '+ (data.iorRatio ? data.iorRatio : "") +'&nbsp;<span style="color:red;">@'+ data.ratio +'</span> ]';
+                    var startStr = '<span style="color:red;">' + (data.bet == 'H' ? '主场' : (data.bet == 'C' ? '客场' : '和局')) + bs + '</span>' + ' - ';
+                    if (data.iorType == '大' || data.iorType == '小') {
+                        startStr = '';
+                    }
+                    return startStr + st + ' [ ' + alltype + (data.iorRatio ? data.iorRatio : "") + '&nbsp;<span style="color:red;">@' + data.ratio + '</span> ]';
                 }
             }, {
                 field: 'state',
@@ -269,8 +285,21 @@ var TD = {
                 align: 'center',
                 fixed: 'right',
                 templet: function(data) {
-
-                    return data.winLose == '1' ? '<span style="color:green;">赢</span>' : (data.winLose == '0' ? '<span style="color:orange;">平</span>' : '<span style="color:red;">输</span>');
+                    var reData = '-';
+                    switch (data.winLose) {
+                        case '1':
+                            reData = '<span style="color:green;" class="fwb">赢</span>';
+                            break;
+                        case '0':
+                            reData = '<span style="color:orange;" class="fwb">平</span>';
+                            break;
+                        case '-1':
+                            reData = '<span style="color:red;" class="fwb">输</span>';
+                            break;
+                        default:
+                            reData = '-';
+                    }
+                    return reData;
                 }
             }]
         ],
