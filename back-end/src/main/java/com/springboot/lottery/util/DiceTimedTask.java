@@ -161,7 +161,7 @@ public class DiceTimedTask {
 					break;
 				}
 			}
-			
+			draw = 0;
 		}
 		
 		Date drawTime = new Date();

@@ -3,6 +3,7 @@ package com.springboot.lottery.dto;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class DiceDrawDTO {
 	private Integer id;
@@ -18,6 +19,7 @@ public class DiceDrawDTO {
 	public String getEnd_time_str() {
 		if(this.getEnd_time() != null) {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			format.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 			return format.format(this.getEnd_time());
 		}else {return "";}
 		

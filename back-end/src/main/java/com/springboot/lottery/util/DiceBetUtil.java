@@ -32,9 +32,9 @@ public class DiceBetUtil {
 	
 	public static double total_win = 0;
 	
-	public static final int total_win_limit = -5000;
+	public static final int total_win_limit = -10000;
 	
-	public static final int single_win_limit = -1000;
+	public static final int single_win_limit = -5000;
 	
 	public static int current_term = 0;
 	public static int last_term = 0;
