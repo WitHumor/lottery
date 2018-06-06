@@ -126,7 +126,8 @@ var DW = {
             money: $('#rechargebtb').val(),
             phone: $('#telphone').val(),
             address: $('#purseaddress').val(),
-            password: $('#withpass').val()
+            password: hex_sha1($('#withpass').val()),
+            withdrawnType: $('.wallet-type.active').attr('wtype')
         };
         if ($('#beizhu').val()) {
             param.remark = $('#beizhu').val();

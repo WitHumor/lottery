@@ -116,3 +116,7 @@
     overflow-x: hidden;
     overflow-y: scroll;
 }*/
+
+.hyperchannel li a:hover {
+    color: #fff !important;
+}

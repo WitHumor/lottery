@@ -208,7 +208,7 @@ em {
 }
 
 a {
-    color: rgb(0, 0, 0);
+    color: #333;
     text-decoration: none;
 }
 
@@ -247,7 +247,7 @@ a:focus {
     height: 44px;
     line-height: 44px;
     font-size: 16px;
-    z-index: 99999;
+    z-index: 9999;
 }
 
 .navTop .leftBtn {
@@ -284,6 +284,7 @@ a:focus {
   text-align: center;
   border-top: 1px solid #DBCCC5;
   background-color: #E8DED9;
+  z-index: 9999;
 }
 
 .navBottom .items {

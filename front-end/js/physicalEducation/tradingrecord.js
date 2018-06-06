@@ -208,15 +208,15 @@ var TD = {
                 minWidth: 280,
                 templet: function(data) {
                     var strArr = ['大','小','单大','单小','单','双'];
-                    var st = '';
+                    var st = data.occasion ? data.occasion : '';
                     if (data.iorType == '大' || data.iorType == '小') {
-                        st = '大小'
+                        st += '大小'
                     } else if (data.iorType == '单大' || data.iorType == '单小') {
-                        st = '积分大小'
+                        st += '积分大小'
                     } else if (data.iorType == '单' || data.iorType == '双') {
                         st = '单双'
                     } else {
-                        st = data.iorType;
+                        st += data.iorType;
                     }
                     var alltype = data.iorType;
                     if(strArr.indexOf(alltype) > -1) {
@@ -241,10 +241,17 @@ var TD = {
                         }
                     }
                     var startStr = '<span style="color:red;">' + (data.bet == 'H' ? '主场' : (data.bet == 'C' ? '客场' : '和局')) + bs + '</span>' + ' - ';
-                    if (data.iorType == '大' || data.iorType == '小') {
+                    if (data.iorType == '大' || data.iorType == '小' || data.iorType == '单' || data.iorType == '双') {
                         startStr = '';
                     }
                     return startStr + st + ' [ ' + alltype + (data.iorRatio ? data.iorRatio : "") + '&nbsp;<span style="color:red;">@' + data.ratio + '</span> ]';
+                }
+            }, {
+                field: 'score',
+                title: '赛果',
+                align: 'center',
+                templet: function(data) {
+                    return data.score ? data.score : '-';
                 }
             }, {
                 field: 'state',
@@ -307,6 +314,29 @@ var TD = {
             }]
         ],
     },
+    tgfl: {
+        cols: [
+            [{
+                field: 'betTime',
+                title: '日期',
+            }, {
+                field: 'number',
+                title: '会员名',
+            }, {
+                field: 'money',
+                width: 150,
+                minWidth: 150,
+                align: 'center',
+                title: '下注流水总量',
+            }, {
+                field: 'betType',
+                title: '返利',
+                width: 95,
+                minWidth: 95,
+                align: 'center'
+            }]
+        ],
+    },
     initPage: function() {
 
         laydate.render({
@@ -322,6 +352,7 @@ var TD = {
             var litype = $(this).attr('litype');
             $('#allTime').val('');
             if (litype == '1') {
+                $('.filtrate').show();
                 $('.filtrate .czjl').hide();
                 $('.filtrate .xzjl').hide();
                 $('#withdrawStatus').html(TD.txjl.select);
@@ -329,6 +360,7 @@ var TD = {
                     record: '1'
                 }, '1');
             } else if (litype == '0') {
+                $('.filtrate').show();
                 $('.filtrate .czjl').show();
                 $('.filtrate .xzjl').hide();
                 var coinhtml = '<option value="" selected>所有类型</option>';
@@ -341,11 +373,15 @@ var TD = {
                     record: '0'
                 }, '0');
             } else if (litype == '2') {
+                $('.filtrate').show();
                 $('.filtrate .czjl').show();
                 $('.filtrate .xzjl').show();
                 $('#withdrawStatus').html(TD.xzjl.select);
                 $('#withdrawType').html(TD.xzjl.types);
                 TD.loadList(TD.xzjl.cols, {}, '2');
+            } else if (litype == '3') {
+                $('.filtrate').hide();
+                TD.loadList(TD.tgfl.cols, {}, '2');
             }
         });
         $('#all-search').on('click', function() {
