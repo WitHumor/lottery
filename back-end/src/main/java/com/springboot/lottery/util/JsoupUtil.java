@@ -60,7 +60,7 @@ public class JsoupUtil {
 	private static final String EXCHANGE_PRICE = "div[class].box p[class].price";// 获取全场篮球比分
 
 	public static void main(String[] args) {
-		
+	
 	}
 
 	/**
@@ -82,7 +82,12 @@ public class JsoupUtil {
 				FULL_MAIN_FT, league);
 		// 判断对象是否为空再根据前一天去查询
 		if (gameResult == null || gameResult.size() <= 0) {
-			String previousDay = previousDay(leagueDate);
+			// 根据时间获取前一天
+			Date dBefore = previousDay(leagueDate);
+			// 设置时间格式
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			// 格式化前一天
+			String previousDay = sdf.format(dBefore);
 			url = "https://www.ylg56789.com/app/member/FT_Result?game_type=FT&today1=" + previousDay
 					+ "&uid=&langx=zh-cn";
 			// 根据字段进行切割，并放入到list集合中
@@ -116,7 +121,12 @@ public class JsoupUtil {
 		List<Map<String, String>> gameResult = getGameResult(url, LEG_BAR, TEAM_C, TEAM_H, HR_MAIN, FULL_MAIN, league);
 		// 判断对象是否为空再根据前一天去查询
 		if (gameResult == null || gameResult.size() <= 0) {
-			String previousDay = previousDay(leagueDate);
+			// 根据时间获取前一天
+			Date dBefore = previousDay(leagueDate);
+			// 设置时间格式
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			// 格式化前一天
+			String previousDay = sdf.format(dBefore);
 			url = "https://www.ylg56789.com/app/member/BK_Result?game_type=BK&today1=" + previousDay
 					+ "&uid=&langx=zh-cn";
 			// 根据字段进行切割，并放入到list集合中
@@ -172,20 +182,21 @@ public class JsoupUtil {
 				System.out.println(teamh + "VS" + teamc + "还在比赛中，目前没有结果。。");
 				continue;
 			}
+			// 判断赛事是否腰斩
+			if (fullOrHrTeamc.equals("赛事腰斩") || fullOrHrTeamh.equals("赛事腰斩")) {
+				bet = "赛事腰斩";
+				listResult.add(bet);
+				return listResult;
+			}
 			scorec = Integer.parseInt(fullOrHrTeamc);
 			scoreh = Integer.parseInt(fullOrHrTeamh);
 			// 判断是否是滚球
 			if (singleNote.getBet_type().equals("REFT") || singleNote.getBet_type().equals("REBK")) {
 				// 获取比分
-				String getScore = singleNote.getScore();
+				String getScore = singleNote.getBet_score();
 				String[] split = getScore.split(" - ");
 				scoreh = scoreh - Integer.valueOf(split[0]);
 				scorec = scorec - Integer.valueOf(split[1]);
-			}
-			// 判断赛事是否腰斩
-			if (fullOrHrTeamc.equals("赛事腰斩") || fullOrHrTeamh.equals("赛事腰斩")) {
-				listResult.add(bet);
-				return listResult;
 			}
 			// 比较主客场比分返回结果
 			if (scorec > scoreh) {
@@ -203,7 +214,15 @@ public class JsoupUtil {
 			} else {
 				continue;
 			}
+			String amidithion = null;
+			//篮球比赛结果相反
+			if(singleNote.getBet_type().equals("REBK") || singleNote.getBet_type().equals("RBK")) {
+				amidithion = fullOrHrTeamc + " - " + fullOrHrTeamh;
+			} else {
+				amidithion = fullOrHrTeamh + " - " + fullOrHrTeamc;
+			}
 			listResult.add(bet);
+			listResult.add(amidithion);
 			listResult.add(scorec);
 			listResult.add(scoreh);
 			listResult.add(score);
@@ -372,7 +391,7 @@ public class JsoupUtil {
 			fullTeamc = element.select(fullSelect).eq(0);// 获取全场客场比分
 			fullTeamh = element.select(fullSelect).eq(1);// 获取全场主场比分
 
-			// 放入map集合
+			// 放入map集合,获取html文档，利用getNonBlankStr方法替换&nbsp,如果获取text文本则替换不了
 			listMap.put("legBar", legBar == null ? "" : getNonBlankStr(legBar.html()));
 			listMap.put("teamc", teamc == null ? "" : getNonBlankStr(teamc.html()));
 			listMap.put("teamh", teamh == null ? "" : getNonBlankStr(teamh.html()));
@@ -477,7 +496,20 @@ public class JsoupUtil {
 		}
 		return map;
 	}
-
+	
+	/**
+	 * 滚球足球全场
+	 * @return
+	 */
+	public static List<String> reFootball(){
+		List<String> list = new ArrayList<String>();
+		list.add("ior_MH");
+		list.add("ior_MC");
+		list.add("ior_MN");
+		list.add("ior_EOO");
+		list.add("ior_EOE");
+		return list;
+	}
 	/**
 	 * 字符串去掉空格
 	 * 
@@ -539,7 +571,7 @@ public class JsoupUtil {
 	 * @param date
 	 * @return
 	 */
-	private static String previousDay(Date date) {
+	public static Date previousDay(Date date) {
 		// 得到日历
 		Calendar calendar = Calendar.getInstance();
 		// 把当前时间赋给日历
@@ -548,10 +580,6 @@ public class JsoupUtil {
 		calendar.add(Calendar.DAY_OF_MONTH, -1);
 		// 得到前一天的时间
 		Date dBefore = calendar.getTime();
-		// 设置时间格式
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		// 格式化前一天
-		String previousDay = sdf.format(dBefore);
-		return previousDay;
+		return dBefore;
 	}
 }

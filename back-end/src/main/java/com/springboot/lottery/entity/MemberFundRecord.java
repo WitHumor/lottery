@@ -35,6 +35,8 @@ public class MemberFundRecord implements Serializable {
 	private String money;
 	// 记录
 	private String record;
+	// 取款类型
+	private String withdrawn_type;
 	// 优惠金额
 	private String discounts;
 	// 状态
@@ -70,6 +72,14 @@ public class MemberFundRecord implements Serializable {
 
 	public String getNumber() {
 		return number;
+	}
+
+	public String getWithdrawn_type() {
+		return withdrawn_type;
+	}
+
+	public void setWithdrawn_type(String withdrawn_type) {
+		this.withdrawn_type = withdrawn_type;
 	}
 
 	public void setNumber(String number) {

@@ -24,6 +24,8 @@ public class FundRecordDTO implements Serializable {
 	private String currency;
 	// 货币数量
 	private String currency_count;
+	// 取款类型
+	private String withdrawn_type;
 	// 金额
 	private String money;
 	// 记录
@@ -46,6 +48,8 @@ public class FundRecordDTO implements Serializable {
 	private String phone;
 	// IP地址
 	private String address;
+	// 返利
+	private String rebate;
 	// 余额
 	private String sum;
 	// 邀请码
@@ -248,6 +252,22 @@ public class FundRecordDTO implements Serializable {
 
 	public void setDiscounts(String discounts) {
 		this.discounts = discounts;
+	}
+
+	public String getRebate() {
+		return rebate;
+	}
+
+	public void setRebate(String rebate) {
+		this.rebate = rebate;
+	}
+
+	public String getWithdrawn_type() {
+		return withdrawn_type;
+	}
+
+	public void setWithdrawn_type(String withdrawn_type) {
+		this.withdrawn_type = withdrawn_type;
 	}
 
 	public String getRemark() {

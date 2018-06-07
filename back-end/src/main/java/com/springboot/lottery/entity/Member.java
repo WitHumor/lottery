@@ -26,6 +26,8 @@ public class Member implements Serializable {
 	private String address;
 	//锁记录
 	private int version;
+	// 返利
+	private String rebate;
 	// 余额
 	private String sum;
 	// 邀请码
@@ -87,6 +89,14 @@ public class Member implements Serializable {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public String getRebate() {
+		return rebate;
+	}
+
+	public void setRebate(String rebate) {
+		this.rebate = rebate;
 	}
 
 	public String getSum() {

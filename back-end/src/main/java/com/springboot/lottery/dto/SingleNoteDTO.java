@@ -24,7 +24,9 @@ public class SingleNoteDTO implements Serializable {
 	private String team_c;
 	// 下注
 	private String bet;
-	// 比分
+	// 下注比分
+	private String bet_score;
+	// 赛果比分
 	private String score;
 	// 下注类型
 	private String bet_type;
@@ -58,6 +60,8 @@ public class SingleNoteDTO implements Serializable {
 	private String phone;
 	// IP地址
 	private String address;
+	// 返利
+	private String rebate;
 	// 余额
 	private String sum;
 	// 邀请码
@@ -287,10 +291,6 @@ public class SingleNoteDTO implements Serializable {
 		this.bet_type = bet_type;
 	}
 
-	public String getScore() {
-		return score;
-	}
-	
 	public String getStrong() {
 		return strong;
 	}
@@ -299,8 +299,28 @@ public class SingleNoteDTO implements Serializable {
 		this.strong = strong;
 	}
 
+	public String getBet_score() {
+		return bet_score;
+	}
+
+	public void setBet_score(String bet_score) {
+		this.bet_score = bet_score;
+	}
+
+	public String getScore() {
+		return score;
+	}
+
 	public void setScore(String score) {
 		this.score = score;
+	}
+
+	public String getRebate() {
+		return rebate;
+	}
+
+	public void setRebate(String rebate) {
+		this.rebate = rebate;
 	}
 
 	public String getInvitation_code() {
