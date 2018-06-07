@@ -317,19 +317,19 @@ var TD = {
     tgfl: {
         cols: [
             [{
-                field: 'betTime',
+                field: 'time',
                 title: '日期',
             }, {
-                field: 'number',
+                field: 'name',
                 title: '会员名',
             }, {
-                field: 'money',
+                field: 'betMoney',
                 width: 150,
                 minWidth: 150,
                 align: 'center',
                 title: '下注流水总量',
             }, {
-                field: 'betType',
+                field: 'rebate',
                 title: '返利',
                 width: 95,
                 minWidth: 95,
@@ -381,7 +381,7 @@ var TD = {
                 TD.loadList(TD.xzjl.cols, {}, '2');
             } else if (litype == '3') {
                 $('.filtrate').hide();
-                TD.loadList(TD.tgfl.cols, {}, '2');
+                TD.loadList(TD.tgfl.cols, {}, '3');
             }
         });
         $('#all-search').on('click', function() {
@@ -418,6 +418,8 @@ var TD = {
             url += '/member/member-record';
         } else if (litype == '2') {
             url += '/member/single-note';
+        } else if (litype == '3') {
+            url += '/member/generalize-rebate';
         }
         layui.use('table', function() {
             var table = layui.table;
@@ -446,6 +448,7 @@ var TD = {
                 // data: data,
                 cols: cols,
                 done: function(res, curr, count) {
+                    console.log(res);
                     if (res.code == '1109' || res.code == '1114') {
                         layer.msg('登录超时，请重新登陆', {
                             time: 2000,

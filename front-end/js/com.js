@@ -196,8 +196,8 @@ var common = {
         if (common.checkinput(thisArr)) {
             var reqData = {
                 "name": logName,
-                // "password": hex_sha1(logPass)
-                "password": logPass
+                "password": hex_sha1(logPass)
+                // "password": logPass
             };
             this.ajax.post('/member/login-member', reqData, function(data) {
                 if (data.code == '2018') {

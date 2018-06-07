@@ -143,17 +143,21 @@ em {
     font-style: normal;
 }
 
-.tleft {
+.text-left {
     text-align: left;
 }
 
-.tcenter {
+.text-center {
     text-align: center;
 }
 
-.tright {
+.text-right {
     text-align: right;
 }
+
+.font-blod {
+  font-weight: bold;
+ }
 
 .curp {
     cursor: pointer;
@@ -325,6 +329,10 @@ a:focus {
   /*overflow-y: scroll;*/
 }
 
+.acontainer.notop {
+  border-top: none;
+}
+
 /*滚动条*/
 ::-webkit-scrollbar-track {
   background-color: #F5F5F5
@@ -349,4 +357,35 @@ a:focus {
   height: 30px;
   line-height: 30px;
   width: 100%;
+}
+
+.vessel {
+  color: #55402F;
+}
+
+/*列表卡*/
+.list_card {
+  margin-top: 10px;
+  line-height: 40px;
+  background-color: #fff;
+}
+
+.list_card > .each_card:last-child {
+  border-bottom: 1px solid #DDDDDD;
+}
+
+.each_card {
+  border-top: 1px solid #DDDDDD;
+  padding: 0 10px;
+}
+
+.each_card * {
+  display: inline-block;
+  vertical-align: middle;
+  /*font-size: 18px;*/
+  /*line-height: 40px;*/
+}
+
+.each_card .icon-more {
+  float: right;
 }

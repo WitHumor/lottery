@@ -1,0 +1,89 @@
+.my_info {
+    background-color: #45383E;
+    padding: 30px 30px 80px;
+    color: #fff;
+    text-align: left;
+}
+
+.my_info > i {
+    display: inline-block;
+    font-size: 40px;
+}
+
+.account_code {
+    display: inline-block;
+    margin-left: 10px;
+    line-height: 22px;
+}
+
+.account_code span {
+    color: #DDD5C4;
+}
+
+.all_sum {
+  position: relative;
+    margin: -60px 15px 10px;
+    padding: 30px 0;
+    background-color: #FF6F6F;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    z-index: 1;
+}
+
+.all_sum * {
+    line-height: 25px;
+}
+
+.residual {
+    width: 50%;
+    height: 100%;
+    text-align: center;
+}
+
+.cz_tx {
+  background-color: #fff;
+  margin-top: -60px;
+  padding: 75px 15px 0;
+  border-bottom: 1px solid #DDDDDD;
+}
+
+.cz_tx > a{
+  width: 33.3%;
+  float: left;
+  text-align: center;
+  color: #55402F;
+}
+
+.cz_tx p {
+  color: #55402F;
+  line-height: 48px;
+ }
+
+ .can_skip {
+  background-color: #4073B9;
+  font-size: 30px;
+  padding: 12px;
+  border-radius: 54px;
+  color: #fff;
+ }
+
+ .i_center {
+  display: inline-block;
+  font-size: 28px;
+  line-height: 35px;
+ }
+
+ .exit-btn {
+  margin-top: 10px;
+  text-align: center;
+  line-height: 40px;
+  padding: 0 10%;
+ }
+
+ .exit-btn button {
+  /*display: block;*/
+  width: 100%;
+  color: #fff;
+  background-color: #FF4A4A;
+ }
