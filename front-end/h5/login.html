@@ -6,32 +6,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="wap-font-scale" content="no">
     <meta name="format-detection" content="telephone=no">
-    <title>永利高</title>
+    <title>永利高 -- 登录</title>
     <link rel="stylesheet" href="css/font/iconfont.css">
-    <link rel="stylesheet" href="css/style-table.css">
-    <link rel="stylesheet" href="js/layui/css/layui.css">
+    <!-- <link rel="stylesheet" href="js/layui/css/layui.css"> -->
+    <link rel="stylesheet" href="js/layer_mobile/need/layer.css">
     <link rel="stylesheet" href="css/public.css?v=1">
-    <link rel="stylesheet" href="css/index.css?v=1">
+    <link rel="stylesheet" href="css/login.css?v=1">
 </head>
 
 <body>
-    <input type="text" class="layui-input" id="test1" placeholder="yyyy-MM-dd" readonly>
+    <div class="vessel">
+        <div class="navTop">
+            <div class="leftBtn"><i class="iconfont icon-zhuye f24_"></i></div>
+            <div class="ctitle">登录</div>
+            <div class="rightBtn">
+                <i class="iconfont icon-kefu"></i>
+            </div>
+        </div>
+        <div class="acontainer nobottom">
+            <div class="log_reg_box" style="margin-top: 20px;">
+                <div class="input_box">
+                    <i class="iconfont icon-account begin_icon"></i>
+                    <input type="text" id="login_name" placeholder="请输入账号" maxlength="10" />
+                    <i class="iconfont icon-close clear_all onlys hide"></i>
+                    <div class="smile_tip hide">
+                        <i class="iconfont icon-smile"></i>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="input_box">
+                    <i class="iconfont icon-password begin_icon"></i>
+                    <input type="password" id="login_pass" placeholder="请输入密码" maxlength="12" />
+                    <i class="iconfont icon-close clear_all hide"></i>
+                    <i class="iconfont icon-iconcloseeye eyes"></i>
+                    <div class="smile_tip hide">
+                        <i class="iconfont icon-smile"></i>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="input_box">
+                    <button class="to_login">登 录</button>
+                </div>
+                <div class="about_tip">
+                    <span>忘记密码请咨询客服</span>
+                    <span class="fr">没有账号？<a href="register.html" style="color: #FF1A1A;">在此注册</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/main-table.js"></script>
-<script src="js/layui/layui.js"></script>
-<!-- <script src="js/index.js"></script> -->
-<script type="text/javascript">
-$(function() {
-    layui.use('laydate', function() {
-        var laydate = layui.laydate;
-
-        //常规用法
-        laydate.render({
-            elem: '#test1'
-        });
-    });
-});
-</script>
+<!-- <script src="js/layui/layui.js"></script> -->
+<script src="js/layer_mobile/layer.js"></script>
+<script src="js/sha1.js"></script>
+<script src="js/public.js"></script>
+<script src="js/login.js"></script>
 
 </html>

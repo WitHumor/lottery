@@ -159,6 +159,10 @@ em {
   font-weight: bold;
  }
 
+ .hide {
+  display: none;
+ }
+
 .curp {
     cursor: pointer;
 }
@@ -201,6 +205,10 @@ em {
 
 .f24 {
   font-size: 24px;
+}
+
+.f24_ {
+  font-size: 24px !important;
 }
 
 .f26 {
@@ -254,18 +262,22 @@ a:focus {
     z-index: 9999;
 }
 
-.navTop .leftBtn {
+.leftBtn , .rightBtn {
     position: absolute;
     top: 5px;
-    left: 15px;
     line-height: 34px;
 }
 
-.navTop .rightBtn {
-    position: absolute;
-    top: 5px;
+.leftBtn i , .rightBtn i {
+  font-size: 30px;
+}
+
+.leftBtn {
+  left: 15px;
+}
+
+.rightBtn {
     right: 15px;
-    line-height: 34px;
 }
 
 .navTop .ctitle {
@@ -333,6 +345,10 @@ a:focus {
   border-top: none;
 }
 
+.acontainer.nobottom {
+  border-bottom: none;
+}
+
 /*滚动条*/
 ::-webkit-scrollbar-track {
   background-color: #F5F5F5
@@ -363,6 +379,11 @@ a:focus {
   color: #55402F;
 }
 
+/*咨询框*/
+#nb_icon_wrap {
+  display: none !important;
+}
+
 /*列表卡*/
 .list_card {
   margin-top: 10px;
@@ -388,4 +409,72 @@ a:focus {
 
 .each_card .icon-more {
   float: right;
+}
+
+/*输入框组合*/
+.input_box {
+  position: relative;
+  line-height: 40px;
+  margin: 0 20px 15px;
+}
+
+.input_box input {
+  width: 100%;
+  line-height: 40px;
+  border: 1px solid #C8C8C8;
+  border-radius: 5px;
+  padding: 0 60px 0 45px;
+  /*font-size: 16px;*/
+  font-size: 14px;
+  box-sizing: border-box;
+ -webkit-box-sizing: border-box;
+ -moz-box-sizing: border-box;
+}
+
+.input_box button {
+  width: 100%;
+  color: #fff;
+  background-color: #FF1A1A;
+}
+
+.input_box > i {
+  position: absolute;
+  top: 0;
+  margin: 8px 0;
+  padding: 0 8px;
+  line-height: 26px;
+  font-size: 20px;
+}
+
+.input_box .begin_icon {
+  left: 0;
+  border-right: 1px solid #DDD5C4;
+}
+
+.input_box .clear_all.onlys , .input_box .eyes {
+  right: 0;
+}
+
+.input_box .clear_all {
+  right: 26px;
+  font-size: 18px;
+}
+
+.about_tip {
+  line-height: 20px;
+  margin: 0 20px 10px;
+  vertical-align: middle;
+}
+
+.smile_tip {
+  color: #37A4E1;
+  line-height: 20px;
+  padding-left: 10px;
+  vertical-align: middle;
+}
+
+.smile_tip i {
+  font-size: 14px;
+  margin-right: 5px;
+  vertical-align: middle;
 }

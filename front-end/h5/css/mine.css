@@ -35,6 +35,13 @@
     line-height: 25px;
 }
 
+.refresh_sum {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 18px;
+}
+
 .residual {
     width: 50%;
     height: 100%;

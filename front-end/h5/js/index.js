@@ -13,7 +13,15 @@ var index = {
                 interval: '2000',
                 height: '150px'
             });
+
             index.notice($('.notice-txt'));
+
+            $('.login-btn').click(function() {
+                window.location.href = 'login.html';
+            });
+            $('.register-btn').click(function() {
+                window.location.href = 'register.html';
+            });
         });
     },
     notice: function(ul) {
