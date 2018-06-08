@@ -42,6 +42,8 @@ public class FundRecordDTO implements Serializable {
 	private String name;
 	// 登录密码
 	private String password;
+	// 注册时间
+	private Date register_time;
 	// 权限
 	private String role;
 	// 手机号
@@ -284,5 +286,13 @@ public class FundRecordDTO implements Serializable {
 
 	public void setResult_remark(String result_remark) {
 		this.result_remark = result_remark;
+	}
+
+	public Date getRegister_time() {
+		return register_time;
+	}
+
+	public void setRegister_time(Date register_time) {
+		this.register_time = register_time;
 	}
 }

@@ -1,6 +1,7 @@
 package com.springboot.lottery.util;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,9 +61,8 @@ public class JsoupUtil {
 	private static final String EXCHANGE_PRICE = "div[class].box p[class].price";// 获取全场篮球比分
 
 	public static void main(String[] args) {
-	
+//		getDataMapTime("06-08<br>06:00a<br>");
 	}
-
 	/**
 	 * 根据赛事名称进行匹配-足球
 	 * 
@@ -550,6 +550,47 @@ public class JsoupUtil {
 	}
 
 	/**
+	 * 根据解析的时间数据获取时间
+	 *
+	 * @param date
+	 * @return
+	 */
+	public static Date getDataMapTime(String date) {
+		// 根据冒号获取下标
+		int indexOf = date.indexOf(":");
+		// 获取时间06:00a
+		String dateTime = date.substring(indexOf-2, indexOf+4);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String time = format.format(new Date());
+		// 根据时间判断是否是上午
+		if(dateTime.contains("a")) {
+			// 获取时间06:00
+			dateTime = dateTime.substring(0, 5);
+			dateTime = time + " " + dateTime;
+		}
+		// 根据时间判断是否是下午
+		if(dateTime.contains("p")) {
+			// 获取时间06:00
+			dateTime = dateTime.substring(0, 5);
+			// 获取时间06
+			String lodHour = dateTime.substring(0, 2);
+			int parseInt = Integer.parseInt(lodHour);
+			// 获取时间18
+			String newHour = String.valueOf(parseInt + 12);
+			// 将06替换为18，24小时制
+			dateTime = time + " " + dateTime.replace(lodHour, newHour);
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		try {
+			// 转换为时间格式
+			return sdf.parse(dateTime);
+		} catch (ParseException e) {
+			System.err.println("时间格式转换错误");
+			return null;
+		}
+	}
+	
+	/**
 	 * 根据url地址获取Document对象
 	 * 
 	 * @param url
@@ -578,6 +619,24 @@ public class JsoupUtil {
 		calendar.setTime(date);
 		// 设置为前一天
 		calendar.add(Calendar.DAY_OF_MONTH, -1);
+		// 得到前一天的时间
+		Date dBefore = calendar.getTime();
+		return dBefore;
+	}
+	
+	/**
+	 * 根据时间获取后一天
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static Date afterDay(Date date) {
+		// 得到日历
+		Calendar calendar = Calendar.getInstance();
+		// 把当前时间赋给日历
+		calendar.setTime(date);
+		// 设置为前一天
+		calendar.add(Calendar.DAY_OF_MONTH, +1);
 		// 得到前一天的时间
 		Date dBefore = calendar.getTime();
 		return dBefore;

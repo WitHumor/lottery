@@ -18,6 +18,8 @@ public class MemberSingleNote implements Serializable {
 	private String mid;
 	// 下注时间
 	private Date bet_time;
+	// 比赛开始时间
+	private Date start_time;
 	// 注单号
 	private String number;
 	// 类型
@@ -231,5 +233,13 @@ public class MemberSingleNote implements Serializable {
 
 	public void setRatio(String ratio) {
 		this.ratio = ratio;
+	}
+
+	public Date getStart_time() {
+		return start_time;
+	}
+
+	public void setStart_time(Date start_time) {
+		this.start_time = start_time;
 	}
 }
