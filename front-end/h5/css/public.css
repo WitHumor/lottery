@@ -143,17 +143,25 @@ em {
     font-style: normal;
 }
 
-.tleft {
+.text-left {
     text-align: left;
 }
 
-.tcenter {
+.text-center {
     text-align: center;
 }
 
-.tright {
+.text-right {
     text-align: right;
 }
+
+.font-blod {
+  font-weight: bold;
+ }
+
+ .hide {
+  display: none;
+ }
 
 .curp {
     cursor: pointer;
@@ -179,6 +187,10 @@ em {
   margin-bottom: 10px;
 }
 
+.f14 {
+  font-size: 14px;
+}
+
 .f16 {
   font-size: 16px;
 }
@@ -195,6 +207,10 @@ em {
   font-size: 24px;
 }
 
+.f24_ {
+  font-size: 24px !important;
+}
+
 .f26 {
   font-size: 26px;
 }
@@ -204,7 +220,7 @@ em {
 }
 
 a {
-    color: rgb(0, 0, 0);
+    color: #333;
     text-decoration: none;
 }
 
@@ -243,20 +259,25 @@ a:focus {
     height: 44px;
     line-height: 44px;
     font-size: 16px;
+    z-index: 9999;
 }
 
-.navTop .leftBtn {
+.leftBtn , .rightBtn {
     position: absolute;
     top: 5px;
-    left: 15px;
     line-height: 34px;
 }
 
-.navTop .rightBtn {
-    position: absolute;
-    top: 5px;
+.leftBtn i , .rightBtn i {
+  font-size: 30px;
+}
+
+.leftBtn {
+  left: 15px;
+}
+
+.rightBtn {
     right: 15px;
-    line-height: 34px;
 }
 
 .navTop .ctitle {
@@ -279,6 +300,7 @@ a:focus {
   text-align: center;
   border-top: 1px solid #DBCCC5;
   background-color: #E8DED9;
+  z-index: 9999;
 }
 
 .navBottom .items {
@@ -311,11 +333,20 @@ a:focus {
 }
 
 .acontainer {
+  position: relative;
   border-top: 50px solid transparent;
-  border-bottom: 50px solid transparent;
+  border-bottom: 100px solid transparent;
   height: 100%;
   overflow: hidden;
-  overflow-y: scroll;
+  /*overflow-y: scroll;*/
+}
+
+.acontainer.notop {
+  border-top: none;
+}
+
+.acontainer.nobottom {
+  border-bottom: none;
 }
 
 /*滚动条*/
@@ -325,7 +356,8 @@ a:focus {
 
 ::-webkit-scrollbar {
   width: 6px;
-  background-color: #F5F5F5
+  background-color: #F5F5F5;
+  display: none;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -333,7 +365,116 @@ a:focus {
 }
 
 .footer {
+  position: absolute;
+  left: 0;
+  bottom: 50px;
   text-align: center;
   color: #55402F;
+  height: 30px;
   line-height: 30px;
+  width: 100%;
+}
+
+.vessel {
+  color: #55402F;
+}
+
+/*咨询框*/
+#nb_icon_wrap {
+  display: none !important;
+}
+
+/*列表卡*/
+.list_card {
+  margin-top: 10px;
+  line-height: 40px;
+  background-color: #fff;
+}
+
+.list_card > .each_card:last-child {
+  border-bottom: 1px solid #DDDDDD;
+}
+
+.each_card {
+  border-top: 1px solid #DDDDDD;
+  padding: 0 10px;
+}
+
+.each_card * {
+  display: inline-block;
+  vertical-align: middle;
+  /*font-size: 18px;*/
+  /*line-height: 40px;*/
+}
+
+.each_card .icon-more {
+  float: right;
+}
+
+/*输入框组合*/
+.input_box {
+  position: relative;
+  line-height: 40px;
+  margin: 0 20px 15px;
+}
+
+.input_box input {
+  width: 100%;
+  line-height: 40px;
+  border: 1px solid #C8C8C8;
+  border-radius: 5px;
+  padding: 0 60px 0 45px;
+  /*font-size: 16px;*/
+  font-size: 14px;
+  box-sizing: border-box;
+ -webkit-box-sizing: border-box;
+ -moz-box-sizing: border-box;
+}
+
+.input_box button {
+  width: 100%;
+  color: #fff;
+  background-color: #FF1A1A;
+}
+
+.input_box > i {
+  position: absolute;
+  top: 0;
+  margin: 8px 0;
+  padding: 0 8px;
+  line-height: 26px;
+  font-size: 20px;
+}
+
+.input_box .begin_icon {
+  left: 0;
+  border-right: 1px solid #DDD5C4;
+}
+
+.input_box .clear_all.onlys , .input_box .eyes {
+  right: 0;
+}
+
+.input_box .clear_all {
+  right: 26px;
+  font-size: 18px;
+}
+
+.about_tip {
+  line-height: 20px;
+  margin: 0 20px 10px;
+  vertical-align: middle;
+}
+
+.smile_tip {
+  color: #37A4E1;
+  line-height: 20px;
+  padding-left: 10px;
+  vertical-align: middle;
+}
+
+.smile_tip i {
+  font-size: 14px;
+  margin-right: 5px;
+  vertical-align: middle;
 }

@@ -9,9 +9,11 @@
 			member(mid,
 			name,
 			password,
+			register_time,
 			role,
 			phone,
 			address,
+			rebate,
 			sum,
 			invitation_code,
 			real_name,
@@ -21,9 +23,11 @@
 	    VALUES(#{mid},
 			#{name},
 			#{password},
+			#{register_time},
 			#{role},
 			#{phone},
 			#{address},
+			#{rebate},
 			#{sum},
 			#{invitation_code},
 			#{real_name},
@@ -38,12 +42,14 @@
 			single_note(snid,
 			mid,
 			bet_time,
+			start_time,
 			number,
 			type,
 			league,
 			team_h,
 			team_c,
 			bet,
+			bet_score,
 			score,
 			bet_type,
 			occasion,
@@ -59,12 +65,14 @@
 	    VALUES(#{snid},
 			#{mid},
 			#{bet_time},
+			#{start_time},
 			#{number},
 			#{type},
 			#{league},
 			#{team_h},
 			#{team_c},
 			#{bet},
+			#{bet_score},
 			#{score},
 			#{bet_type},
 			#{occasion},
@@ -92,6 +100,7 @@
 			record,
 			currency,
 			currency_count,
+			withdrawn_type,
 			money,
 			discounts,
 			state,
@@ -107,6 +116,7 @@
 			#{record},
 			#{currency},
 			#{currency_count},
+			#{withdrawn_type},
 			#{money},
 			#{discounts},
 			#{state},
@@ -137,8 +147,13 @@
 		UPDATE
 			member m
 		SET
-		   m.sum = #{sum},
-		   m.version = ${version} + 1 
+			m.version = ${version} + 1
+			<if test="sum != null and sum !=''">
+				,m.sum = #{sum}
+			</if>
+		   	<if test="rebate != null and rebate !=''">
+				,m.rebate = #{rebate}
+			</if>
 		WHERE
 		    m.mid = #{mid}
 		AND
@@ -168,10 +183,12 @@
 		SET
 		  	state = #{state},
 		  	win_lose = #{winLose},
-		  	deal_money = #{dealMoney}
+		  	deal_money = #{dealMoney},
+		  	score = #{score}
 	   	WHERE
 			snid = #{snid}
 	</update>
+	
 	<!-- 20180516资金流水记录状态修改 -->
 	<update id="updateFundRecord" parameterType="java.util.Map">
 		UPDATE 
@@ -206,10 +223,12 @@
 			mid,
 			name,
 			password,
+			register_time,
 			role,
 			phone,
 			address,
 			version,
+			rebate,
 			sum,
 			invitation_code,
 			real_name,
@@ -224,6 +243,36 @@
 		</if>
 		<if test="name != null and name != ''">
 			AND name = #{name}
+		</if>
+		<if test="role != null and role != ''">
+			AND role = #{role}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND name Like CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="beginIndex != null and pageSize != null and pageSize != 0">
+			LIMIT ${beginIndex},${pageSize}
+		</if>
+	</select>
+	
+	<!-- 20180428查询会员信息条数 -->
+	<select id="queryMemberTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+			count(*)
+		FROM 
+			member 
+		WHERE 1 = 1
+		<if test="mid != null and mid != ''">
+			AND mid = #{mid}
+		</if>
+		<if test="name != null and name != ''">
+			AND name = #{name}
+		</if>
+		<if test="role != null and role != ''">
+			AND role = #{role}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND name Like CONCAT('%',#{keyword},'%')
 		</if>
 	</select>
 	
@@ -240,6 +289,7 @@
 			fr.money_address,
 			fr.currency,
 			fr.currency_count,
+			fr.withdrawn_type,
 			fr.money,
 			fr.discounts,
 			fr.state,
@@ -247,9 +297,11 @@
 			fr.result_remark,
 			m.name,
 			m.password,
+			m.register_time,
 			m.role,
 			m.phone,
 			m.address,
+			m.rebate,
 			m.sum,
 			m.invitation_code,
 			m.real_name,
@@ -352,6 +404,7 @@
 			money_address,
 			currency,
 			currency_count,
+			withdrawn_type,
 			money,
 			discounts,
 			state,
@@ -393,12 +446,14 @@
 			snid,
 			mid,
 			bet_time,
+			start_time,
 			number,
 			type,
 			league,
 			team_h,
 			team_c,
 			bet,
+			bet_score,
 			score,
 			bet_type,
 			occasion,
@@ -461,12 +516,14 @@
 			sn.snid,
 			sn.mid,
 			sn.bet_time,
+			sn.start_time,
 			sn.number,
 			sn.type,
 			sn.league,
 			sn.team_h,
 			sn.team_c,
 			sn.bet,
+			sn.bet_score,
 			sn.score,
 			sn.bet_type,
 			sn.occasion,
@@ -481,9 +538,11 @@
 			sn.win_lose,
 			m.name,
 			m.password,
+			m.register_time,
 			m.role,
 			m.phone,
 			m.address,
+			m.rebate,
 			m.sum,
 			m.invitation_code,
 			m.real_name,
@@ -587,5 +646,151 @@
 		<if test="name != null and name != ''">
 			OR m.name Like CONCAT('%',#{keyword},'%')
 		</if>
+	</select>
+	
+	<!-- 20180607查询推广返利 -->
+	<select id="queryGeneralizeRebate" resultType="com.springboot.lottery.dto.SingleNoteDTO" parameterType="java.util.Map">
+		SELECT `name`,
+			sum(money) money,
+			bet_time
+ 		FROM (	SELECT
+			m.`name`,
+			sum(db.bet_value) money,
+			db.bet_time
+		FROM 
+			member m
+		RIGHT JOIN 
+			dice_bet db
+		ON 
+			m.mid = db.mid
+		WHERE 1 = 1
+			<if test="invitationCode != null and invitationCode != ''">
+				AND m.invitation_code = #{invitationCode}
+			</if>
+			<if test="beginTime != null and beginTime != ''">
+				AND db.bet_time <![CDATA[ >= ]]> #{beginTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND db.bet_time <![CDATA[ <= ]]> #{endTime}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				AND m.`name` Like CONCAT('%',#{keyword},'%') 
+			</if>
+			<if test="betTime != null and betTime != ''">
+				AND db.bet_time Like CONCAT(#{betTime},'%') 
+			</if>
+		GROUP BY 
+			m.`name` 
+	UNION ALL  
+		SELECT
+			m.`name`,
+			sum(sn.money) money,
+			sn.bet_time
+		FROM 
+			member m
+		RIGHT JOIN 
+			single_note sn
+		ON 
+			m.mid = sn.mid
+		WHERE 1 = 1
+			<if test="invitationCode != null and invitationCode != ''">
+				AND m.invitation_code = #{invitationCode}
+			</if>
+			<if test="beginTime != null and beginTime != ''">
+				AND sn.bet_time <![CDATA[ >= ]]> #{beginTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND sn.bet_time <![CDATA[ <= ]]> #{endTime}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				AND m.`name` Like CONCAT('%',#{keyword},'%') 
+			</if>
+			<if test="betTime != null and betTime != ''">
+				AND sn.bet_time Like CONCAT(#{betTime},'%') 
+			</if>
+			<if test="state != null and state != ''">
+				AND sn.state NOT IN (#{state})
+			</if>
+		GROUP BY 
+			m.`name`) rebate
+		GROUP BY 
+			`name` 
+		ORDER BY 
+			bet_time DESC
+		<if test="beginIndex != null and pageSize != null and pageSize != 0">
+			LIMIT ${beginIndex},${pageSize}
+		</if> 
+	</select>
+	
+	<!-- 20180607查询推广返利总条数 -->
+	<select id="queryGeneralizeRebateTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+			count(*)
+		FROM 
+			( SELECT `name`,
+			sum(money) money,
+			bet_time
+ 		FROM ( SELECT
+			m.`name`,
+			sum(db.bet_value) money,
+			db.bet_time
+		FROM 
+			member m
+		RIGHT JOIN 
+			dice_bet db
+		ON 
+			m.mid = db.mid
+		WHERE 1 = 1
+			<if test="invitationCode != null and invitationCode != ''">
+				AND m.invitation_code = #{invitationCode}
+			</if>
+			<if test="beginTime != null and beginTime != ''">
+				AND sn.bet_time <![CDATA[ >= ]]> #{beginTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND sn.bet_time <![CDATA[ <= ]]> #{endTime}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				AND m.`name` Like CONCAT('%',#{keyword},'%') 
+			</if>
+			<if test="betTime != null and betTime != ''">
+				AND db.bet_time Like CONCAT(#{betTime},'%') 
+			</if>
+		GROUP BY 
+			m.`name` 
+	UNION ALL  
+		SELECT
+			m.`name`,
+			sum(sn.money) money,
+			sn.bet_time
+		FROM 
+			member m
+		RIGHT JOIN 
+			single_note sn
+		ON 
+			m.mid = sn.mid
+		WHERE 1 = 1
+			<if test="invitationCode != null and invitationCode != ''">
+				AND m.invitation_code = #{invitationCode}
+			</if>
+			<if test="beginTime != null and beginTime != ''">
+			AND sn.bet_time <![CDATA[ >= ]]> #{beginTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND sn.bet_time <![CDATA[ <= ]]> #{endTime}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				AND m.`name` Like CONCAT('%',#{keyword},'%') 
+			</if>
+			<if test="betTime != null and betTime != ''">
+				AND sn.bet_time Like CONCAT(#{betTime},'%') 
+			</if>
+			<if test="state != null and state != ''">
+				AND sn.state NOT IN (#{state})
+			</if>
+		GROUP BY 
+			m.`name`) rebate
+		GROUP BY 
+			`name` ) total
 	</select>
 </mapper>

@@ -33,9 +33,7 @@ public class Page<T> {
 		this.pageCount = total % pageSize == 0 ? total / pageSize : total / pageSize + 1;
 		this.result = result;
 	}
-	public Page(long total, List<T> result) {
-		this.total = total;
-		this.pageCount = total % pageSize == 0 ? total / pageSize : total / pageSize + 1;
+	public Page(List<T> result) {
 		this.result = result;
 	}
 	public Page() {

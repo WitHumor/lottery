@@ -28,6 +28,14 @@ public interface MemberService {
 	List<Member> queryMember(Map<String, Object> map);
 
 	/**
+	 * 查询会员信息条数
+	 * 
+	 * @param map
+	 * @return
+	 */
+	int queryMemberTotal(Map<String, Object> map);
+	
+	/**
 	 * 会员名验证
 	 * 
 	 * @param name
@@ -49,7 +57,7 @@ public interface MemberService {
 	 * @param map
 	 */
 	int updateSum(Map<String, Object> map);
-	
+
 	/**
 	 * 根据mid修改用户信息
 	 * 
@@ -143,7 +151,23 @@ public interface MemberService {
 	 * @return
 	 */
 	Page<Map<String, Object>> listSingleNote(Map<String, Object> map);
+
+	/**
+	 * 查询推广返利记录
+	 * 
+	 * @param map
+	 * @return
+	 */
+	Page<Map<String, Object>> queryGeneralizeRebate(Map<String, Object> map);
 	
+	/**
+	 * 查询推广返利
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<SingleNoteDTO> generalizeRebate(Map<String, Object> map);
+
 	/**
 	 * 在线取款-事务
 	 * 
@@ -151,7 +175,7 @@ public interface MemberService {
 	 * @return
 	 */
 	int memberWithdrawn(Map<String, Object> map);
-	
+
 	/**
 	 * 注单取消-事务
 	 * 
@@ -159,7 +183,7 @@ public interface MemberService {
 	 * @return
 	 */
 	int cancelSingleNote(Map<String, Object> map);
-	
+
 	/**
 	 * 会员下注-事务
 	 * 
@@ -167,7 +191,7 @@ public interface MemberService {
 	 * @return
 	 */
 	int betMember(Map<String, Object> map);
-	
+
 	/**
 	 * 充值/取款结算-事务
 	 * 
@@ -175,7 +199,7 @@ public interface MemberService {
 	 * @return
 	 */
 	int alterFundRecord(Map<String, Object> map);
-	
+
 	/**
 	 * 修改状态
 	 * 
@@ -187,5 +211,5 @@ public interface MemberService {
 	 * @return
 	 */
 	boolean stateUpdate(String mid, Float sum, Float memberByMoney, Float money, SingleNoteDTO singleNote,
-			String winLose);
+			String winLose, String amidithion);
 }

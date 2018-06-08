@@ -77,6 +77,26 @@
     border-color: #e5e5e5;
 }
 
+.wallet-type {
+    height: 38px;
+    line-height: 38px;
+    width: 50%;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: none;
+    float: left;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.wallet-type.active {
+    color: #fff;
+    background-color: #44A1D1;
+    border: 1px solid #44A1D1;
+}
+
 .form-group .btnYel2 {
     background: rgba(0, 0, 0, .4);
 }

@@ -1,6 +1,7 @@
 package com.springboot.lottery.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 会员实体类
@@ -18,6 +19,8 @@ public class Member implements Serializable {
 	private String name;
 	// 登录密码
 	private String password;
+	// 注册时间
+	private Date register_time;
 	// 权限
 	private String role;
 	// 手机号
@@ -26,6 +29,8 @@ public class Member implements Serializable {
 	private String address;
 	//锁记录
 	private int version;
+	// 返利
+	private String rebate;
 	// 余额
 	private String sum;
 	// 邀请码
@@ -65,6 +70,14 @@ public class Member implements Serializable {
 		this.password = password;
 	}
 
+	public Date getRegister_time() {
+		return register_time;
+	}
+
+	public void setRegister_time(Date register_time) {
+		this.register_time = register_time;
+	}
+
 	public String getPhone() {
 		return phone;
 	}
@@ -87,6 +100,14 @@ public class Member implements Serializable {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public String getRebate() {
+		return rebate;
+	}
+
+	public void setRebate(String rebate) {
+		this.rebate = rebate;
 	}
 
 	public String getSum() {

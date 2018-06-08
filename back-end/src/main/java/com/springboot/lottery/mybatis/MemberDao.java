@@ -32,7 +32,16 @@ public interface MemberDao {
 	List<Member> queryMember(Map<String, Object> map);
 	
 	/**
+	 * 查询会员信息条数
+	 * 
+	 * @param map
+	 * @return
+	 */
+	int queryMemberTotal(Map<String, Object> map);
+
+	/**
 	 * 会员名验证
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -47,12 +56,12 @@ public interface MemberDao {
 	int betMember(MemberSingleNote memberSingleNote);
 
 	/**
-	 * 根据mid修改余额 
+	 * 根据mid修改余额
 	 * 
 	 * @param map
 	 */
 	int updateSum(Map<String, Object> map);
-	
+
 	/**
 	 * 根据mid修改用户信息
 	 * 
@@ -83,21 +92,23 @@ public interface MemberDao {
 	 * @return
 	 */
 	List<SingleNoteDTO> querySingleNoteDTO(Map<String, Object> map);
-	
+
 	/**
 	 * 在线存款与在线取款
+	 * 
 	 * @param memberFundRecord
 	 * @return
 	 */
 	int addFundRecord(MemberFundRecord memberFundRecord);
-	
+
 	/**
 	 * 根据资金流水表id删除信息
+	 * 
 	 * @param frid
 	 * @return
 	 */
 	int deleteFundRecord(String frid);
-	
+
 	/**
 	 * 查询存取款记录
 	 * 
@@ -105,13 +116,14 @@ public interface MemberDao {
 	 * @return
 	 */
 	List<FundRecordDTO> queryFundRecordDTO(Map<String, Object> map);
-	
+
 	/**
 	 * 查询资金流水记录总条数
+	 * 
 	 * @return
 	 */
 	int loadFundRecordTotal(Map<String, Object> map);
-	
+
 	/**
 	 * 资金流水记录状态修改
 	 * 
@@ -119,7 +131,7 @@ public interface MemberDao {
 	 * @return
 	 */
 	int updateFundRecord(Map<String, Object> map);
-	
+
 	/**
 	 * 查询资金流水记录
 	 * 
@@ -127,7 +139,7 @@ public interface MemberDao {
 	 * @return
 	 */
 	List<MemberFundRecord> queryFundRecord(Map<String, Object> map);
-	
+
 	/**
 	 * 查询注单记录
 	 * 
@@ -135,10 +147,27 @@ public interface MemberDao {
 	 * @return
 	 */
 	List<MemberSingleNote> querySingleNote(Map<String, Object> map);
-	
+
 	/**
 	 * 查询注单记录总条数
+	 * 
 	 * @return
 	 */
 	int loadSingleNoteTotal(Map<String, Object> map);
+
+	/**
+	 * 查询推广返利
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<SingleNoteDTO> queryGeneralizeRebate(Map<String, Object> map);
+
+	/**
+	 * 查询推广返利总条数
+	 * 
+	 * @param map
+	 * @return
+	 */
+	int queryGeneralizeRebateTotal(Map<String, Object> map);
 }

@@ -18,6 +18,8 @@ public class MemberSingleNote implements Serializable {
 	private String mid;
 	// 下注时间
 	private Date bet_time;
+	// 比赛开始时间
+	private Date start_time;
 	// 注单号
 	private String number;
 	// 类型
@@ -30,7 +32,9 @@ public class MemberSingleNote implements Serializable {
 	private String team_c;
 	// 下注
 	private String bet;
-	// 比分
+	// 下注比分
+	private String bet_score;
+	// 赛果比分
 	private String score;
 	// 下注类型
 	private String bet_type;
@@ -207,6 +211,14 @@ public class MemberSingleNote implements Serializable {
 		this.win_lose = win_lose;
 	}
 
+	public String getBet_score() {
+		return bet_score;
+	}
+
+	public void setBet_score(String bet_score) {
+		this.bet_score = bet_score;
+	}
+
 	public String getScore() {
 		return score;
 	}
@@ -221,5 +233,13 @@ public class MemberSingleNote implements Serializable {
 
 	public void setRatio(String ratio) {
 		this.ratio = ratio;
+	}
+
+	public Date getStart_time() {
+		return start_time;
+	}
+
+	public void setStart_time(Date start_time) {
+		this.start_time = start_time;
 	}
 }

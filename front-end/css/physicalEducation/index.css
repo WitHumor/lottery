@@ -41,7 +41,7 @@
     background-color: #850E02;
 }
 
-.nav-type .time {
+.nav-type #rt-time {
     width: 260px;
     color: #fff;
 }
@@ -190,6 +190,7 @@ th {
 }
 
 .dtitle {
+    position: relative;
     font-size: 14px;
     font-weight: bold;
     text-align: center;
@@ -305,7 +306,9 @@ th {
 }
 
 .pourRefreshBtn {
-    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
     border: none;
     padding: 1px 3px;
     border-radius: 5px;

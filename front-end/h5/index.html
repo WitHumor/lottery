@@ -1,12 +1,12 @@
 <!doctype html>
-<html>
+<html id="thisisindex">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="wap-font-scale" content="no">
     <meta name="format-detection" content="telephone=no">
-    <title>永利高</title>
+    <title>永利高 -- 首页</title>
     <link rel="stylesheet" href="css/font/iconfont.css">
     <link rel="stylesheet" href="css/style-table.css">
     <link rel="stylesheet" href="js/layui/css/layui.css">
@@ -15,55 +15,12 @@
 </head>
 
 <body>
-    <!-- <div class="btnbox">
-  <a href="menu.html" class="ffw active">
-  <span class="icon iconfont icon-fuwu" onClick="goTogoToPartyAndMassService()"></span>党群服务
-  </a>
-  <a  href="center.html" class="ffw">
-  <span class="icon iconfont icon-wode" onClick="goTogoToPartyAndMassService()"></span>个人中心
-  </a>
-</div>
-<div class="box">
-  <div class="banner"></div>
-  <div class="menu">
-    <div class="me" onClick="goToSendLove()">
-        <i class="iconfont icon-localflorist red"></i>
-        <strong>有关爱</strong>
-        <em>同献关爱，共铸希望</em>
-    </div>
-    <div class="me" onClick="goToSendWarm()">
-        <i class="iconfont icon-accountcircle orange"></i>
-        <strong>有温暖</strong>
-        <em>帮困助学，敬老扶残</em>
-    </div>
-    <div class="me" onClick="goToProtectInterests()">
-        <i class="iconfont icon-localflorist blue"></i>
-        <strong>有权益</strong>
-        <em>知法守法，和谐和美</em>
-    </div>
-    <div class="me" onClick="goToJobFair()">
-        <i class="iconfont icon-payment lblue"></i>
-        <strong>有工作</strong>
-        <em>伯乐寻良马，明主觅贤才</em>
-    </div>
-    <div class="me" onClick="goToAllHelp()">
-        <i class="iconfont icon-assignment ginger"></i>
-        <strong>有大家</strong>
-        <em>集群众智慧，解天下问题</em>
-    </div>
-    <div class="me" onClick="goToIfYou()">
-        <i class="iconfont icon-xin fullred"></i>
-        <strong>有你</strong>
-        <em>参与志愿服务，共建美好公明</em>
-    </div>
-  </div>
-</div> -->
     <div class="vessel">
         <div class="navTop">
             <div class="leftBtn"><i class="iconfont icon-kefu f30"></i></div>
             <div class="ctitle">永利高</div>
             <div class="rightBtn">
-                <button class="mR5 login-btn">登录</button>
+                <button class="mR5 login-btn" onclick="">登录</button>
                 <button class="register-btn">注册</button>
             </div>
         </div>
@@ -95,52 +52,34 @@
                     </a>
                 </div>
             </div>
-            <div class="latest-offers clear">
-              <p>
-                <span class="fl">最新优惠</span>
-                <i class="iconfont icon-more fr"></i>
-              </p>
+            <div class="notice clear">
+                <div class="fl notice-name"><i class="iconfont icon-remind f14"></i>&nbsp;公告</div>
+                <div class="notice-con">
+                    <ul class="notice-txt">
+                        <li><a href="javascript:;" class="notice-new">首充就送188点！</a></li>
+                        <li><a href="javascript:;">充值有福利，优惠额度1%；充的多，送的多！</a></li>
+                        <li><a href="javascript:;">注册领取苹果币空投福利，参与世界杯竞猜！</a></li>
+                    </ul>
+                </div>
+                <div class="more">| <a href="avascript:;">更多</a></div>
             </div>
-            <div class="footer">
-              <a href="#">关于我们</a> | <a href="#">联系我们</a> | <a href="#">合作代理</a> | <a href="#">存款帮助</a> | <a href="#">取款帮助</a>
+            <div class="latest-offers">
+                <!-- <p>
+                    <span class="fl">最新优惠</span>
+                    <i class="iconfont icon-more fr"></i>
+                </p> -->
+                <img src="img/2018sjb.png">
             </div>
         </div>
-        <div class="navBottom">
-            <div class="items active"><i class="iconfont icon-zhuye"></i><span class="icon-name">首页</span></div>
-            <div class="items"><a class="cd-bouncy-nav-trigger" href="#0"><i class="iconfont icon-jiahao"></i></a></div>
-            <div class="items"><i class="iconfont icon-wode"></i><span class="icon-name">我的</span></div>
-            <div class="cd-bouncy-nav-modal">
-                <nav>
-                    <ul class="cd-bouncy-nav">
-                        <li><a class="cz" href="">充值</a></li>
-                        <li><a class="tx" href="">提现</a></li>
-                    </ul>
-                </nav>
-                <a href="#0" class="cd-close">Close modal</a>
-            </div>
+        <div class="footer">
+            <a href="#">关于我们</a> | <a href="#">联系我们</a> | <a href="#">合作代理</a> | <a href="#">存款帮助</a> | <a href="#">取款帮助</a>
         </div>
     </div>
 </body>
 <script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/main-table.js"></script>
 <script src="js/layui/layui.js"></script>
-<script type="text/javascript">
-$(function() {
-    layui.use('carousel', function() {
-        var carousel = layui.carousel;
-        carousel.render({
-            elem: '#banners',
-            width: '100%',
-            arrow: 'always',
-            interval: '2000',
-            height: '150px'
-        });
-    });
-});
-</script>
-<!-- <script src="js/jquery.cookie.js?v=5"></script>
-<script src="js/config.js?v=5"></script>
-<script src="js/util.js?v=5"></script>
-<script src="js/menu.js?v=5"></script> -->
+<script src="js/public.js"></script>
+<script src="js/main-table.js"></script>
+<script src="js/index.js"></script>
 
 </html>

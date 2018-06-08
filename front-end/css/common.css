@@ -21,6 +21,10 @@ a {
     color: #fff;
 }
 
+a:hover {
+    color: none;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-weight: 100
 }
@@ -646,7 +650,6 @@ input.btn-submit {
     background: url(../img/bgss.png) center center;
     color: #fff;
     padding: 15px 20px 0;
-    font-size: 18px;
     border: 2px solid gray;
 }
 

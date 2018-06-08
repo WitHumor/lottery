@@ -1,4 +1,6 @@
-var ServerUrl = 'http://www.xrp-candy.com/springBoot'; //192.168.31.254  43.20  172.20.10.2:8080 http://www.xrp-candy.com/springBoot
+var ServerUrl = 'http://www.xrp-candy.com/springBoot';
+// var ServerUrl = 'http://192.168.43.20:8080';
+// var ServerUrl = 'http://172.20.10.2:8080';
 var HttpService = function() {
     this.MAX_VALUE = 100000;
     var TYPE = {
@@ -6,7 +8,7 @@ var HttpService = function() {
         "get": "GET"
     };
 
-    var _ajax = function(type, url, data, succ, failed) {
+    var _ajax = function(type, url, data, succ, failed, bSend) {
         var userinfo = sessionStorage.getItem("userinfo");
         var toid = null;
         var index = '';
@@ -26,9 +28,13 @@ var HttpService = function() {
             contentType: "application/x-www-form-urlencoded",
             data: data,
             beforeSend: function() {
-                index = layer.load(0, {
-                    shade: 0.1
-                });
+                if (typeof(bSend) == "function") {
+                    bSend();
+                } else {
+                    index = layer.load(0, {
+                        shade: 0.1
+                    });
+                }
             },
             success: function(data) {
                 var codeArr = ['1109', '1114', '1121', '1122'];
@@ -81,11 +87,11 @@ var HttpService = function() {
             }
         });
     };
-    this.get = function(url, data, succ, failed) {
-        return _ajax(TYPE.get, url, data, succ, failed);
+    this.get = function(url, data, succ, failed, bSend) {
+        return _ajax(TYPE.get, url, data, succ, failed, bSend);
     }
-    this.post = function(url, data, succ, failed) {
-        return _ajax(TYPE.post, url, data, succ, failed);
+    this.post = function(url, data, succ, failed, bSend) {
+        return _ajax(TYPE.post, url, data, succ, failed, bSend);
     }
 }
 
@@ -157,7 +163,7 @@ var common = {
                     '</div>' +
                     '<div class="fgroup"><div class="input-group"><input id="regpass" type="password" placeholder="密码，6~12个字母和数字组合的字符，区分大小写" maxlength="12" iType="r_password" iStr="密码"/><span class="icon-pass"></span></div><label class="regPass-error tip vh"></label></div>' +
                     '<div class="fgroup"><div class="input-group"><input id="verpass" type="password" placeholder="请确认密码" maxlength="12" iType="r_spassword" iStr="密码确认"/><span class="icon-pass"></span></div><label class="verPassVer-error tip vh"></label></div>' +
-                    '<div class="fgroup"><div class="input-group"><input id="truename" type="text" placeholder="真实姓名，需与银行帐户名称相同，否则不能出款" iType="r_tname" iStr="真实姓名"/><span class="icon-tname"></span></div><label class="trueName-error tip vh"></label></div>' +
+                    '<div class="fgroup"><div class="input-group"><input id="truename" type="text" placeholder="真实姓名" iType="r_tname" iStr="真实姓名"/><span class="icon-tname"></span></div><label class="trueName-error tip vh"></label></div>' +
                     '<div class="fgroup"><div class="input-group"><input id="withpass" type="text" placeholder=" 4 位数字取款密码，提款认证必须，请务必记住" maxlength="4"  iType="r_wpassword" iStr="取款密码"/><span class="icon-wpass"></span></div><label class="withPass-error tip vh"></label></div>' +
                     '<div class="fgroup" style="margin-bottom: 15px;"><div class="input-group"><input id="yaoqingma" type="text" placeholder="代理邀请码，非必填" maxlength="10"  iType="r_yaoqingma" iStr="邀请码"/><span class="icon-yaoqingma"></span></div></div>' +
                     '<div class="fgroup f12" style="margin: 5px 0;color: gray;"><input type="checkbox" checked disabled style="vertical-align:middle;">&nbsp;我已届满合法博彩年龄﹐且同意各项开户条约。</div>' +
@@ -172,6 +178,8 @@ var common = {
             area: (types == 'L' ? log.ar : reg.ar),
             content: (types == 'L' ? log.co : reg.co),
             success: function(layero, index) {
+                $('#regpass').val('');
+                $('#withpass').val('');
                 var inputDeal = $('.input-group>input[type="text"],.input-group>input[type="password"]');
                 // inputDeal.focus(function() {
                 // });
@@ -188,7 +196,8 @@ var common = {
         if (common.checkinput(thisArr)) {
             var reqData = {
                 "name": logName,
-                "password": logPass
+                "password": hex_sha1(logPass)
+                // "password": logPass
             };
             this.ajax.post('/member/login-member', reqData, function(data) {
                 if (data.code == '2018') {
@@ -224,16 +233,16 @@ var common = {
     },
 
     register: function() {
-        var cip = '';
-        $.ajax({
-            url: 'http://freegeoip.net/json/',
-            async: false,
-            success: function(data) {
-                cip = data.ip;
-            },
-            type: 'GET',
-            dataType: 'JSON'
-        });
+        // var cip = '';
+        // $.ajax({
+        //     url: 'http://freegeoip.net/json/',
+        //     async: false,
+        //     success: function(data) {
+        //         cip = data.ip;
+        //     },
+        //     type: 'GET',
+        //     dataType: 'JSON'
+        // });
         var regname = $('#regname').val(),
             regpass = $('#regpass').val(),
             truename = $('#truename').val(),
@@ -243,10 +252,10 @@ var common = {
         if (common.checkinput(thisArr)) {
             var reqData = {
                 name: regname,
-                password: regpass,
+                password: hex_sha1(regpass),
                 real_name: truename,
-                bank_password: withpass,
-                address: cip
+                bank_password: hex_sha1(withpass),
+                // address: cip
             };
             if (yaoqingma) {
                 reqData.invitation_code = yaoqingma;
@@ -350,6 +359,7 @@ var common = {
 
     //初始化
     initPage: function() {
+
         //页面共同代码
         if ($('#thisisheader').length == 0) {
             var html = '';
@@ -359,16 +369,24 @@ var common = {
             } else {
                 html = '<button type="button" onclick="common.openlayer(\'L\');">登录</button><button type="button" onclick="common.openlayer(\'R\');">注册</button>' + ($('#thisishome').length == 0 ? '<button type="button" onclick="window.location.href=\'home.html\'"><i class="iconfont icon-shouye"></i>&nbsp;首页</button>' : '');
             }
-            $('body').prepend('<div id="thisisheader" class="header"><img src="../../img/homelogo.png" style="vertical-align: middle;" width="90" height="80"><div class="slogan"><span class="wel">永利高</span></div><i class="iconfont icon-icon_xinyongguiji"></i><div class="credit"><span>老品牌 值得信赖</span><div>精彩赛事，尽在永利高</div></div><div class="baseinfo fr">' + html + '</div></div>');
+            $('body').prepend('<div id="thisisheader" class="header"><img src="../../img/homelogo.png" style="vertical-align: middle;" width="90" height="80"><div class="slogan"><span class="wel">永利高</span></div><i class="iconfont icon-icon_xinyongguiji"></i><div class="credit"><span>老品牌 值得信赖</span><div>精彩赛事，尽在永利高</div></div><div class="baseinfo fr">' + html + '</div><div></</div>');
         }
 
         if ($('#thisisfooter').length == 0) {
             $('body').append('<div id="thisisfooter" class="footer"><div class="fl"><img src="../../img/2018sjb.png"></div><div class="fl footinfo"><div class="article-menu"><a href="footerinfo.html?type=aboutus">关于我們</a>｜ <a href="javascript:void(0)" onclick="$(\'.nb-icon-inner-wrap\').click();">联系我们</a>｜ <a href="javascript:void(0);" onclick="common.inviteCode();">合作代理</a>｜ <a href="footerinfo.html?type=diploma">博彩牌照</a>｜ <a href="footerinfo.html?type=desposit">存款帮助</a>｜ <a href="footerinfo.html?type=teller">取款帮助</a><!-- ｜ <a href="javascript:void(0)">常见问题</a> --></div><div class="fo-text">永利高所提供的产品和服务，是由菲律宾政府卡格扬河经济特区 First Cagayan leisure and Resort Corporation.<br> 授权和监管 我们将不余遗力的为您提供优质的服务和可靠的资金保障。</div><div class="footer-Infomation"><div class="copyright fl">Copyright © 永利高 Reserved&nbsp; <span class="footer-info"><!-- 邮箱：980127777@qq.com&nbsp;&nbsp;QQ：980127777 --></span></div></div></div><div class="Clear"></div></div>');
         }
 
-        setInterval(function() {
-            $(".time > span").text(new Date().format("yyyy年MM月dd日 hh:mm:ss"));
-        }, 1000);
+        if ($('#rt-time').length > 0) {
+            setInterval(function() {
+                // $("#rt-time > span").text(new Date().format("yyyy年MM月dd日 hh:mm:ss"));
+                new HttpService().post('/member/get-time', {}, function(data) {
+                    if (data.code == '2018') {
+                        $("#rt-time > span").text(data.result);
+                    }
+                }, function(e) {}, function() {});
+            }, 1000);
+        }
+
         $.each(config.navtype, function(i, item) {
             $('#navType').append('<li><a href="javascript:void(0);" class="' + (item.name == "今日赛事" ? "active" : "") + '" tabType="' + item.tabtype + '" countType="' + item.countType + '">' + item.name + '</a></li>');
         });
@@ -415,7 +433,7 @@ var common = {
             });
         }
 
-        if($('#thisishome').length == 0 && $('#thisisft').length == 0 && $('#thisisbk').length == 0) {
+        if ($('#thisishome').length == 0 && $('#thisisft').length == 0 && $('#thisisbk').length == 0) {
             $('body').append('<div class="hyperchannel"><li><a href="football.html"><i class="iconfont icon-xiaoyuan-"></i>&nbsp;足球</a></li><li><a href="basketball.html"><i class="iconfont icon-lanqiu"></i>&nbsp;篮球</a></li><li><a href="javascript:void(0);" class="lotteryBetting"><i class="iconfont icon-taiqiu"></i></i>&nbsp;彩票</a></li></div>');
         }
     },
@@ -424,7 +442,7 @@ var common = {
         $('.mine').remove();
         layer.closeAll();
         if (sessionStorage.getItem('toid') && sessionStorage.getItem('userinfo')) {
-            var h = '<div style="letter-spacing: 5px;font-size: 20px;text-align: center;color: #071D32;">' + JSON.parse(sessionStorage.getItem('userinfo')).name + '</div>';
+            var h = '<div style="letter-spacing: 5px;font-size: 20px;text-align: center;color: #071D32;">' + JSON.parse(sessionStorage.getItem('userinfo')).name + '</div><div style="margin-top: 10px;font-size: 12px; color: #FC6747;text-align: center;">Tip：受邀会员每月下注流水总额的1%作为推广返利</div>';
             layer.alert(h, {
                 skin: 'layui-layer-molv',
                 title: '您的代理邀请码',
@@ -468,7 +486,7 @@ var common = {
     },
 
     mine: function() {
-        $('body').prepend('<div class="mine"><div class="myinfos"><img src="../../img/icon_user_o_lg.png"><p>账户：<label id="myAccount" class="fwb">-</label></p><p>余额：<label id="remainSum" class="fwb">0.00</label> 点</p><p><button class="refresh-credit" onclick="common.getANS();"><i class="iconfont icon-msnui-refresh-circle alignmid"></i> 刷新额度</button></p><div class="milist"><div onclick="window.location.href=\'tradingrecord.html\'">资金交易记录<i class="iconfont icon-more fr f20"></i></div><div onclick="window.location.href=\'managePass.html\'">密码管理<i class="iconfont icon-more fr f20"></i></div><div onclick="common.inviteCode();">获取代理邀请码<i class="iconfont icon-more fr f20"></i></div></div><a href="javascript:void(0);" onclick="common.loginout();"><i class="iconfont icon-tuichu alignmid"></i> 安全退出</a></div></div>');
+        $('body').prepend('<div class="mine"><div class="myinfos"><img src="../../img/icon_user_o_lg.png"><p>账户：<label id="myAccount" class="fwb">-</label></p><p>本地余额：<label id="remainSum" class="fwb">0.00</label> 点</p><p>返利余额：<label id="returnSum" class="fwb">0.00</label> 点</p><p><button class="refresh-credit" onclick="common.getANS();"><i class="iconfont icon-msnui-refresh-circle alignmid"></i> 刷新额度</button></p><div class="milist"><div onclick="window.location.href=\'tradingrecord.html\'">资金交易记录<i class="iconfont icon-more fr f20"></i></div><div onclick="window.location.href=\'managePass.html\'">密码管理<i class="iconfont icon-more fr f20"></i></div><div onclick="common.inviteCode();">获取代理邀请码<i class="iconfont icon-more fr f20"></i></div></div><a href="javascript:void(0);" onclick="common.loginout();"><i class="iconfont icon-tuichu alignmid"></i> 安全退出</a></div></div>');
         $('.mine').click(function(e) {
             var o = e.target;
             if ($(o).closest('.myinfos').length == 0) //不是特定区域
@@ -482,6 +500,7 @@ var common = {
             if (data.code == '2018') {
                 $('#myAccount').text(data.result.name);
                 $('#remainSum').text(data.result.sum);
+                $('#returnSum').text(data.result.rebate);
             }
             // else {
             //     layer.msg('数据获取失败', {
@@ -524,15 +543,15 @@ var common = {
                             default:
                                 btype = '-';
                         };
-                        var st = '';
+                        var st = item.occasion ? item.occasion : '';
                         if (item.iorType == '大' || item.iorType == '小') {
-                            st = '大小'
+                            st += '大小'
                         } else if (item.iorType == '单大' || item.iorType == '单小') {
-                            st = '积分大小'
+                            st += '积分大小'
                         } else if (item.iorType == '单' || item.iorType == '双') {
                             st = '单双'
                         } else {
-                            st = item.iorType;
+                            st += item.iorType;
                         }
                         var alltype = item.iorType;
                         if (strArr.indexOf(alltype) > -1) {
@@ -563,8 +582,11 @@ var common = {
                                 // thisfront = '';
                                 break;
                         };
-                        if(!alltype && !item.iorRatio) {
+                        if (!alltype && !item.iorRatio) {
                             thisfront = '';
+                        }
+                        if (item.iorType == '大' || item.iorType == '小' || item.iorType == '单' || item.iorType == '双') {
+                            chosedName = '';
                         }
                         var bs = '';
                         if (item.iorType == '让球' || item.iorType == '让分') {
@@ -577,8 +599,7 @@ var common = {
                                 bs = '';
                             }
                         }
-
-                        html += '<div class="tinfo commons"><div class="dleague"><span>' + btype + '</span></div><p>' + item.league + '</p><p>下注时间：<span>' + item.betTime + '</span></p><div class="chsteam commons c_red fwb">' + st + '</div><div class="chsteam commons"><span class="tName">' + item.teamh + ' <font class="radio">vs</font> ' + item.teamc + '</span></div><div class="chsteam commons"><label class="c_red">' + chosedName +  ' ' + bs + thisfront + '</label> @ <strong class="light" id="ioradio_id">' + (item.ratio || '-') + '</strong></div><p>下注金额：<span class="pourMoney">' + (item.money || '0') + '</span></p></div>';
+                        html += '<div class="tinfo commons"><div class="dleague"><span>' + btype + '</span></div><p>' + item.league + '</p><p>下注时间：<span>' + item.betTime + '</span></p><div class="chsteam commons c_red fwb">' + st + '</div><div class="chsteam commons"><span class="tName">' + item.teamh + ' <font class="radio">vs</font> ' + item.teamc + '</span></div><div class="chsteam commons"><label class="c_red">' + chosedName + ' ' + bs + thisfront + '</label> @ <strong class="light" id="ioradio_id">' + (item.ratio || '-') + '</strong></div><p>下注金额：<span class="pourMoney">' + (item.money || '0') + '</span></p></div>';
                     });
                     html += '</div>';
                     $('.bottomPourList').html(html);
