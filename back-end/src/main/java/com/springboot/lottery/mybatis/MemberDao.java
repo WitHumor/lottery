@@ -30,6 +30,14 @@ public interface MemberDao {
 	 * @return
 	 */
 	List<Member> queryMember(Map<String, Object> map);
+	
+	/**
+	 * 查询会员信息条数
+	 * 
+	 * @param map
+	 * @return
+	 */
+	int queryMemberTotal(Map<String, Object> map);
 
 	/**
 	 * 会员名验证

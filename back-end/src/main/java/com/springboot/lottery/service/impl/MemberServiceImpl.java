@@ -54,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	/**
-	 * 会员登录
+	 * 查询会员信息
 	 * 
 	 * @param map
 	 * @return
@@ -65,6 +65,17 @@ public class MemberServiceImpl implements MemberService {
 		return list;
 	}
 
+	/**
+	 * 查询会员信息条数
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public int queryMemberTotal(Map<String, Object> map) {
+		return memberDao.queryMemberTotal(map);
+	}
+	
 	/**
 	 * 会员下注
 	 * 
@@ -588,6 +599,7 @@ public class MemberServiceImpl implements MemberService {
 			// 如果是提现记录添加两条信息，返回给前端
 			if (record.equals("1")) {
 				map.put("moneyAddress", dto.getMoney_address());// 钱包地址
+				map.put("withdrawnType", dto.getWithdrawn_type());// 取款类型
 				map.put("remark", dto.getRemark());// 备注
 			}
 			// 如果是充值记录添加两条信息，返回给前端
@@ -705,6 +717,7 @@ public class MemberServiceImpl implements MemberService {
 		map.put("name", singleNote.getName());// 会员名
 		return map;
 	}
+	
 	/**
 	 * List<FundRecordDTO> 转为 List<Map<String, Object>> 只保留前端需要的字段
 	 * 
@@ -741,5 +754,4 @@ public class MemberServiceImpl implements MemberService {
 		map.put("rebate", String.format("%.2f", rebate));
 		return map;
 	}
-	
 }

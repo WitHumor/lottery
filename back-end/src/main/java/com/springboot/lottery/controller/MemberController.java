@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -72,6 +73,7 @@ public class MemberController {
 		String mid = BeanLoad.getId();
 		String role = member.getRole();
 		member.setAddress(ipAddress);// 设置IP地址
+		member.setRegister_time(new Date());// 注册时间
 		member.setMid(mid);// 设置主键id
 		member.setSum("0");// 余额默认设置为0
 		member.setRebate("0");// 返利默认设置为0
@@ -115,6 +117,49 @@ public class MemberController {
 		result.setCode(MessageUtil.NAME_EXIST);
 		return result;
 	}
+	
+	/**
+	 * 20180428查询会员信息
+	 * 
+	 * @param pageNo
+	 *            当前页
+	 * @param pageSize
+	 *            每页显示条数
+	 * @param keyword
+	 *            关键字
+	 * @return
+	 */
+	@RequestMapping(value = "query-member", method = RequestMethod.POST)
+	@ResponseBody
+	public ObjectResult queryMember(Integer pageNo, Integer pageSize, String keyword) {
+		ObjectResult result = new ObjectResult();
+		String token = request.getHeader("token");
+		// 获取指定缓存对象
+		Cache cache = getCache();
+		// token验证
+		String tokenVerify = tokenVerify(token, cache);
+		if (!tokenVerify.equals(MessageUtil.SUCCESS)) {
+			result.setCode(tokenVerify);
+			return result;
+		}
+		// 获取缓存中的数据
+		Member tokenMember = (Member) cache.get(token).get();
+		if(tokenMember.getRole().equals("1")) {
+			Map<String, Object> memberMap = new HashMap<String, Object>();
+			memberMap.put("role", "0");
+			memberMap.put("keyword", keyword);// 关键字
+			memberMap.put("pageSize", pageSize);// 每页显示多少条
+			memberMap.put("beginIndex", pageNo == null || pageSize == null ? null : (pageNo - 1) * pageSize);// 下标
+			memberMap.put("pageNo", pageNo);// 当前页
+			int total = memberService.queryMemberTotal(memberMap);
+			List<Member> list = memberService.queryMember(memberMap);
+			List<Map<String, Object>> mapByMembers = toMapByMembers(list, null);
+			Page<Map<String, Object>> map = new Page<Map<String, Object>>(pageNo, pageSize, total, mapByMembers);
+			// 用户名已存在
+			result.setResult(map);
+		}
+		return result;
+	}
 
 	/**
 	 * 20180604修改密码
@@ -141,6 +186,21 @@ public class MemberController {
 		// 获取缓存中的数据
 		Member tokenMember = (Member) cache.get(token).get();
 		Map<String, Object> map = new HashMap<String, Object>();
+		String role = tokenMember.getRole();
+		// 重置密码
+		if(role.equals("1")) {
+			// 0表示取款密码，1表示登录密码
+			if (state.equals("0")) {
+				map.put("bankPassword", newPassword);// 设置新密码
+				tokenMember.setBank_password(newPassword);
+			} else if (state.equals("1")) {
+				map.put("password", newPassword);// 设置新密码
+				tokenMember.setPassword(newPassword);
+			}
+			map.put("mid", oldPassword);// 设置mid
+			memberService.updateMember(map);
+			return result;
+		}
 		// 0表示取款密码，1表示登录密码
 		if (state.equals("0")) {
 			// 匹配密码是否正确
@@ -996,9 +1056,9 @@ public class MemberController {
 		map.put("mid", mid = tokenMember.getRole().equals("0") ? mid : null);// 会员id
 		map.put("beginTime", StringUtils.isBlank(beginTime) ? null : beginTime);// 开始时间
 		map.put("endTime", StringUtils.isBlank(endTime) ? null : endTime);// 结束时间
-		map.put("keyword", keyword);// 关键字
 		map.put("type", type);// 充值类型
 		map.put("state", state);// 状态
+		map.put("keyword", keyword);// 关键字
 		map.put("pageSize", pageSize);// 每页显示多少条
 		map.put("beginIndex", pageNo == null || pageSize == null ? null : (pageNo - 1) * pageSize);// 下标
 		map.put("pageNo", pageNo);// 当前页
@@ -1046,8 +1106,7 @@ public class MemberController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("mid", mid = tokenMember.getRole().equals("0") ? mid : null);// 会员id
 		map.put("invitationCode", tokenMember.getName());// 邀请码
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM"); //设置日期格式
-		map.put("betTime", sdf.format(new Date()));// 当前这一个月
+		map.put("state", "-1");// 已取消不参与返利
 		map.put("beginTime", StringUtils.isBlank(beginTime) ? null : beginTime);// 开始时间
 		map.put("endTime", StringUtils.isBlank(endTime) ? null : endTime);// 结束时间
 		map.put("keyword", keyword);// 关键字
@@ -1230,12 +1289,28 @@ public class MemberController {
 		String league = mapData.get("league");// 获取数据的赛事
 		String teamh = mapData.get("team_h");// 获取数据的主场
 		String teamc = mapData.get("team_c");// 获取数据的客场
+		Date startTime = null;
+		// 判断是否是滚动足球
+		if (betType.equals("REFT")) {
+			String dateTime = mapData.get("retimeset");// 获取数据的进行时间
+			startTime = JsoupUtil.getRollFootball(dateTime);
+		} else if (betType.equals("REBK")) {
+			// 根据其他盘口获取时间
+			Map<String, String> basketall= JsoupUtil.getRollBasketallData(list, league, teamh, teamc);
+			String nowSession = basketall.get("nowSession");// 获取数据的第几节
+			String lastTime = basketall.get("lastTime");// 获取数据比赛倒计时秒
+			startTime = JsoupUtil.getRollBasketall(nowSession, lastTime);
+		} else {
+			String dateTime = mapData.get("datetime");
+			startTime = JsoupUtil.getDataMapTime(dateTime);// 转换时间格式
+		}
 		String snid = BeanLoad.getId();// 随机生成主键id
 		MemberSingleNote memberSingleNote = new MemberSingleNote();
 		memberSingleNote.setSnid(snid);// 设置主键id
 		memberSingleNote.setMid(mid);// 设置会员id
 		memberSingleNote.setNumber(BeanLoad.getNumber());// 设置注单号
 		memberSingleNote.setBet_time(new Date());// 设置时间
+		memberSingleNote.setStart_time(startTime);// 设置开始比赛时间
 		memberSingleNote.setType("体育");// 设置类型
 		memberSingleNote.setTeam_h(teamh);// 设置主场
 		memberSingleNote.setTeam_c(teamc);// 设置客场
@@ -1659,7 +1734,7 @@ public class MemberController {
 				continue;
 			}
 			// 获得两个时间的毫秒时间差异
-			long distance = new Date().getTime() - singleNote.getBet_time().getTime();
+			long distance = new Date().getTime() - singleNote.getStart_time().getTime();
 			// 计算差多少天
 			long day = distance / (1000 * 24 * 60 * 60);
 			// 计算差多少小时
@@ -1670,8 +1745,8 @@ public class MemberController {
 			long second = (distance % (1000 * 24 * 60 * 60) % (1000 * 60 * 60) % (1000 * 60)) / 1000;
 			// 计算总共相差多少秒
 			long time = (day * 60 * 60 * 24) + (hour * 60 * 60) + (min * 60) + second;
-			// 如果注单超过24个小时未有结果就交给客服处理
-			if (time <= 24 * 60 * 60) {
+			// 如果注单超过4个小时未有结果就交给客服处理
+			if (time <= 4 * 60 * 60) {
 				continue;
 			}
 			Map<String, Object> singleNoteMap = new HashMap<String, Object>();
@@ -1707,6 +1782,7 @@ public class MemberController {
 		// 格式化前一天
 		String previousDay = sdf.format(dBefore);
 		map.put("betTime", previousDay);
+		map.put("state", "-1");// 已取消注单不参与返利
 		// 利用迭代器循环会员信息
 		Iterator<Member> memberIterator = queryMember.iterator();
 		while (memberIterator.hasNext()) {
@@ -2507,6 +2583,23 @@ public class MemberController {
 	}
 
 	/**
+	 * List<Member> 转为 List<Map<String, Object>> 只保留前端需要的字段
+	 * 
+	 * @param dtos
+	 * @return
+	 */
+	public List<Map<String, Object>> toMapByMembers(List<Member> dtos, String token) {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		if (dtos != null) {
+			for (Member dto : dtos) {
+				Map<String, Object> map = toMapByMember(dto, token);
+				list.add(map);
+			}
+		}
+		return list;
+	}
+	
+	/**
 	 * Member 放入 Map<String, Object> 只保留前端需要的字段
 	 * 
 	 * @param member
@@ -2517,8 +2610,15 @@ public class MemberController {
 		map.put("mid", member.getMid());// mid
 		map.put("name", member.getName());// 姓名
 		map.put("address", member.getAddress());// ip地址
-		map.put("token", token); // token
 		map.put("real_name", member.getReal_name());// 真实姓名
+		if(token == null) {
+			map.put("registerTime", member.getRegister_time());// 注册时间
+			map.put("rebate", member.getRebate());// 返利钱包
+			map.put("sum", member.getSum());// 本地钱包
+			map.put("invitationCode", member.getInvitation_code());// 邀请码
+		} else {
+			map.put("token", token); // token
+		}
 		return map;
 	}
 }
