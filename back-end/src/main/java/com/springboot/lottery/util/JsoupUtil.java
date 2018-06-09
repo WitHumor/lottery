@@ -61,7 +61,9 @@ public class JsoupUtil {
 	private static final String EXCHANGE_PRICE = "div[class].box p[class].price";// 获取全场篮球比分
 
 	public static void main(String[] args) {
-//		getDataMapTime("06-08<br>06:00a<br>");
+//		getDataMapTime("Start^09:08p");
+//		getRollBall("2H^23:32");
+//		getRollBasketall("Q2","180");
 	}
 	/**
 	 * 根据赛事名称进行匹配-足球
@@ -586,8 +588,80 @@ public class JsoupUtil {
 			return sdf.parse(dateTime);
 		} catch (ParseException e) {
 			System.err.println("时间格式转换错误");
-			return null;
+			return new Date();
 		}
+	}
+	
+	/**
+	 * 滚球-足球比赛开始时间
+	 * @param date
+	 * @return
+	 */
+	public static Date getRollFootball(String date) {
+		String H = date.substring(0, 1);
+		// 根据冒号获取下标
+		int indexOf = date.indexOf(":");
+		// 获取时间06:00
+		String dateTime = date.substring(indexOf-2, indexOf+3);
+		Date currentTime = new Date();
+		// 获取时间分钟06
+		String lodHour = dateTime.substring(0, 2);
+		// 获取时间秒00
+		String lodSecond = dateTime.substring(3, 5);
+		Integer proceed = null;
+		if(H.equals("1")) {
+			// 比赛进行时间1H表示上半场
+			proceed = (Integer.parseInt(lodHour) * 60 * 1000) + (Integer.parseInt(lodSecond) * 1000);
+		}else if(H.equals("2")) {
+			// 比赛进行时间2H表示下半场，所以要加上上半场时间45与中场休息时间30
+			proceed = ((Integer.parseInt(lodHour) + 75) * 60 * 1000) + (Integer.parseInt(lodHour) * 1000);
+		}
+		Date beforeDate = new Date(currentTime.getTime() - proceed);
+		return beforeDate;
+	}
+	
+	/**
+	 * 根据url地址与gid进行数据匹配
+	 * 
+	 * @return Map<String, String>
+	 */
+	public static Map<String, String> getRollBasketallData(List<Map<String, String>> list, String league,
+			String teamh, String teamc) {
+		// 循环匹配gid是否存在，如果存在则返回map，如果不存在则返回null
+		for (Map<String, String> map : list) {
+			String mapLeague = map.get("league");// 获取数据的赛事
+			String mapTeamh = map.get("team_h");// 获取数据的主场
+			String mapTeamc = map.get("team_c");// 获取数据的客场
+			String mapNowSession = map.get("nowSession");// 获取数据的第几节
+			if (mapLeague.equals(league) && mapTeamh.equals(teamh) && mapTeamc.equals(teamc)
+					&& StringUtils.isNotBlank(mapNowSession)) {
+				// for(Entry<String, String> entry : map.entrySet()) {
+				// System.out.println(entry.getKey() +" "+entry.getValue());
+				// }
+				System.out.println(map);
+				return map;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 滚球-篮球比赛开始时间
+	 * @param date
+	 * @return
+	 */
+	public static Date getRollBasketall(String nowSession, String lastTime) {
+		// 获取Qx中的x
+		nowSession = nowSession.substring(1, 2);
+		//15乘以x的时间
+		Integer now = (Integer.parseInt(nowSession) - 1) * 15 * 60 * 1000;
+		// 600减x的时间
+		Integer last = (600 - Integer.parseInt(lastTime)) * 1000;
+		// 获取当前时间
+		Date currentTime = new Date();
+		// 当前时间减过去了多少时间
+		Date beforeDate = new Date(currentTime.getTime() - (now + last));
+		return beforeDate;
 	}
 	
 	/**
