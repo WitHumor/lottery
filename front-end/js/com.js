@@ -197,7 +197,7 @@ var common = {
             var reqData = {
                 "name": logName,
                 "password": hex_sha1(logPass)
-                // "password": logPass
+                    // "password": logPass
             };
             this.ajax.post('/member/login-member', reqData, function(data) {
                 if (data.code == '2018') {
@@ -442,12 +442,30 @@ var common = {
         $('.mine').remove();
         layer.closeAll();
         if (sessionStorage.getItem('toid') && sessionStorage.getItem('userinfo')) {
-            var h = '<div style="letter-spacing: 5px;font-size: 20px;text-align: center;color: #071D32;">' + JSON.parse(sessionStorage.getItem('userinfo')).name + '</div><div style="margin-top: 10px;font-size: 12px; color: #FC6747;text-align: center;">Tip：受邀会员每月下注流水总额的1%作为推广返利</div>';
+            var names = JSON.parse(sessionStorage.getItem('userinfo')).name;
+            var h = '<div class="icodes">' + names + '</div><div class="netaddr"><label>http://www.xrp-candy.com?ic=' + names + '</label><button id="btn-copy-qrcode" data-clipboard-text="http://www.xrp-candy.com?ic='+ names +'">复 制</button></div><div id="qrcode"></div><div class="qrcode-tip">Tip：受邀会员每月下注流水总额的1%作为推广返利</div>';
             layer.alert(h, {
                 skin: 'layui-layer-molv',
+                area: ['420px', '370px'],
                 title: '您的代理邀请码',
                 move: false,
                 closeBtn: 0,
+                success: function() {
+                    ZeroClipboard.setDefaults({
+                        moviePath: '../../js/ZeroClipboard.swf'
+                    });
+                    new ZeroClipboard([document.getElementById("btn-copy-qrcode")]).on('complete', function(client, args) {
+                        // layer.msg('内容已经复制，你可以使用Ctrl+V 粘贴！');
+                    });
+                    new QRCode(document.getElementById("qrcode"), {
+                        text: "wap.xrp-candy.com/register.html?icode=" + names,
+                        width: 128,
+                        height: 128,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                }
             });
         } else {
             sessionStorage.setItem('userinfo', '');

@@ -16,12 +16,19 @@ var index = {
 
             index.notice($('.notice-txt'));
 
-            $('.login-btn').click(function() {
-                window.location.href = 'login.html';
-            });
-            $('.register-btn').click(function() {
-                window.location.href = 'register.html';
-            });
+            if (!sessionStorage.getItem('toid')) {
+                $('.rightBtn').html('<button class="mR5 login-btn to_login_register" onclick="">登录</button><button class="register-btn to_login_register">注册</button>');
+
+                $('.to_login_register').on('click', function() {
+                    if ($(this).hasClass('login-btn')) {
+                        window.location.href = 'login.html';
+                    } else if ($(this).hasClass('register-btn')) {
+                        window.location.href = 'register.html';
+                    }
+                });
+            } else {
+                $('.rightBtn').html('<i class="iconfont icon-xiaoxi2 f24_"></i>');
+            }
         });
     },
     notice: function(ul) {

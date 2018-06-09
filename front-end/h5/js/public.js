@@ -37,10 +37,10 @@ var HttpService = function() {
                 if (typeof(bSend) == "function") {
                     bSend();
                 } else {
-                    // index = layer.load(0, {
-                    //     shade: 0.1
-                    // });
-                    index = layer.open({type: 2,shade: 'background-color: rgba(0,0,0,.3)'});
+                    index = layer.open({
+                        type: 2,
+                        shade: 'background-color: rgba(0,0,0,.3)'
+                    });
                 }
             },
             success: function(data) {
@@ -52,20 +52,22 @@ var HttpService = function() {
                         }, 500);
                     }
                     if (data.code == '1109' || data.code == '1114') {
-                        layer.msg('登录超时，请重新登陆', {
-                            time: 2000,
-                            icon: 2
+                        layer.open({
+                            content: '登录超时，请重新登陆',
+                            skin: 'msg',
+                            time: 2
                         });
-
                     } else if (data.code == '1121') {
-                        layer.msg('您的账号已在其他地方登陆，请重新登录', {
-                            time: 2000,
-                            icon: 2
+                        layer.open({
+                            content: '您的账号已在其他地方登陆，请重新登录',
+                            skin: 'msg',
+                            time: 2
                         });
                     } else if (data.code == '1122') {
-                        layer.msg('同网络下只能有一个账户活跃，您已被迫下线', {
-                            time: 2000,
-                            icon: 2
+                        layer.open({
+                            content: '同网络下只能有一个账户活跃，您已被迫下线',
+                            skin: 'msg',
+                            time: 2
                         });
                     }
                     sessionStorage.setItem('userinfo', '');
@@ -86,7 +88,11 @@ var HttpService = function() {
                 if (typeof(failed) == "function") {
                     failed(error);
                 } else {
-                    console.log("the method is no a function!");
+                    layer.open({
+                        content: '网络正在开小差',
+                        skin: 'msg',
+                        time: 2
+                    });
                 }
             },
             complete: function() {
@@ -103,6 +109,29 @@ var HttpService = function() {
 }
 
 var public = {
+    ajax: new HttpService(),
+    getParamFromUrl: function(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    },
+    //返回url中的参数对应值
+    getParameter: function(key) {
+        var str,
+            result = '',
+            pageUrl = window.location.href,
+            parameter = pageUrl.substring(pageUrl.indexOf('?') + 1, pageUrl.length);
+        parameter = parameter.split('&');
+        for (i in parameter) {
+            var str = parameter[i].split('=');
+            if (str[0] == key) {
+                result = str[1];
+                break;
+            }
+        }
+        return result;
+    },
     init: function() {
         if ($('#thisisindex').length > 0 || $('#thisismine').length > 0) {
             $('.vessel').append('<div class="navBottom">' +
@@ -142,7 +171,7 @@ var public = {
             $('#nb_icon_wrap').click();
         });
 
-        $('.log_reg_box input').bind("input propotychange", function() {
+        $('.total_box input').bind("input propotychange", function() {
             if ($(this).val()) {
                 $(this).siblings('i.clear_all').show();
             } else {
@@ -150,12 +179,12 @@ var public = {
             }
         });
 
-        $('.log_reg_box i.clear_all').on('click', function() {
+        $('.total_box i.clear_all').on('click', function() {
             $(this).siblings('input').val('');
             $(this).hide();
         });
 
-        $('.log_reg_box i.eyes').on('click', function() {
+        $('.total_box i.eyes').on('click', function() {
             if ($(this).hasClass('icon-yanjing')) {
                 $(this).removeClass('icon-yanjing').addClass('icon-iconcloseeye');
                 $(this).siblings('input').attr('type', 'password');
@@ -164,6 +193,90 @@ var public = {
                 $(this).siblings('input').attr('type', 'text');
             }
         });
+    },
+    checkinput: function(type) {
+        var reg1 = /^[a-zA-Z][a-zA-Z0-9]{5,9}$/,
+            reg2 = /^[a-zA-Z][a-zA-Z0-9]{5,11}$/,
+            reg3 = /^[0-9]{4}$/,
+            reBool = true;
+        $.each($('.total_box input[need]'), function(i, item) {
+            var ivalue = $(item).val(),
+                itype = $(item).attr('itype'),
+                istr = $(item).attr('istr'),
+                tips = $(item).siblings('.total_tip').find('.tip_text');
+            if (!ivalue) {
+                tips.text(istr + '必须填写').removeClass('smile').addClass('cry').show();
+                $(item).addClass('deposit-m');
+                reBool = false;
+                return;
+            }
+            if (itype == 'account') {
+                if (!reg1.test(ivalue)) {
+                    tips.text(istr + '由6~10个字母和数字组合的字符，以字母开头').removeClass('smile').addClass('cry').show();
+                    $(item).addClass('deposit-m');
+                    reBool = false;
+                    return;
+                }
+                if (type == 'r') {
+                    public.ajax.get('/member/verify-name', {
+                        name: ivalue
+                    }, function(data) {
+                        if (data.code == '2018') {
+
+                        } else {
+                            tips.text(istr + '账号已存在，请重新填写').removeClass('smile').addClass('cry').show();
+                            $(item).addClass('deposit-m');
+                            reBool = false;
+                            return;
+                        }
+                    }, function(e) {
+                        console.log(e);
+                        layer.msg('用户名验证失败', {
+                            time: 2000,
+                            icon: 2
+                        });
+                    });
+                }
+            }
+            console.log(itype, itype.indexOf('password'), 'password'.indexOf(itype));
+            if (itype.indexOf('password') > -1) {
+                if (!reg2.test(ivalue)) {
+                    tips.text(istr + '由6~12个字母和数字组合的字符，以字母开头').removeClass('smile').addClass('cry').show();
+                    $(item).addClass('deposit-m');
+                    reBool = false;
+                    return;
+                }
+            }
+            if (itype.indexOf('withpass') > -1) {
+                if (!reg3.test(ivalue)) {
+                    tips.text(istr + '由4位纯数字组成').removeClass('smile').addClass('cry').show();
+                    $(item).addClass('deposit-m');
+                    reBool = false;
+                    return;
+                }
+            }
+            if (type == 'w' && itype.indexOf('cipher') > -1) {
+                var before = $(item).parents('.input_box').prev('.input_box').find('input').val();
+                if (ivalue == before) {
+                    tips.text('旧密码与新密码不能相同').removeClass('smile').addClass('cry').show();
+                    $(item).addClass('deposit-m');
+                    reBool = false;
+                    return;
+                }
+            }
+            if (itype.indexOf('surepass') > -1) {
+                var before = $(item).parents('.input_box').prev('.input_box').find('input').val();
+                if (ivalue == before) {
+                    tips.text('两次密码输入不一致，请确认').removeClass('smile').addClass('cry').show();
+                    $(item).addClass('deposit-m');
+                    reBool = false;
+                    return;
+                }
+            }
+            tips.removeClass('cry').addClass('smile').hide();
+            $(item).removeClass('deposit-m');
+        });
+        return reBool;
     },
 };
 
