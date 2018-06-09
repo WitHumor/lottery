@@ -1,5 +1,5 @@
 body {
-  position: relative;
+    position: relative;
     background-color: #f0f3f4;
     /*overflow: hidden;*/
     font-size: 16px;
@@ -127,11 +127,11 @@ textarea {
 }
 
 button {
-  line-height: 34px;
-  height: 34px;
-  border: none;
-  border-radius: 5px;
-  padding: 0 10px;
+    line-height: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 5px;
+    padding: 0 10px;
 }
 
 p {
@@ -156,12 +156,12 @@ em {
 }
 
 .font-blod {
-  font-weight: bold;
- }
+    font-weight: bold;
+}
 
- .hide {
-  display: none;
- }
+.hide {
+    display: none;
+}
 
 .curp {
     cursor: pointer;
@@ -172,51 +172,59 @@ em {
 }
 
 .mR5 {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
 .mR10 {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 
 .mB5 {
-  margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 .mB10 {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .f14 {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 .f16 {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 .f18 {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 .f20 {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 .f24 {
-  font-size: 24px;
+    font-size: 24px;
+}
+
+.f22_ {
+    font-size: 22px !important;
 }
 
 .f24_ {
-  font-size: 24px !important;
+    font-size: 24px !important;
+}
+
+.f26_ {
+    font-size: 26px !important;
 }
 
 .f26 {
-  font-size: 26px;
+    font-size: 26px;
 }
 
 .f30 {
-  font-size: 30px;
+    font-size: 30px;
 }
 
 a {
@@ -256,24 +264,26 @@ a:focus {
     width: 100%;
     background-color: #DBCCC5;
     color: #55402F;
-    height: 44px;
+    /*height: 44px;*/
     line-height: 44px;
     font-size: 16px;
     z-index: 9999;
 }
 
-.leftBtn , .rightBtn {
+.leftBtn,
+.rightBtn {
     position: absolute;
     top: 5px;
     line-height: 34px;
 }
 
-.leftBtn i , .rightBtn i {
-  font-size: 30px;
+.leftBtn i,
+.rightBtn i {
+    font-size: 30px;
 }
 
 .leftBtn {
-  left: 15px;
+    left: 15px;
 }
 
 .rightBtn {
@@ -289,192 +299,268 @@ a:focus {
     white-space: nowrap;
 }
 
+.ctitle > * {
+  vertical-align: middle;
+}
+
 .navBottom {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  color: #55402F;
-  height: 44px;
-  line-height: 44px;
-  text-align: center;
-  border-top: 1px solid #DBCCC5;
-  background-color: #E8DED9;
-  z-index: 9999;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    color: #55402F;
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+    border-top: 1px solid #DBCCC5;
+    background-color: #E8DED9;
+    z-index: 9999;
 }
 
 .navBottom .items {
-  width: 32%;
-  vertical-align: middle;
-  padding: 2px 0;
-  display: inline-block;
+    width: 32%;
+    vertical-align: middle;
+    padding: 2px 0;
+    display: inline-block;
 }
 
 .navBottom .items.active {
-  color: #FD6146;
+    color: #FD6146;
 }
 
 .navBottom .iconfont {
-  display: block;
-  font-size: 22px;
-  line-height: 24px;
+    display: block;
+    font-size: 22px;
+    line-height: 24px;
 }
 
 .navBottom .icon-name {
-  display: block;
-  line-height: 16px;
+    display: block;
+    line-height: 16px;
 }
 
 .navBottom .icon-jiahao {
-  font-size: 50px;
-  font-weight: bold;
-  line-height: 40px;
-  color: #FF874D;
+    font-size: 50px;
+    font-weight: bold;
+    line-height: 40px;
+    color: #FF874D;
 }
 
 .acontainer {
-  position: relative;
-  border-top: 50px solid transparent;
-  border-bottom: 100px solid transparent;
-  height: 100%;
-  overflow: hidden;
-  /*overflow-y: scroll;*/
+    position: relative;
+    border-top: 50px solid transparent;
+    border-bottom: 100px solid transparent;
+    height: 100%;
+    overflow: hidden;
+    /*overflow-y: scroll;*/
 }
 
 .acontainer.notop {
-  border-top: none;
+    border-top: none;
 }
 
 .acontainer.nobottom {
-  border-bottom: none;
+    border-bottom: none;
 }
 
+
 /*滚动条*/
+
 ::-webkit-scrollbar-track {
-  background-color: #F5F5F5
+    background-color: #F5F5F5
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  background-color: #F5F5F5;
-  display: none;
+    width: 6px;
+    background-color: #F5F5F5;
+    display: none;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #999
+    background-color: #999
 }
 
 .footer {
-  position: absolute;
-  left: 0;
-  bottom: 50px;
-  text-align: center;
-  color: #55402F;
-  height: 30px;
-  line-height: 30px;
-  width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 50px;
+    text-align: center;
+    color: #55402F;
+    height: 30px;
+    line-height: 30px;
+    width: 100%;
 }
 
 .vessel {
-  color: #55402F;
+    color: #55402F;
 }
+
 
 /*咨询框*/
+
 #nb_icon_wrap {
-  display: none !important;
+    display: none !important;
 }
 
+
 /*列表卡*/
+
 .list_card {
-  margin-top: 10px;
-  line-height: 40px;
-  background-color: #fff;
+    margin-top: 10px;
+    line-height: 40px;
+    background-color: #fff;
 }
 
 .list_card > .each_card:last-child {
-  border-bottom: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
 }
 
 .each_card {
-  border-top: 1px solid #DDDDDD;
-  padding: 0 10px;
+    border-top: 1px solid #DDDDDD;
+    padding: 0 10px;
 }
 
 .each_card * {
-  display: inline-block;
-  vertical-align: middle;
-  /*font-size: 18px;*/
-  /*line-height: 40px;*/
+    display: inline-block;
+    vertical-align: middle;
+    /*font-size: 18px;*/
+    /*line-height: 40px;*/
 }
 
 .each_card .icon-more {
-  float: right;
+    float: right;
 }
 
+
 /*输入框组合*/
+
 .input_box {
-  position: relative;
-  line-height: 40px;
-  margin: 0 20px 15px;
+    position: relative;
+    line-height: 40px;
+    margin: 0 20px 15px;
 }
 
 .input_box input {
-  width: 100%;
-  line-height: 40px;
-  border: 1px solid #C8C8C8;
-  border-radius: 5px;
-  padding: 0 60px 0 45px;
-  /*font-size: 16px;*/
-  font-size: 14px;
-  box-sizing: border-box;
- -webkit-box-sizing: border-box;
- -moz-box-sizing: border-box;
+    width: 100%;
+    line-height: 40px;
+    border: 1px solid #C8C8C8;
+    border-radius: 5px;
+    padding: 0 60px 0 45px;
+    /*font-size: 16px;*/
+    font-size: 14px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 
 .input_box button {
-  width: 100%;
-  color: #fff;
-  background-color: #FF1A1A;
+    width: 100%;
+    color: #fff;
+    background-color: #FF1A1A;
 }
 
 .input_box > i {
-  position: absolute;
-  top: 0;
-  margin: 8px 0;
-  padding: 0 8px;
-  line-height: 26px;
-  font-size: 20px;
+    position: absolute;
+    top: 0;
+    margin: 8px 0;
+    padding: 0 8px;
+    line-height: 26px;
+    font-size: 20px;
 }
 
 .input_box .begin_icon {
-  left: 0;
-  border-right: 1px solid #DDD5C4;
+    left: 0;
+    border-right: 1px solid #DDD5C4;
 }
 
-.input_box .clear_all.onlys , .input_box .eyes {
-  right: 0;
+.input_box .clear_all.onlys,
+.input_box .eyes {
+    right: 0;
 }
 
 .input_box .clear_all {
-  right: 26px;
-  font-size: 18px;
+    right: 26px;
+    font-size: 18px;
 }
 
 .about_tip {
-  line-height: 20px;
-  margin: 0 20px 10px;
+    line-height: 20px;
+    margin: 0 20px 10px;
+    vertical-align: middle;
+}
+
+.total_tip {
+    line-height: 20px;
+    padding-left: 10px;
+    vertical-align: middle;
+}
+
+.smile {
+    color: #37A4E1;
+}
+
+.cry {
+    color: #be4822;
+}
+
+.smile:before {
+    content: "\e6af";
+}
+
+.cry:before {
+    content: "\e69c";
+}
+
+.tip_text:before {
+    font-family: "iconfont" !important;
+    font-size: 14px;
+    margin-right: 5px;
+    vertical-align: middle;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.deposit-m {
+    border: 1px solid #be4822 !important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(190, 72, 34, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(190, 72, 34, 0.6);
+}
+
+
+/*暂时demo*/
+.modales {
+  margin: 15px 10px;
+}
+
+.modales p {
+  line-height: 25px;
+  font-size: 12px;
+  text-align: center;
+  margin-bottom: 5px;
+}
+.netaddr {
+  color: #FF1A1A;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.netaddr input {
+  width: 170px;
+  line-height: 32px;
+  border: 1px solid #FF1A1A;
+  border-right: none;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 0 8px;
   vertical-align: middle;
 }
 
-.smile_tip {
-  color: #37A4E1;
-  line-height: 20px;
-  padding-left: 10px;
-  vertical-align: middle;
-}
-
-.smile_tip i {
-  font-size: 14px;
-  margin-right: 5px;
+.netaddr button {
+  width: 80px;
+  color: #fff;
+  background-color: #FF1A1A;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
   vertical-align: middle;
 }

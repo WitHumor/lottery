@@ -116,6 +116,10 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                     return st;
                 }
             }, {
+                field: 'startTime',
+                minWidth: 150,
+                title: '比赛开始时间',
+            }, {
                 field: 'league',
                 minWidth: 180,
                 title: '联赛名称',
@@ -131,7 +135,7 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                 title: '注单选项',
                 minWidth: 280,
                 templet: function(data) {
-                    var strArr = ['大','小','单大','单小','单','双'];
+                    var strArr = ['大', '小', '单大', '单小', '单', '双'];
                     var st = data.occasion ? data.occasion : '';
                     if (data.iorType == '大' || data.iorType == '小') {
                         st += '大小'
@@ -143,11 +147,11 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                         st += data.iorType;
                     }
                     var alltype = data.iorType;
-                    if(strArr.indexOf(alltype) > -1) {
-                        if(alltype == '单大') {
+                    if (strArr.indexOf(alltype) > -1) {
+                        if (alltype == '单大') {
                             alltype = '大';
                         }
-                        if(alltype == '单小') {
+                        if (alltype == '单小') {
                             alltype = '小';
                         }
                     } else {
@@ -190,6 +194,9 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                         case '2':
                             st = '待结算';
                             break;
+                        case '-1':
+                            st = '已取消';
+                            break;
                         default:
                             st = '-';
                     }
@@ -218,6 +225,8 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                         html = '<a class="operateBtn layui-btn layui-btn-xs" lay-event="cancel">取消注单</a>';
                     } else if (data.state == '2') {
                         html = '<a class="operateBtn layui-btn layui-btn-xs" lay-event="handleClose">手动结算</a>';
+                    } else if (data.state == '-1') {
+                        html = '<a class="operateBtn layui-btn layui-btn-xs layui-btn-disabled">已取消</a>';
                     }
                     return html;
                 },

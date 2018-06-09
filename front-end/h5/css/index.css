@@ -1,19 +1,18 @@
-.login-btn {
-    background-color: transparent;
+.to_login_register {
     border: 1px solid #FF4100;
-    color: #FF4100;
     line-height: 24px;
     height: 24px;
     font-size: 12px;
 }
 
+.login-btn {
+    background-color: transparent;
+    color: #FF4100;
+}
+
 .register-btn {
     background-color: #FF4100;
-    border: 1px solid #FF4100;
     color: #fff;
-    line-height: 24px;
-    height: 24px;
-    font-size: 12px;
 }
 
 .car-item > div {
@@ -58,25 +57,24 @@
 }
 
 .notice {
-  position: relative;
-  margin: 10px;
-  padding-left: 10px;
-  background-color: #fff;
-  border-radius: 20px;
-  line-height: 30px;
+    position: relative;
+    margin: 10px;
+    padding-left: 10px;
+    background-color: #fff;
+    border-radius: 20px;
+    line-height: 30px;
 }
 
 .notice .notice-name {
-  font-size: 14px;
-  vertical-align: middle;
-  color: #EF473A;
+    font-size: 14px;
+    vertical-align: middle;
+    color: #EF473A;
 }
 
-
 .notice .more {
-  position:absolute;
-  top: 0;
-  right: 10px;
+    position: absolute;
+    top: 0;
+    right: 10px;
 }
 
 .notice-con {
@@ -94,7 +92,7 @@
 }
 
 .latest-offers {
-  background-color: #BDDDC2;
-  text-align: center;
-  padding: 5px;
+    background-color: #BDDDC2;
+    text-align: center;
+    padding: 5px;
 }

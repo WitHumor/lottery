@@ -1286,16 +1286,24 @@ public class MemberController {
 		}
 		// 计算有效金额
 		float validMoney = Integer.parseInt(money) * Float.parseFloat(ratioData);
-		String dateTime = mapData.get("datetime");// 获取数据的赛事
-		Date startTime = JsoupUtil.getDataMapTime(dateTime);// 转换时间格式
-		if(startTime == null) {
-			// 时间格式转换异常
-			result.setCode(MessageUtil.DATA_NOT);
-			return result;
-		}
 		String league = mapData.get("league");// 获取数据的赛事
 		String teamh = mapData.get("team_h");// 获取数据的主场
 		String teamc = mapData.get("team_c");// 获取数据的客场
+		Date startTime = null;
+		// 判断是否是滚动足球
+		if (betType.equals("REFT")) {
+			String dateTime = mapData.get("retimeset");// 获取数据的进行时间
+			startTime = JsoupUtil.getRollFootball(dateTime);
+		} else if (betType.equals("REBK")) {
+			// 根据其他盘口获取时间
+			Map<String, String> basketall= JsoupUtil.getRollBasketallData(list, league, teamh, teamc);
+			String nowSession = basketall.get("nowSession");// 获取数据的第几节
+			String lastTime = basketall.get("lastTime");// 获取数据比赛倒计时秒
+			startTime = JsoupUtil.getRollBasketall(nowSession, lastTime);
+		} else {
+			String dateTime = mapData.get("datetime");
+			startTime = JsoupUtil.getDataMapTime(dateTime);// 转换时间格式
+		}
 		String snid = BeanLoad.getId();// 随机生成主键id
 		MemberSingleNote memberSingleNote = new MemberSingleNote();
 		memberSingleNote.setSnid(snid);// 设置主键id

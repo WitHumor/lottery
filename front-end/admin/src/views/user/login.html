@@ -66,7 +66,7 @@ layui.use(['admin', 'form', 'user'], function() {
 
     //提交
     form.on('submit(LAY-user-login-submit)', function(obj) {
-        // obj.field.password = hex_sha1(obj.field.password);
+        obj.field.password = hex_sha1(obj.field.password);
         if ($('input[name="remember"]').is(':checked')) {
             layui.data('loginName', {key: 'name',value: $('input[name="name"]').val()});
         } else {
