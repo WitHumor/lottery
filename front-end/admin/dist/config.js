@@ -24,7 +24,9 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
 
     ,interceptor: true //是否开启未登入拦截
 
-    ,serviceUrl: 'http://192.168.43.20:8080'  //接口
+    ,serviceUrl: 'http://gametest.eastus.cloudapp.azure.com/springBoot'
+    // ,serviceUrl: 'http://192.168.43.20:8080'
+    // ,serviceUrl: 'http://172.20.10.2:8080'
 
     //自定义请求字段
     ,request: {

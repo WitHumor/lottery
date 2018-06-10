@@ -1,4 +1,4 @@
-var ServerUrl = 'http://www.xrp-candy.com/springBoot';
+var ServerUrl = 'http://wap.ylg51888.com/springBoot';
 // var ServerUrl = 'http://192.168.43.20:8080';
 // var ServerUrl = 'http://172.20.10.2:8080';
 var BasePath = 'http://ylg51888.com';
@@ -133,6 +133,7 @@ var public = {
         return result;
     },
     init: function() {
+        console.log(window.location.hostname);
         if ($('#thisisindex').length > 0 || $('#thisismine').length > 0) {
             $('.vessel').append('<div class="navBottom">' +
                 '<div class="items btn-click" htmls="index"><i class="iconfont icon-zhuye"></i><span class="icon-name">首页</span></div>' +
