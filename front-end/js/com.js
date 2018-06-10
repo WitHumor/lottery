@@ -1,6 +1,7 @@
 var ServerUrl = 'http://www.xrp-candy.com/springBoot';
 // var ServerUrl = 'http://192.168.43.20:8080';
 // var ServerUrl = 'http://172.20.10.2:8080';
+var BasePath = 'http://ylg51888.com';
 var HttpService = function() {
     this.MAX_VALUE = 100000;
     var TYPE = {
@@ -420,7 +421,7 @@ var common = {
                 var userinfo = sessionStorage.getItem("userinfo");
                 if (userinfo && JSON.parse(userinfo).token) {
                     // window.open("http://www.xrp-candy.com/dice/home.html");
-                    window.location.href = 'http://www.xrp-candy.com/dice/home.html';
+                    window.location.href = '/html/physicalEducation/dice/home.html';
                 } else {
                     layer.msg("请先登录", {
                         icon: 0,
@@ -443,7 +444,7 @@ var common = {
         layer.closeAll();
         if (sessionStorage.getItem('toid') && sessionStorage.getItem('userinfo')) {
             var names = JSON.parse(sessionStorage.getItem('userinfo')).name;
-            var h = '<div class="icodes">' + names + '</div><div class="netaddr"><label>http://www.xrp-candy.com?ic=' + names + '</label><button id="btn-copy-qrcode" data-clipboard-text="http://www.xrp-candy.com?ic='+ names +'">复 制</button></div><div id="qrcode"></div><div class="qrcode-tip">Tip：受邀会员每月下注流水总额的1%作为推广返利</div>';
+            var h = '<div class="icodes">' + names + '</div><div class="netaddr"><label>'+ BasePath +'?ic=' + names + '</label><button id="btn-copy-qrcode" data-clipboard-text="'+ BasePath +'?ic='+ names +'">复 制</button></div><div id="qrcode"></div><div class="qrcode-tip">Tip：受邀会员每月下注流水总额的1%作为推广返利</div>';
             layer.alert(h, {
                 skin: 'layui-layer-molv',
                 area: ['420px', '370px'],
@@ -458,7 +459,7 @@ var common = {
                         // layer.msg('内容已经复制，你可以使用Ctrl+V 粘贴！');
                     });
                     new QRCode(document.getElementById("qrcode"), {
-                        text: "wap.xrp-candy.com/register.html?icode=" + names,
+                        text: BasePath +"/register.html?icode=" + names,
                         width: 128,
                         height: 128,
                         colorDark: "#000000",

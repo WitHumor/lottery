@@ -1,7 +1,7 @@
 var ServerUrl = 'http://www.xrp-candy.com/springBoot';
 // var ServerUrl = 'http://192.168.43.20:8080';
 // var ServerUrl = 'http://172.20.10.2:8080';
-
+var BasePath = 'http://ylg51888.com';
 // var layer = '';
 // layui.use('layer', function() {
 //     var $ = layui.jquery;
@@ -238,7 +238,6 @@ var public = {
                     });
                 }
             }
-            console.log(itype, itype.indexOf('password'), 'password'.indexOf(itype));
             if (itype.indexOf('password') > -1) {
                 if (!reg2.test(ivalue)) {
                     tips.text(istr + '由6~12个字母和数字组合的字符，以字母开头').removeClass('smile').addClass('cry').show();
