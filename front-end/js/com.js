@@ -1,7 +1,8 @@
-var ServerUrl = 'http://www.xrp-candy.com/springBoot';
+var ServerUrl = 'http://www.ylg51888.com/springBoot';
 // var ServerUrl = 'http://192.168.43.20:8080';
 // var ServerUrl = 'http://172.20.10.2:8080';
 var BasePath = 'http://ylg51888.com';
+var H5Path = 'wap.ylg51888.com';
 var HttpService = function() {
     this.MAX_VALUE = 100000;
     var TYPE = {
@@ -360,7 +361,7 @@ var common = {
 
     //初始化
     initPage: function() {
-
+        console.log(window.location.hostname);
         //页面共同代码
         if ($('#thisisheader').length == 0) {
             var html = '';
@@ -421,7 +422,7 @@ var common = {
                 var userinfo = sessionStorage.getItem("userinfo");
                 if (userinfo && JSON.parse(userinfo).token) {
                     // window.open("http://www.xrp-candy.com/dice/home.html");
-                    window.location.href = '/html/physicalEducation/dice/home.html';
+                    window.location.href = '/dice/home.html';
                 } else {
                     layer.msg("请先登录", {
                         icon: 0,
@@ -459,7 +460,7 @@ var common = {
                         // layer.msg('内容已经复制，你可以使用Ctrl+V 粘贴！');
                     });
                     new QRCode(document.getElementById("qrcode"), {
-                        text: BasePath +"/register.html?icode=" + names,
+                        text: H5Path +"/register.html?icode=" + names,
                         width: 128,
                         height: 128,
                         colorDark: "#000000",
