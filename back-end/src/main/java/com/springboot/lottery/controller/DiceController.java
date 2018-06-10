@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.springboot.lottery.dto.DiceDrawBetDTO;
 import com.springboot.lottery.dto.DiceDrawDTO;
 import com.springboot.lottery.entity.DiceBet;
 import com.springboot.lottery.entity.DiceDraw;
@@ -36,7 +35,6 @@ import com.springboot.lottery.util.ObjectResult;
  */
 @Controller
 @RequestMapping("dice")
-@CrossOrigin(origins = "*")
 public class DiceController {
 
 	@Autowired
