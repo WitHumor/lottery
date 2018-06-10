@@ -696,6 +696,7 @@ public class MemberServiceImpl implements MemberService {
 		map.put("number", singleNote.getNumber());// 注单号
 		map.put("mid", singleNote.getMid());// 会员id
 		map.put("betTime", time);// 下注时间
+		map.put("startTime", format.format(singleNote.getStart_time()));// 开始比赛时间
 		map.put("league", singleNote.getLeague());// 联赛
 		map.put("teamh", singleNote.getTeam_h());// 主场
 		map.put("teamc", singleNote.getTeam_c());// 客场
