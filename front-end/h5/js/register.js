@@ -54,7 +54,7 @@ var register = {
                         if (register.icode) {
                             layer.open({
                                 type: 1,
-                                content: '<div class="modales"><p>恭喜您，您已成为永利高的会员，为了让您有更好的用户体验，请尽量使用电脑访问以下地址进行娱乐</p><p class="netaddr"><input id="copy-text" value="http://www.xrp-candy.com" readonly /><button>复 制</button></p></div>',
+                                content: '<div class="modales"><p>恭喜您，您已成为永利高的会员，为了让您有更好的用户体验，请尽量使用电脑访问以下地址进行娱乐</p><p class="netaddr"><input id="copy-text" value="'+ BasePath +'" readonly /><button>复 制</button></p></div>',
                                 shadeClose: false,
                                 anim: 'up',
                                 style: 'position:fixed; bottom:10%; left:15px; right:15px; padding:10px 0; border:none;border-radius:10px;',
