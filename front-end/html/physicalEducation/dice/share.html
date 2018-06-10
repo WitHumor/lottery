@@ -9,20 +9,104 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link rel="Shortcut Icon" href="../../../favicon.ico">
 
-
  <link href="../../../css/dice/home.css" rel="stylesheet">
 
   <title>永利高 - 分享赚钱</title>
   <style>
-      
-	
+  #qrcode img {
+    margin: 0 auto;
+}
+  .icodes {
+    letter-spacing: 5px;
+    font-size: 18px;
+    text-align: center;
+    color: #071D32;
+}
+  .netaddr {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #FF1A1A;
+    font-size: 12px;
+    font-weight: bold;
+}
+      .netaddr input {
+    display: inline-block;
+    line-height: 28px;
+    border: 1px solid #FF1A1A;
+    border-right: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 0 8px;
+    vertical-align: middle;
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}
+
+.netaddr button {
+    line-height: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    padding: 0 10px;
+    width: 60px;
+    color: #fff;
+    background-color: #FF1A1A;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    vertical-align: middle;
+}
+	.qrcode-tip {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #FC6747;
+    text-align: center;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 80px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 120%;
+    left: 50%;
+    margin-left: -45px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+
 		</style>
  </head>
- <body style='background-color: #071D32;'>
- <div class="container" style='max-width:750px;height:100%;'>
-		<div id='shuoming' style='margin:auto;max-width:542px;position:relative;'>
-			<div><img src="../../../img/dice/QRcode2.png" border='0'></div>
-		</div>
+  <body class='history-body'>
+ <div class="container history-container">
+ <div style='padding: 40px 20px;'>
+ <div id="shareSection" style="width:100%"></div>
+</div>
+
 		<nav>
 			<div class="weui-tabbar nav">
 
@@ -43,5 +127,7 @@
 	<script src="../../../lib/jquery-3.3.1.min.js"></script>
 	 <script src="../../../plugins/layer/layer.min.js"></script>
 	 <script src="../../../js/dice/com.js"></script>
+    <script src="../../../js/qrcode.min.js"></script>
+	 <script src="../../../js/dice/share.js"></script>
  </body>
 </html>
