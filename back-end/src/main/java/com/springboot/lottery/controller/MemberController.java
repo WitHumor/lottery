@@ -131,16 +131,16 @@ public class MemberController {
 	 */
 	@RequestMapping(value = "query-member", method = RequestMethod.POST)
 	@ResponseBody
-	public ObjectResult queryMember(Integer pageNo, Integer pageSize, String keyword) {
-		ObjectResult result = new ObjectResult();
+	public Page<Map<String, Object>> queryMember(Integer pageNo, Integer pageSize, String keyword) {
 		String token = request.getHeader("token");
+		Page<Map<String, Object>> page = new Page<Map<String, Object>>();
 		// 获取指定缓存对象
 		Cache cache = getCache();
 		// token验证
 		String tokenVerify = tokenVerify(token, cache);
 		if (!tokenVerify.equals(MessageUtil.SUCCESS)) {
-			result.setCode(tokenVerify);
-			return result;
+			page.setCode(tokenVerify);
+			return page;
 		}
 		// 获取缓存中的数据
 		Member tokenMember = (Member) cache.get(token).get();
@@ -155,10 +155,9 @@ public class MemberController {
 			List<Member> list = memberService.queryMember(memberMap);
 			List<Map<String, Object>> mapByMembers = toMapByMembers(list, null);
 			Page<Map<String, Object>> map = new Page<Map<String, Object>>(pageNo, pageSize, total, mapByMembers);
-			// 用户名已存在
-			result.setResult(map);
+			return map;
 		}
-		return result;
+		return page;
 	}
 
 	/**
@@ -188,17 +187,31 @@ public class MemberController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String role = tokenMember.getRole();
 		// 重置密码
-		if(role.equals("1")) {
+		if (role.equals("1")) {
+			Member member = new Member();
+			String cacheToken = null;
+			// 根据mid获取token
+			if (cache.get(oldPassword) != null) {
+				cacheToken = (String) cache.get(oldPassword).get();
+				// 获取token中会员信息
+				member = (Member) cache.get(cacheToken).get();
+			}
 			// 0表示取款密码，1表示登录密码
 			if (state.equals("0")) {
-				map.put("bankPassword", newPassword);// 设置新密码
-				tokenMember.setBank_password(newPassword);
+				String bankPassword = "011c945f30ce2cbafc452f39840f025693339c42";// 取款密码1111
+				map.put("bankPassword", newPassword = StringUtils.isBlank(newPassword) ? bankPassword : newPassword);// 设置新密码
+				member.setBank_password(newPassword);
 			} else if (state.equals("1")) {
-				map.put("password", newPassword);// 设置新密码
-				tokenMember.setPassword(newPassword);
+				String password = "f7a9e24777ec23212c54d7a350bc5bea5477fdbb";// 登录密码aaaaaa
+				map.put("password", newPassword = StringUtils.isBlank(newPassword) ? password : newPassword);// 设置新密码
+				member.setPassword(newPassword);
 			}
 			map.put("mid", oldPassword);// 设置mid
 			memberService.updateMember(map);
+			// 如果会员token不为空，则更新token中的密码
+			if (cacheToken != null) {
+				cache.put(cacheToken, member);
+			}
 			return result;
 		}
 		// 0表示取款密码，1表示登录密码
@@ -206,7 +219,7 @@ public class MemberController {
 			// 匹配密码是否正确
 			if (!tokenMember.getBank_password().equals(oldPassword)) {
 				// 密码错误
-				result.setCode(MessageUtil.PASSWORD_ERROR);
+				result.setCode(MessageUtil.PASSWORD_ERROR); 
 				return result;
 			}
 			if (tokenMember.getBank_password().equals(newPassword)) {
@@ -2612,7 +2625,9 @@ public class MemberController {
 		map.put("address", member.getAddress());// ip地址
 		map.put("real_name", member.getReal_name());// 真实姓名
 		if(token == null) {
-			map.put("registerTime", member.getRegister_time());// 注册时间
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			String date = format.format(member.getRegister_time());
+			map.put("registerTime", date);// 注册时间
 			map.put("rebate", member.getRebate());// 返利钱包
 			map.put("sum", member.getSum());// 本地钱包
 			map.put("invitationCode", member.getInvitation_code());// 邀请码
