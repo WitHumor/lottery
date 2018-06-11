@@ -251,6 +251,7 @@
 			AND name Like CONCAT('%',#{keyword},'%')
 		</if>
 		<if test="beginIndex != null and pageSize != null and pageSize != 0">
+			ORDER BY register_time DESC
 			LIMIT ${beginIndex},${pageSize}
 		</if>
 	</select>
