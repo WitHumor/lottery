@@ -155,6 +155,10 @@ var public = {
                 $('.navBottom .items[htmls="mine"]').addClass('active');
             }
             $('.navBottom .btn-click').on('click', function() {
+                if ($(this).attr('htmls') == 'mine' && !sessionStorage.getItem('toid')) {
+                    window.location.href = 'login.html';
+                    return;
+                }
                 if ($(this).hasClass('active')) {
                     window.location.reload();
                 } else {

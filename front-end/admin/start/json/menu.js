@@ -20,5 +20,10 @@
     ,"title": "取款单"
     ,"icon": "layui-icon-woyaoqukuan"
     ,"jump": "/withdrawalOrder/"
+  }, {
+    "name": "userManage"
+    ,"title": "用户管理"
+    ,"icon": "layui-icon-user"
+    ,"jump": "/user/user/list"
   }]
 }

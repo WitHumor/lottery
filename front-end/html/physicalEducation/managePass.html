@@ -203,6 +203,7 @@
                 eachArr = $('input[name|="' + sign + '"]')
             }
             $.each(eachArr, function(i, item) {
+                var signs = $(item).attr('name').split('-')[0]
                 var type = $(item).attr('name').split('-')[1];
                 var value = $(item).val(),
                     tip_HTML = $(item).parents('.layui-form-item').next('.e-tip');
@@ -215,20 +216,21 @@
                             if (!/^[0-9]{4}$/.test(value)) {
                                 tip_HTML.text(text['td']);
                                 flag = false;
+                            } else if ($('input[name="' + signs + '-old-pass"]').val() == value) {
+                                tip_HTML.text(text['ton']);
+                                flag = false;
                             }
                         } else if (state == '1') {
                             if (!/^[a-zA-Z][a-zA-Z0-9]{5,11}$/.test(value)) {
                                 tip_HTML.text(text['tl']);
                                 flag = false;
-                            }
-                        } else {
-                            if ($('input[name="' + sign + '-old-pass"]').val() != value) {
+                            } else if ($('input[name="' + signs + '-old-pass"]').val() == value) {
                                 tip_HTML.text(text['ton']);
                                 flag = false;
                             }
                         }
                     } else if (type == 'sure') {
-                        if ($('input[name="' + sign + '-new-pass"]').val() != value) {
+                        if ($('input[name="' + signs + '-new-pass"]').val() != value) {
                             tip_HTML.text(text['tb']);
                             flag = false;
                         }

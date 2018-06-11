@@ -352,9 +352,10 @@ table .col-12 {
     position: fixed;
     top: 0;
     left: 0;
-    height: 85px;
+    min-height: 85px;
     /*height: 150px;*/
     width: 100%;
+    min-width: 975px;
     background-color: #071D32;
     border-bottom: 2px solid #054B64;
     color: #fff;

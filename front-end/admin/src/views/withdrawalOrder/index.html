@@ -84,6 +84,24 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                 minWidth: 120,
                 title: '取款用户',
             }, {
+                field: 'withdrawnType',
+                minWidth: 120,
+                title: '取款类型',
+                templet: function(data) {
+                    var st = '';
+                    switch (data.withdrawnType) {
+                        case '0':
+                            st = '本地账户';
+                            break;
+                        case '1':
+                            st = '返利账户';
+                            break;
+                        default:
+                            st = '-';
+                    }
+                    return st;
+                }
+            }, {
                 field: 'money',
                 title: '取款金额(点)',
             }, {
