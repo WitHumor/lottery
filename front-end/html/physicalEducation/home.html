@@ -79,10 +79,10 @@
         $("#carousel").FtCarousel({
             time: 3000
         });
-        var ic = common.getParameter('ic');
-        if(ic) {
+        var icode = common.getParameter('icode');
+        if(icode) {
             common.openlayer('R');
-            $('#yaoqingma').val(ic).attr('readonly', 'readonly');
+            $('#yaoqingma').val(icode).attr('readonly', 'readonly');
         }
     });
     </script>

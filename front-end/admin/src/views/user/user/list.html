@@ -1,30 +1,144 @@
-
+<script type="text/html" template>
+    <link rel="stylesheet" href="{{ layui.setter.base }}style/order.css?v={{ layui.admin.v }}-1" media="all">
+</script>
+<title>
+    用户管理</title>
 <div class="layui-card layadmin-header">
-  <div class="layui-breadcrumb" lay-filter="breadcrumb">
-    <a lay-href="">主页</a>
-    <a><cite>用户</cite></a>
-    <a><cite>用户列表</cite></a>
-  </div>
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">主页</a>
+        <a>
+            <cite>用户管理</cite>
+        </a>
+    </div>
 </div>
-
 <style>
-/* 这段样式只是用于演示 */
-.layadmin-trailer{position: absolute; left: 0; top: 0; height: 100%; width: 100%; padding: 15px; display: flex; justify-content: center; flex-direction: column; text-align: center; box-sizing: border-box; font-size: 20px; font-weight: 300; color: #ccc;}
 </style>
-
-<div class="layadmin-trailer">
-  即将开放
+<div class="layui-fluid">
+    <div class="layui-form">
+        <div class="layui-inline">
+            <input id="keyword" type="text" placeholder="会员名" class="layui-input" />
+        </div>
+        <div class="layui-inline">
+            <button id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i>查询</button>
+        </div>
+    </div>
+    <div class="optips"><i class="layui-icon layui-icon-tips"></i> 提示：登录密码重置后为&nbsp;aaaaaa&nbsp;，取款密码重置后为&nbsp;1111&nbsp;</div>
+    <table class="layui-hide" id="datalist"></table>
 </div>
-
 <script>
-layui.use(['admin'], function(){
-  var $ = layui.$
-  ,admin = layui.admin
-  ,element = layui.element
-  ,router = layui.router();
+layui.use(['admin', 'table', 'laydate', 'common'], function() {
+    var $ = layui.$,
+        admin = layui.admin,
+        element = layui.element,
+        laydate = layui.laydate,
+        table = layui.table,
+        common = layui.common,
+        setter = layui.setter,
+        form = layui.form,
+        router = layui.router();
+    element.render();
 
-  element.render();
-  
-  
+    form.render();
+    // common.dtimeInit('#allTime');
+    common.getList({
+        elem: '#datalist',
+        url: '/member/query-member',
+        cols: [
+            [{
+                field: 'registerTime',
+                minWidth: 150,
+                title: '注册时间',
+            }, {
+                field: 'name',
+                width: 110,
+                minWidth: 110,
+                title: '会员名',
+            }, {
+                field: 'address',
+                minWidth: 130,
+                title: 'IP地址',
+            }, {
+                field: 'real_name',
+                title: '真实姓名',
+                minWidth: 100,
+            }, {
+                field: 'sum',
+                minWidth: 150,
+                title: '本地余额',
+            }, {
+                field: 'rebate',
+                minWidth: 150,
+                title: '返利余额',
+            }, {
+                field: 'invitationCode',
+                width: 110,
+                minWidth: 110,
+                title: '所得邀请码',
+                templet: function(data) {
+                    return (data.invitationCode ? data.invitationCode : '-');
+                }
+            }, {
+                title: '密码重置',
+                fixed: 'right',
+                width: 165,
+                align: 'center',
+                templet: function(data) {
+                    return html = '<a class="layui-btn layui-btn-xs" lay-event="reset-login">登录密码</a><a class="layui-btn layui-btn-xs" lay-event="reset-with">取款密码</a>';
+                },
+            }]
+        ],
+    });
+    $('#search').click(function() {
+        var keyword = $('#keyword').val();
+        table.reload('idAllTable', {
+            where: {
+                keyword: keyword
+            }
+        });
+    });
+
+    //监听工具条
+    table.on('tool()', function(obj) {
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的DOM对象
+        var state = '1';
+        var strState = '登录密码';
+        if (layEvent == 'reset-with') {
+            state = '0';
+            strState = '取款密码';
+        }
+        layer.confirm('您确定要重置此用户的' + strState + '吗？请慎重处理！', {
+            title: '提示'
+        }, function(index) {
+            layer.close(index);
+            admin.req({
+                url: setter.serviceUrl + '/member/update-password',
+                type: 'post',
+                data: {
+                    state: state,
+                    oldPassword: data.mid
+                },
+                done: function(res) {
+                    if (res.code == '2018') {
+                        layer.msg(strState + '重置成功', {
+                            offset: '15px',
+                            time: 1500,
+                            icon: 1
+                        });
+                        setTimeout(function() {
+                            $('#search').click();
+                        }, 1500);
+                    } else {
+                        layer.msg(strState + '重置失败', {
+                            offset: '15px',
+                            time: 1500,
+                            icon: 2
+                        });
+                    }
+                }
+            });
+        });
+    });
 });
 </script>

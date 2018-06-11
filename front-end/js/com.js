@@ -1,8 +1,8 @@
-var ServerUrl = 'http://www.ylg51888.com/springBoot';
-// var ServerUrl = 'http://192.168.43.20:8080';
+// var ServerUrl = 'http://www.ylg51888.com/springBoot';
+var ServerUrl = 'http://192.168.43.20:8080';
 // var ServerUrl = 'http://172.20.10.2:8080';
 var BasePath = 'http://ylg51888.com';
-var H5Path = 'wap.ylg51888.com';
+var H5Path = 'http://wap.ylg51888.com';
 var HttpService = function() {
     this.MAX_VALUE = 100000;
     var TYPE = {
@@ -445,7 +445,7 @@ var common = {
         layer.closeAll();
         if (sessionStorage.getItem('toid') && sessionStorage.getItem('userinfo')) {
             var names = JSON.parse(sessionStorage.getItem('userinfo')).name;
-            var h = '<div class="icodes">' + names + '</div><div class="netaddr"><label>'+ BasePath +'?ic=' + names + '</label><button id="btn-copy-qrcode" data-clipboard-text="'+ BasePath +'?ic='+ names +'">复 制</button></div><div id="qrcode"></div><div class="qrcode-tip">Tip：受邀会员每月下注流水总额的1%作为推广返利</div>';
+            var h = '<div class="icodes">' + names + '</div><div class="netaddr"><label>'+ BasePath +'?icode=' + names + '</label><button id="btn-copy-qrcode" data-clipboard-text="'+ BasePath +'?icode='+ names +'">复 制</button></div><div id="qrcode"></div><div class="qrcode-tip">Tip：受邀会员每月下注流水总额的1%作为推广返利</div>';
             layer.alert(h, {
                 skin: 'layui-layer-molv',
                 area: ['420px', '370px'],
@@ -457,7 +457,7 @@ var common = {
                         moviePath: '../../js/ZeroClipboard.swf'
                     });
                     new ZeroClipboard([document.getElementById("btn-copy-qrcode")]).on('complete', function(client, args) {
-                        // layer.msg('内容已经复制，你可以使用Ctrl+V 粘贴！');
+                        layer.msg('内容已经复制，你可以使用Ctrl+V 粘贴！');
                     });
                     new QRCode(document.getElementById("qrcode"), {
                         text: H5Path +"/register.html?icode=" + names,

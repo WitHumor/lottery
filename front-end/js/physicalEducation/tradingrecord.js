@@ -32,6 +32,24 @@ var TD = {
                 field: 'number',
                 title: '提现单号',
             }, {
+                field: 'withdrawnType',
+                minWidth: 120,
+                title: '提现类型',
+                templet: function(data) {
+                    var st = '';
+                    switch (data.withdrawnType) {
+                        case '0':
+                            st = '本地账户';
+                            break;
+                        case '1':
+                            st = '返利账户';
+                            break;
+                        default:
+                            st = '-';
+                    }
+                    return st;
+                }
+            }, {
                 field: 'moneyAddress',
                 title: '钱包地址',
             }, {
