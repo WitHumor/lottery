@@ -37,7 +37,7 @@ var dicehistory = {
 								historyHtml = historyHtml + 		'</div>' + 
 									  '</ul>' + 
 									'<div class="page" style=" padding:10px;margin-bottom: 30px;">'+
-									'<div><span class="rows">共 '+data.result.total+' 条记录</span>';
+									'<div>';
 									if(1 == data.result.current_page){
 										historyHtml = historyHtml + '<span class="next"><<</span>';
 									}else{

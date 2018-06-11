@@ -146,7 +146,7 @@
 		UPDATE
 			member m
 		SET
-		   m.sum = m.sum + #{sum} 
+		   m.sum = m.sum + #{sum}, m.version=m.version + 1 
 		WHERE
 		    m.mid = #{mid}
 	</update>		
