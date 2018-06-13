@@ -10,10 +10,16 @@ public class SingleNoteDTO implements Serializable {
 	private String snid;
 	// 会员id
 	private String mid;
+	// 比赛id
+	private String gid;
 	// 下注时间
 	private Date bet_time;
 	// 比赛开始时间
 	private Date start_time;
+	// 比赛结算时间
+	private Date end_time;
+	// 比赛结算时间String
+	private String endTime;
 	// 注单号
 	private String number;
 	// 类型
@@ -38,6 +44,8 @@ public class SingleNoteDTO implements Serializable {
 	private String ior_type;
 	// 比率
 	private String ior_ratio;
+	// 盘口字段
+	private String tape_field;
 	// 赔率
 	private String ratio;
 	// 让球方
@@ -365,5 +373,37 @@ public class SingleNoteDTO implements Serializable {
 
 	public Date getRegister_time() {
 		return register_time;
+	}
+
+	public Date getEnd_time() {
+		return end_time;
+	}
+
+	public void setEnd_time(Date end_time) {
+		this.end_time = end_time;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getGid() {
+		return gid;
+	}
+
+	public void setGid(String gid) {
+		this.gid = gid;
+	}
+
+	public String getTape_field() {
+		return tape_field;
+	}
+
+	public void setTape_field(String tape_field) {
+		this.tape_field = tape_field;
 	}
 }

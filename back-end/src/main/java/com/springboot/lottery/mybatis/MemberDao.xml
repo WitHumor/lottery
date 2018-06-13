@@ -41,8 +41,10 @@
 		INSERT INTO 
 			single_note(snid,
 			mid,
+			gid,
 			bet_time,
 			start_time,
+			end_time,
 			number,
 			type,
 			league,
@@ -55,6 +57,7 @@
 			occasion,
 			ior_type,
 			ior_ratio,
+			tape_field,
 			ratio,
 			strong,
 			state,
@@ -64,8 +67,10 @@
 			win_lose)
 	    VALUES(#{snid},
 			#{mid},
+			#{gid},
 			#{bet_time},
 			#{start_time},
+			#{end_time},
 			#{number},
 			#{type},
 			#{league},
@@ -78,6 +83,7 @@
 			#{occasion},
 			#{ior_type},
 			#{ior_ratio},
+			#{tape_field},
 			#{ratio},
 			#{strong},
 			#{state},
@@ -181,10 +187,19 @@
 		UPDATE 
 			single_note
 		SET
-		  	state = #{state},
-		  	win_lose = #{winLose},
-		  	deal_money = #{dealMoney},
-		  	score = #{score}
+		  	state = #{state}
+		  	<if test="winLose != null and winLose != ''">
+		  		,win_lose = #{winLose}
+		  	</if>
+		  	<if test="dealMoney != null and dealMoney != ''">
+		  		,deal_money = #{dealMoney}
+		  	</if>
+		  	<if test="score != null and score != ''">
+		  		,score = #{score}
+		  	</if>
+		  	<if test="endTime != null">
+		  		,end_time = #{endTime}
+		  	</if>
 	   	WHERE
 			snid = #{snid}
 	</update>
@@ -446,8 +461,10 @@
 		SELECT
 			snid,
 			mid,
+			gid,
 			bet_time,
 			start_time,
+			end_time,
 			number,
 			type,
 			league,
@@ -460,6 +477,7 @@
 			occasion,
 			ior_type,
 			ior_ratio,
+			tape_field,
 			ratio,
 			strong,
 			state,
@@ -487,6 +505,9 @@
 		</if>
 		<if test="betType != null and betType != ''">
 			AND bet_type = #{betType}
+		</if>
+		<if test="iorTypes != null and iorTypes != ''">
+			AND ior_type IN (${iorTypes})
 		</if>
 		<if test="winLose != null and winLose != ''">
 			AND win_lose = #{winLose}
@@ -516,8 +537,10 @@
 		SELECT 
 			sn.snid,
 			sn.mid,
+			sn.gid,
 			sn.bet_time,
 			sn.start_time,
+			sn.end_time,
 			sn.number,
 			sn.type,
 			sn.league,
@@ -530,6 +553,7 @@
 			sn.occasion,
 			sn.ior_type,
 			sn.ior_ratio,
+			sn.tape_field,
 			sn.ratio,
 			sn.strong,
 			sn.state,
@@ -653,11 +677,12 @@
 	<select id="queryGeneralizeRebate" resultType="com.springboot.lottery.dto.SingleNoteDTO" parameterType="java.util.Map">
 		SELECT `name`,
 			sum(money) money,
-			bet_time
+			end_time endTime
  		FROM (	SELECT
 			m.`name`,
-			sum(db.bet_value) money,
-			db.bet_time
+			db.bet_value money,
+			DATE_FORMAT(draw_time,'%Y年%m月') end_time,
+			m.invitation_code
 		FROM 
 			member m
 		RIGHT JOIN 
@@ -668,25 +693,12 @@
 			<if test="invitationCode != null and invitationCode != ''">
 				AND m.invitation_code = #{invitationCode}
 			</if>
-			<if test="beginTime != null and beginTime != ''">
-				AND db.bet_time <![CDATA[ >= ]]> #{beginTime}
-			</if>
-			<if test="endTime != null and endTime != ''">
-				AND db.bet_time <![CDATA[ <= ]]> #{endTime}
-			</if>
-			<if test="keyword != null and keyword != ''">
-				AND m.`name` Like CONCAT('%',#{keyword},'%') 
-			</if>
-			<if test="betTime != null and betTime != ''">
-				AND db.bet_time Like CONCAT(#{betTime},'%') 
-			</if>
-		GROUP BY 
-			m.`name` 
 	UNION ALL  
 		SELECT
 			m.`name`,
-			sum(sn.money) money,
-			sn.bet_time
+			sn.money money,
+			DATE_FORMAT(end_time,'%Y年%m月') end_time,
+			m.invitation_code
 		FROM 
 			member m
 		RIGHT JOIN 
@@ -697,27 +709,21 @@
 			<if test="invitationCode != null and invitationCode != ''">
 				AND m.invitation_code = #{invitationCode}
 			</if>
-			<if test="beginTime != null and beginTime != ''">
-				AND sn.bet_time <![CDATA[ >= ]]> #{beginTime}
+			<if test="state != null and state != ''">
+				AND sn.state = #{state}
 			</if>
+				) rebate
+		WHERE 1 = 1
 			<if test="endTime != null and endTime != ''">
-				AND sn.bet_time <![CDATA[ <= ]]> #{endTime}
+				AND rebate.end_time = #{endTime}
 			</if>
 			<if test="keyword != null and keyword != ''">
-				AND m.`name` Like CONCAT('%',#{keyword},'%') 
-			</if>
-			<if test="betTime != null and betTime != ''">
-				AND sn.bet_time Like CONCAT(#{betTime},'%') 
-			</if>
-			<if test="state != null and state != ''">
-				AND sn.state NOT IN (#{state})
+				AND `name` Like CONCAT('%',#{keyword},'%') 
 			</if>
 		GROUP BY 
-			m.`name`) rebate
-		GROUP BY 
-			`name` 
+			end_time,`name`
 		ORDER BY 
-			bet_time DESC
+			end_time DESC
 		<if test="beginIndex != null and pageSize != null and pageSize != 0">
 			LIMIT ${beginIndex},${pageSize}
 		</if> 
@@ -730,11 +736,12 @@
 		FROM 
 			( SELECT `name`,
 			sum(money) money,
-			bet_time
+			end_time endTime
  		FROM ( SELECT
 			m.`name`,
-			sum(db.bet_value) money,
-			db.bet_time
+			db.bet_value money,
+			DATE_FORMAT(draw_time,'%Y年%m月') end_time,
+			m.invitation_code
 		FROM 
 			member m
 		RIGHT JOIN 
@@ -745,25 +752,12 @@
 			<if test="invitationCode != null and invitationCode != ''">
 				AND m.invitation_code = #{invitationCode}
 			</if>
-			<if test="beginTime != null and beginTime != ''">
-				AND sn.bet_time <![CDATA[ >= ]]> #{beginTime}
-			</if>
-			<if test="endTime != null and endTime != ''">
-				AND sn.bet_time <![CDATA[ <= ]]> #{endTime}
-			</if>
-			<if test="keyword != null and keyword != ''">
-				AND m.`name` Like CONCAT('%',#{keyword},'%') 
-			</if>
-			<if test="betTime != null and betTime != ''">
-				AND db.bet_time Like CONCAT(#{betTime},'%') 
-			</if>
-		GROUP BY 
-			m.`name` 
 	UNION ALL  
 		SELECT
 			m.`name`,
-			sum(sn.money) money,
-			sn.bet_time
+			sn.money money,
+			DATE_FORMAT(end_time,'%Y年%m月') end_time,
+			m.invitation_code
 		FROM 
 			member m
 		RIGHT JOIN 
@@ -774,24 +768,18 @@
 			<if test="invitationCode != null and invitationCode != ''">
 				AND m.invitation_code = #{invitationCode}
 			</if>
-			<if test="beginTime != null and beginTime != ''">
-			AND sn.bet_time <![CDATA[ >= ]]> #{beginTime}
+			<if test="state != null and state != ''">
+				AND sn.state = #{state}
 			</if>
+				) rebate
+		WHERE 1 = 1
 			<if test="endTime != null and endTime != ''">
-				AND sn.bet_time <![CDATA[ <= ]]> #{endTime}
+				AND rebate.end_time = #{endTime}
 			</if>
 			<if test="keyword != null and keyword != ''">
-				AND m.`name` Like CONCAT('%',#{keyword},'%') 
-			</if>
-			<if test="betTime != null and betTime != ''">
-				AND sn.bet_time Like CONCAT(#{betTime},'%') 
-			</if>
-			<if test="state != null and state != ''">
-				AND sn.state NOT IN (#{state})
+				AND `name` Like CONCAT('%',#{keyword},'%') 
 			</if>
 		GROUP BY 
-			m.`name`) rebate
-		GROUP BY 
-			`name` ) total
+			end_time,`name`) total
 	</select>
 </mapper>

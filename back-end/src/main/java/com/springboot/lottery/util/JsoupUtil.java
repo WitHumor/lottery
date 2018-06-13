@@ -500,6 +500,15 @@ public class JsoupUtil {
 	}
 	
 	/**
+	 * 定义下注防护
+	 * @return
+	 */
+	public static String getDefend(){
+		String defend = "'大','小','单大','单小'";
+		return defend;
+	}
+	
+	/**
 	 * 滚球足球全场
 	 * @return
 	 */
@@ -651,6 +660,9 @@ public class JsoupUtil {
 	 * @return
 	 */
 	public static Date getRollBasketall(String nowSession, String lastTime) {
+		if(nowSession.equals("HT")) {
+			nowSession = "Q2";
+		}
 		// 获取Qx中的x
 		nowSession = nowSession.substring(1, 2);
 		//15乘以x的时间
@@ -679,7 +691,41 @@ public class JsoupUtil {
 			return null;
 		}
 	}
-
+	
+	/**
+	 * 根据类型获取url地址
+	 * 
+	 * @param type 类型：RFT、REFT、RBK、REBK
+	 * @return
+	 */
+	public static String getUrl(String type) {
+		if(StringUtils.isBlank(type)) {
+			return null;
+		}
+		String url = null;
+		// 今日足球地址
+		if(type.equals("RFT")) {
+			url = "https://www.ylg56789.com/app/member/FT_browse/body_var?uid=41E1C90D347A90C6A60811350&"
+					+ "rtype=r&langx=zh-cn&mtype=3&page_no=0&league_id=&hot_game=";
+		}
+		// 滚动足球地址
+		if(type.equals("REFT")) {
+			url = "https://www.ylg56789.com/app/member/FT_browse/body_var?uid=41E1C90D347A90C6A60811350"
+					+ "&rtype=re&langx=zh-cn&mtype=3&page_no=0&league_id=&hot_game=";
+		}
+		// 今日篮球地址
+		if(type.equals("RBK")) {
+			url = "https://www.ylg56789.com/app/member/BK_browse/body_var?uid=41E1C90D347A90C6A60811350"
+					+ "&rtype=r_main&langx=zh-cn&mtype=3&page_no=0&league_id=&hot_game=";
+		}
+		// 滚动篮球地址
+		if(type.equals("REBK")) {
+			url = "https://www.ylg56789.com/app/member/BK_browse/body_var?uid=41E1C90D347A90C6A60811350"
+					+ "&rtype=re_main&langx=zh-cn&mtype=3&page_no=0&league_id=&hot_game=";
+		}
+		return url;
+	}
+	
 	/**
 	 * 根据时间获取前一天
 	 * 
