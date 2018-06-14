@@ -443,24 +443,6 @@ public class MemberController {
 				}
 			}
 		}
-		if (cache.get(ipAddress) != null) {
-			// 获取token
-			String cacheToken = (String) cache.get(ipAddress).get();
-			if (cache.get(cacheToken) != null) {
-				// 获取token中会员信息
-				Member tokenMember = (Member) cache.get(cacheToken).get();
-				// 同一地址允许管理员和会员同时登录
-				if (tokenMember.getRole().equals(member.getRole())) {
-					if (ipAddress.equals(tokenMember.getAddress())) {
-						// 移除mid缓存
-						cache.evict(tokenMember.getMid());
-						// 移除IP地址缓存
-						cache.evict(tokenMember.getAddress());
-					}
-				}
-			}
-		}
-
 		// 设置IP地址
 		member.setAddress(ipAddress);
 		// 设置token
