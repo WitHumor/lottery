@@ -709,12 +709,8 @@ public class MemberController {
 	/**
 	 * 20180508在线存款
 	 * 
-	 * @param money
-	 *            存款金额
-	 * @param discountsMoeny
-	 *            优惠金额
 	 * @param currency
-	 *            货币
+	 *            货币类型
 	 * @param currencyCount
 	 *            货币个数
 	 * @return
@@ -785,7 +781,11 @@ public class MemberController {
 			result.setCode(MessageUtil.INSERT_ERROR);
 			return result;
 		}
-		result.setResult(number);
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("number", number);
+		resultMap.put("money", String.format("%.2f", money));
+		resultMap.put("discounts", String.format("%.2f", discounts));
+		result.setResult(resultMap);
 		return result;
 	}
 
