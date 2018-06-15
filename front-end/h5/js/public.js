@@ -1,12 +1,53 @@
 var ServerUrl = 'http://wap.ylg51888.com/springBoot';
 // var ServerUrl = 'http://192.168.43.20:8080';
 // var ServerUrl = 'http://172.20.10.2:8080';
-var BasePath = 'http://ylg51888.com';
+var BasePath = 'http://www.ylg51888.com';
 // var layer = '';
 // layui.use('layer', function() {
 //     var $ = layui.jquery;
 //     layer = layui.layer;
 // });
+
+var jsons = {
+    coin: [{
+        name: '比特币',
+        value: 'BTC',
+    }, {
+        name: '柚子币',
+        value: 'EOS',
+    }, {
+        name: '以太币',
+        value: 'ETH',
+    }, {
+        name: '瑞波币',
+        value: 'XRP',
+    }, {
+        name: '莱特币',
+        value: 'LTC',
+    }, {
+        name: '量子币',
+        value: 'QTUM',
+    }, {
+        name: '苹果币',
+        value: 'AppleC',
+    }],
+    walletType: [{
+        name: '本地钱包',
+        value: '0'
+    }, {
+        name: '返利钱包',
+        value: '1'
+    }],
+    coinLimit: {
+        BTC: 0.003,
+        EOS: 2,
+        ETH: 0.03,
+        XRP: 30,
+        LTC: 0.2,
+        QTUM: 2,
+        AppleC: 100
+    },
+};
 var HttpService = function() {
     this.MAX_VALUE = 100000;
     var TYPE = {
@@ -39,6 +80,7 @@ var HttpService = function() {
                 } else {
                     index = layer.open({
                         type: 2,
+                        content: '正在努力加载',
                         shade: 'background-color: rgba(0,0,0,.3)'
                     });
                 }
@@ -73,7 +115,7 @@ var HttpService = function() {
                     sessionStorage.setItem('userinfo', '');
                     sessionStorage.setItem('toid', '');
                     setTimeout(function() {
-                        window.location.href = 'home.html';
+                        window.location.href = 'index.html';
                     }, 2000);
                     return;
                 }
@@ -110,6 +152,9 @@ var HttpService = function() {
 
 var public = {
     ajax: new HttpService(),
+    firstpay: false,
+    regs1: /^([1-9]\d*|0)(\.\d+)?$/, //充值币额验证正则
+    regs2: /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/, //提现点数验证正则
     getParamFromUrl: function(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
@@ -133,7 +178,6 @@ var public = {
         return result;
     },
     init: function() {
-        console.log(window.location.hostname);
         if ($('#thisisindex').length > 0 || $('#thisismine').length > 0) {
             $('.vessel').append('<div class="navBottom">' +
                 '<div class="items btn-click" htmls="index"><i class="iconfont icon-zhuye"></i><span class="icon-name">首页</span></div>' +
@@ -142,8 +186,8 @@ var public = {
                 '<div class="cd-bouncy-nav-modal">' +
                 '<nav>' +
                 '<ul class="cd-bouncy-nav">' +
-                '<li><a class="cz" href="">充值</a></li>' +
-                '<li><a class="tx" href="">提现</a></li>' +
+                '<li><a class="cz" href="recharge.html">充值</a></li>' +
+                '<li><a class="tx" href="draw.html">提现</a></li>' +
                 '</ul>' +
                 '</nav>' +
                 '<a href="javascript:void(0);" class="cd-close">Close modal</a>' +
@@ -156,7 +200,7 @@ var public = {
             }
             $('.navBottom .btn-click').on('click', function() {
                 if ($(this).attr('htmls') == 'mine' && !sessionStorage.getItem('toid')) {
-                    window.location.href = 'login.html';
+                    window.location.href = 'login.html?where=' + $(this).attr('htmls');
                     return;
                 }
                 if ($(this).hasClass('active')) {
@@ -176,7 +220,7 @@ var public = {
             $('#nb_icon_wrap').click();
         });
 
-        $('.total_box input').bind("input propotychange", function() {
+        $('.input_box input').bind("input propotychange", function() {
             if ($(this).val()) {
                 $(this).siblings('i.clear_all').show();
             } else {
@@ -184,12 +228,12 @@ var public = {
             }
         });
 
-        $('.total_box i.clear_all').on('click', function() {
+        $('.input_box i.clear_all').on('click', function() {
             $(this).siblings('input').val('');
             $(this).hide();
         });
 
-        $('.total_box i.eyes').on('click', function() {
+        $('.input_box i.eyes').on('click', function() {
             if ($(this).hasClass('icon-yanjing')) {
                 $(this).removeClass('icon-yanjing').addClass('icon-iconcloseeye');
                 $(this).siblings('input').attr('type', 'password');
@@ -199,12 +243,15 @@ var public = {
             }
         });
     },
-    checkinput: function(type) {
-        var reg1 = /^[a-zA-Z][a-zA-Z0-9]{5,9}$/,
-            reg2 = /^[a-zA-Z][a-zA-Z0-9]{5,11}$/,
-            reg3 = /^[0-9]{4}$/,
+    checkinput: function(obj) {
+        var o = $.extend({}, obj);
+        var inputArr = o.domlist ? [o.domlist] : $('.input_box input[need]');
+        var reg1 = /^[a-zA-Z][a-zA-Z0-9]{5,9}$/, //用户名验证正则
+            reg2 = /^[a-zA-Z][a-zA-Z0-9]{5,11}$/, //登录密码验证正则
+            reg3 = /^[0-9]{4}$/, //取款密码验证正则
+            reg4 = /0?(13|14|15|17|18)[0-9]{9}/, //电话号码验证正则
             reBool = true;
-        $.each($('.total_box input[need]'), function(i, item) {
+        $.each(inputArr, function(i, item) {
             var ivalue = $(item).val(),
                 itype = $(item).attr('itype'),
                 istr = $(item).attr('istr'),
@@ -222,7 +269,7 @@ var public = {
                     reBool = false;
                     return;
                 }
-                if (type == 'r') {
+                if (o.type == 'r') {
                     public.ajax.get('/member/verify-name', {
                         name: ivalue
                     }, function(data) {
@@ -234,12 +281,6 @@ var public = {
                             reBool = false;
                             return;
                         }
-                    }, function(e) {
-                        console.log(e);
-                        layer.msg('用户名验证失败', {
-                            time: 2000,
-                            icon: 2
-                        });
                     });
                 }
             }
@@ -259,7 +300,15 @@ var public = {
                     return;
                 }
             }
-            if (type == 'w' && itype.indexOf('cipher') > -1) {
+            if (itype.indexOf('telephone') > -1) {
+                if (!reg4.test(ivalue)) {
+                    tips.text(istr + '格式有误').removeClass('smile').addClass('cry').show();
+                    $(item).addClass('deposit-m');
+                    reBool = false;
+                    return;
+                }
+            }
+            if (o.type == 'w' && itype.indexOf('cipher') > -1) {
                 var before = $(item).parents('.input_box').prev('.input_box').find('input').val();
                 if (ivalue == before) {
                     tips.text('旧密码与新密码不能相同').removeClass('smile').addClass('cry').show();
@@ -277,10 +326,216 @@ var public = {
                     return;
                 }
             }
+            if (itype == 'paw') {
+                var payAmount = $('#payAmount').val(),
+                    cointype = $('#coinType');
+                if (payAmount < jsons.coinLimit[cointype.attr('vals')]) {
+                    tips.text(cointype.val().split('（')[0] + ' 单笔充值最低币额为' + jsons.coinLimit[cointype.attr('vals')] + '个').removeClass('smile').addClass('cry').show();
+                    $(item).addClass('deposit-m');
+                    reBool = false;
+                    return;
+                }
+                if (!(public.regs1).test(payAmount)) {
+                    tips.text('请输入正确的' + istr).removeClass('smile').addClass('cry').show();
+                    $(item).addClass('deposit-m');
+                    reBool = false;
+                    return;
+                }
+            }
+            if (itype == 'wap') {
+                var countDian = $('#countDian').val();
+                if (countDian < 100) {
+                    tips.text('单笔提现最低金额 100 点').removeClass('smile').addClass('cry').show();
+                    $(item).addClass('deposit-m');
+                    reBool = false;
+                    return;
+                }
+                if (!(public.regs2).test(countDian)) {
+                    tips.text('请输入正确的' + istr).removeClass('smile').addClass('cry').show();
+                    $(item).addClass('deposit-m');
+                    reBool = false;
+                    return;
+                }
+            }
             tips.removeClass('cry').addClass('smile').hide();
             $(item).removeClass('deposit-m');
         });
         return reBool;
+    },
+
+    payInput: function(types) {
+        $('.input_box input[need]').bind('input propertychange', function() {
+            if ($(this)[0].id == 'payAmount' || $(this)[0].id == 'countDian') {
+                public.aboutChange(types);
+            }
+            public.checkinput({
+                domlist: $(this)
+            });
+        }).blur(function() {
+            public.checkinput({
+                domlist: $(this)
+            });
+        }).focus(function() {
+            $(this).removeClass('deposit-m');
+        });
+    },
+
+    aboutChange: function(t) {
+        var current = parseFloat((t == '0') ? $('#payAmount').val() : $('#countDian').val()),
+            rate = parseFloat($('#coinRate').attr('vals')),
+            reg = t == '0' ? public.regs1 : public.regs2;
+        if (!(reg.test(current)) || isNaN(rate)) {
+            if (t == '0') {
+                $('#payCount').val('');
+                $('#payDiscount').val('');
+                $('#toAccount').val('');
+            } else {
+                $('#biQuota').val('');
+            }
+        } else {
+            if (t == '0') {
+                var coin_dian = parseFloat((rate * current).toFixed(2)),
+                    pay_discount = parseFloat((coin_dian * 0.01).toFixed(2));
+                $('#payCount').val(coin_dian.toFixed(2) + ' 点');
+                $('#payDiscount').val(pay_discount.toFixed(2) + ' 点');
+                $('#toAccount').val((coin_dian + pay_discount + (public.firstpay ? 188.00 : 0)).toFixed(2) + ' 点');
+            } else {
+                var dian_coin = parseFloat((current / rate).toFixed(3));
+                $('#biQuota').val(dian_coin.toFixed(3) + ' 个' + $('#coinType').val());
+            }
+
+        }
+    },
+
+    getManyType: function(obj, callback) {
+        var o = $.extend({},{
+            type: 'coin',
+            text: '选择币种',
+            length: 4
+        },obj);
+        var ulheight = 170,
+            layerheight = 200;
+        switch (o.length) {
+            case 1:
+                ulheight = 45;
+                layerheight = 75;
+                break;
+            case 2:
+                ulheight = 90;
+                layerheight = 120;
+                break;
+            case 3:
+                ulheight = 130;
+                layerheight = 160;
+                break;
+            default:
+                ulheight = 170;
+                layerheight = 200;
+        };
+        var lcontent = '<ul style="height: ' + ulheight +'px;">';
+        $.each(jsons[o.type], function(i, item) {
+            if (o.type = 'coin') {
+                lcontent += '<li val="' + item.value + '">' + item.name + '（' + item.value + '）</li>';
+            } else {
+                lcontent += '<li val="' + item.value + '">' + item.name + '</li>';
+            }
+        });
+        lcontent += '</ul>';
+        var content = '<div class="Clear bottom_choose"><label class="cl">取消</label><label>'+ o.text +'</label><label class="sure normal">完成</label></div><div class="li_list">' + lcontent + '</div>';
+        var index = layer.open({
+            type: 1,
+            content: content,
+            shadeClose: false,
+            anim: 'up',
+            /*170-4-200 130-3-160  90-2-120 45-1-75*/
+            style: 'position:fixed; bottom:0; left:0; width: 100%; height: '+ layerheight +'px; padding:5px 0; border:none;',
+            success: function(e) {
+                console.log();
+                $('body').css({
+                    'position': 'fixed',
+                    'top': '-' + $(document).scrollTop() + 'px'
+                });
+                $('.li_list li').on('click', function() {
+                    $(this).addClass('chosed').siblings('li').removeClass('chosed');
+                });
+                $('.bottom_choose .cl').on('click', function() {
+                    $('body').css({
+                        'position': 'relative',
+                        'top': '0px'
+                    });
+                    layer.close(index);
+                });
+                $('.bottom_choose .sure').on('click', function() {
+                    if ($('.li_list li.chosed').length == 0) {
+                        layer.open({
+                            content: '您还未选择',
+                            skin: 'msg',
+                            time: 2
+                        });
+                    } else {
+                        var data = {
+                            text: $('.li_list li.chosed').text(),
+                            value: $('.li_list li.chosed').attr('val')
+                        };
+                        if (typeof(callback) == "function") {
+                            callback(data);
+                            $('.bottom_choose .cl').click();
+                        } else {
+                            layer.open({
+                                content: '回调函数有误',
+                                skin: 'msg',
+                                time: 2
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    },
+    currency: function(type, first) {
+        var ciontype = $('#coinType').attr('vals'),
+            coinname = $('#coinType').val().split('（')[0];
+        if (type == '0') {
+            $('#payQuota').val('');
+            $('#payCount').val('');
+            $('#payDiscount').val('');
+            $('#toAccount').val('');
+            $('#payQuota').val('最小充值限额为 ' + jsons.coinLimit[ciontype] + ' 个');
+        } else {
+            $('#biQuota').val('');
+        }
+        $('#coinRate').val('').attr('vals', '');
+        if (ciontype == 'AppleC') {
+            $('#coinRate').val('1 ' + ciontype + ' = 1 点').attr('vals', '1');
+            return;
+        }
+        this.ajax.post('/member/money-exchange', {
+            record: type,
+            currency: ciontype.toLowerCase()
+        }, function(data) {
+            if (data.code == '2018') {
+                var real = data.result.exchange.replace(' CNY', '').replace(/,/g, '');
+                $('#coinRate').val('1 ' + ciontype + ' = ' + (real || '') + ' 点').attr('vals', (real || ''));
+                if (type == '0' && data.result.total == '0') {
+                    public.firstpay = true;
+                    $('#payDiscount').parents('.input_box').before('<div class="input_box">' +
+                        '<i class="iconfont icon-discount i_text begin_icon primary">首冲特惠</i>' +
+                        '<input type="text" id="firstPay" class="plr" readonly disabled placeholder="首冲送188点" value="188 点" /></div>');
+                }
+                if (!first) {
+                    public.aboutChange(type);
+                    public.checkinput({
+                        domlist: (type == '0') ? $('#payAmount') : $('#countDian')
+                    });
+                }
+            } else {
+                layer.open({
+                    content: '汇率异常，请刷新后再试',
+                    skin: 'msg',
+                    time: 2
+                });
+            }
+        });
     },
 };
 

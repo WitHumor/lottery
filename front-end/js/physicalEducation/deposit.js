@@ -5,7 +5,7 @@ $(function() {
 
 var DE = {
     ajax: new HttpService(),
-    booltf: true,
+    // booltf: true,
     firstpay: false,
     initPage: function() {
         DE.currency();
@@ -26,14 +26,14 @@ var DE = {
                         time: 2000
                     });
                 } else {
-                    if (DE.booltf) {
-                        DE.booltf = false;
+                    // if (DE.booltf) {
+                    //     DE.booltf = false;
                         DE.currency('verify');
-                    } else {
-                        layer.msg('订单正在处理，请勿重复提交', {
-                            time: 2000
-                        });
-                    }
+                    // } else {
+                    //     layer.msg('订单正在处理，请勿重复提交', {
+                    //         time: 2000
+                    //     });
+                    // }
                 }
             }
         });
@@ -135,7 +135,7 @@ var DE = {
                 });
             }
         }, function(e) {
-            DE.booltf = true;
+            // DE.booltf = true;
             layer.msg('网络错误', {
                 time: 2000,
                 icon: 2
@@ -175,7 +175,7 @@ var DE = {
                     }
                 }
             });
-            DE.booltf = true;
+            // DE.booltf = true;
         }
     },
     allchange: function(fi) {
@@ -197,19 +197,20 @@ var DE = {
     createOrder: function() {
         var coinType = $('#coin-type').val(),
             coinName = $('#coin-type option:checked').text(),
-            coinNum = $('#rechargebtb').val(),
-            rmb = $('#btb-rmb').val().replace(' 点', ''),
-            onSale = (parseFloat($('#charge-dis').val().replace(' 点', '')) + (DE.firstpay ? 188.00 : 0)) + '';
+            coinNum = $('#rechargebtb').val();
+            // rmb = $('#btb-rmb').val().replace(' 点', ''),
+            // onSale = (parseFloat($('#charge-dis').val().replace(' 点', '')) + (DE.firstpay ? 188.00 : 0)) + '';
         this.ajax.post('/member/member-deposit', {
             currency: coinType,
             currencyCount: coinNum
         }, function(data) {
             if (data.code == '2018') {
-                $('#can-dis').val(onSale + ' 点');
-                $('#order-num').val(data.result);
+                $('.btn-next').attr('disabled', 'disabled');
+                $('#can-dis').val(data.result.discounts + ' 点');
+                $('#order-num').val(data.result.number);
                 $('#btn-copy-order').attr('data-clipboard-text', data.result);
                 $('#re-amount').val(coinNum + ' ' + coinName);
-                $('#pay-rmb').text(rmb + '点');
+                $('#pay-rmb').text(data.result.money + '点');
                 $('#firsts').hide();
                 $('#nexts').show();
                 $('#nexts .finish-div').html('<button class="btn-submit btn-finish" onclick="DE.finishPay();">完成支付</button>');

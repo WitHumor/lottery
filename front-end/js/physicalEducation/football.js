@@ -3,7 +3,7 @@ var CDS = 3,
 $(function() {
     init();
     getAllDatas(config.today_FT);
-    countDown();
+    // countDown();
 });
 
 var positions = {},
@@ -86,12 +86,12 @@ function getAllDatas(reqData) {
                 })
             }
         },
-        error: function(error) {
-            layer.msg('网络连接失败，请稍后再试', {
-                time: 2000,
-                icon: 2
-            })
-        }
+        // error: function(error) {
+        //     layer.msg('网络连接失败，请稍后再试', {
+        //         time: 2000,
+        //         icon: 2
+        //     })
+        // }
     });
 }
 
@@ -178,19 +178,19 @@ function analysis(datas) {
                 '<td rowspan="3">' + timeabout + '</td>' +
                 '<td class="coal" rowspan="3">' + item[withdraws('team_h')] + '<br>' + item[withdraws('team_c')] + '<br>和局</td>' +
                 '<td><a href="javascript:void(0);" class="canclick" vi="ior_MH">' + item[withdraws('ior_MH')] + '</a></td>' +
-                '<td class="t_right" fronts="' + (item[withdraws('strong')] == 'H' ? 'ratio' : '') + '">' + (item[withdraws('strong')] == 'H' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RH">' + item[withdraws('ior_RH')] + '</a></td>' +
+                '<td class="t_right" fonts="' + (item[withdraws('strong')] == 'H' ? 'ratio' : '') + '" vals="' + item[withdraws('ratio')] + '">' + (item[withdraws('strong')] == 'H' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RH">' + item[withdraws('ior_RH')] + '</a></td>' +
                 '<td class="t_right" fonts="ratio_o">' + item[withdraws('ratio_o')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUC">' + item[withdraws('ior_OUC')] + '</a></td>' +
                 '<td fonts="str_odd">' + item[withdraws('str_odd')] + '&nbsp;<a href="javascript:void(0);" class="canclick odd_even" vi="ior_EOO">' + item[withdraws('ior_EOO')] + '</a></td>' +
                 '<td class="bgF0F1B5"><a href="javascript:void(0);" class="canclick halfs" vi="ior_HMH">' + item[withdraws('ior_HMH')] + '</a></td>' +
-                '<td class="t_right bgF0F1B5" fronts="' + (item[withdraws('hstrong')] == 'H' ? 'hratio' : '') + '">' + (item[withdraws('hstrong')] == 'H' ? item[withdraws('hratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick halfs" vi="ior_HRH">' + item[withdraws('ior_HRH')] + '</a></td>' +
+                '<td class="t_right bgF0F1B5" fonts="' + (item[withdraws('hstrong')] == 'H' ? 'hratio' : '') + '" vals="' + item[withdraws('hratio')] + '">' + (item[withdraws('hstrong')] == 'H' ? item[withdraws('hratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick halfs" vi="ior_HRH">' + item[withdraws('ior_HRH')] + '</a></td>' +
                 '<td class="t_right bgF0F1B5" fonts="hratio_o">' + item[withdraws('hratio_o')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick halfs" vi="ior_HOUC">' + item[withdraws('ior_HOUC')] + '</a></td>' +
                 '</tr>';
             html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="C"><td class="hide"></td><td class="hide"></td><td><a href="javascript:void(0);" class="canclick" vi="ior_MC">' + item[withdraws('ior_MC')] + '</a></td>' +
-                '<td class="t_right" fronts="' + (item[withdraws('strong')] == 'C' ? 'ratio' : '') + '">' + (item[withdraws('strong')] == 'C' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RC">' + item[withdraws('ior_RC')] + '</a></td>' +
+                '<td class="t_right" fonts="' + (item[withdraws('strong')] == 'C' ? 'ratio' : '') + '" vals="' + item[withdraws('ratio')] + '">' + (item[withdraws('strong')] == 'C' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RC">' + item[withdraws('ior_RC')] + '</a></td>' +
                 '<td class="t_right" fonts="ratio_u">' + item[withdraws('ratio_u')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUH">' + item[withdraws('ior_OUH')] + '</a></td>' +
                 '<td fonts="str_even">' + item[withdraws('str_even')] + '&nbsp;<a href="javascript:void(0);" class="canclick odd_even" vi="ior_EOE">' + item[withdraws('ior_EOE')] + '</a></td>' +
                 '<td class="bgF0F1B5"><a href="javascript:void(0);" class="canclick halfs" vi="ior_HMC">' + item[withdraws('ior_HMC')] + '</a></td>' +
-                '<td class="t_right bgF0F1B5" fronts="' + (item[withdraws('hstrong')] == 'H' ? 'hratio' : '') + '">' + (item[withdraws('hstrong')] == 'C' ? item[withdraws('hratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick halfs" vi="ior_HRC">' + item[withdraws('ior_HRC')] + '</a></td>' +
+                '<td class="t_right bgF0F1B5" fonts="' + (item[withdraws('hstrong')] == 'H' ? 'hratio' : '') + '" vals="' + item[withdraws('hratio')] + '">' + (item[withdraws('hstrong')] == 'C' ? item[withdraws('hratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick halfs" vi="ior_HRC">' + item[withdraws('ior_HRC')] + '</a></td>' +
                 '<td class="t_right bgF0F1B5" fonts="hratio_u">' + item[withdraws('hratio_u')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick halfs" vi="ior_HOUH">' + item[withdraws('ior_HOUH')] + '</a></td>' +
                 '</tr>';
             html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="N"><td class="hide"></td><td class="hide"></td><td><a href="javascript:void(0);" class="canclick" vi="ior_MN">' + item[withdraws('ior_MN')] + '</a></td>' +
@@ -217,8 +217,13 @@ function analysis(datas) {
             finfo = JSON.parse(me.parents('tr').siblings('tr[fgid="f' + tgid + '"]').attr('finfo').replace(/'/g, '"')),
             navtype = $('#navType a.active').attr('tabType'),
             balltype = 'FT';
-        var indextext = $('.theads th').eq(me.parents('tr').children('td').index(me.parents('td'))).text();
-        //
+        var duy_index = me.parents('tr').children('td').index(me.parents('td')); // 独赢index
+        var indextext = $('.theads th').eq(duy_index).text();
+        if (duy_index == 2) {
+            indextext = '全场 - 独赢';
+        } else if (duy_index == 6) {
+            indextext = '半场 - 独赢';
+        }
         var dsinfojson = {
             gid: finfo.gid,
             url: currentUrl,
@@ -231,13 +236,31 @@ function analysis(datas) {
             dsinfojson.iorRatio = fonts;
         }
         var dsinfo = JSON.stringify(dsinfojson).replace(/"/g, '\'');
+        var show_team = (tmtype == "H" ? finfo.team_h : (tmtype == "C" ? finfo.team_c : '和局'));
+        if (indextext.indexOf('大小') > -1 || indextext.indexOf('单双') > -1) {
+            show_team = '';
+        }
+        if (indextext.indexOf('让球') > -1) {
+            if (fonts) {
+                show_team += '（让方）';
+            } else {
+                show_team += '（受让方）'
+            }
+            show_team += '[' + me.parents('td').attr('vals') + ']';
+        } else {
+            if (fonts) {
+                var front_es = me.parent('td').text().replace(me.text(),'');
+                show_team += '&nbsp;[' + front_es + ']';
+            }
+        }
+
         var html = '<div class="dtitle">交易单</div>' +
-            '<div class="dleague"><span>篮球美式足球</span></div>' +
+            '<div class="dleague"><span>足球</span></div>' +
             '<div class="tinfo commons">' +
-            '<p>' + finfo.league + '</p><p>' + indextext + '</p>' +
+            '<p>' + finfo.league + '</p><p class="c_red">' + indextext + '</p>' +
             '<p><span class="tName">' + finfo.team_h + ' <font class="radio">vs</font> ' + finfo.team_c +
             '</span></p></div>' +
-            '<div class="chsteam commons"><label class="c_red">' + (tmtype == "H" ? finfo.team_h : finfo.team_c) + '</label> @ <strong class="light" id="ioradio_id">' + parseFloat(me.text()).toFixed(2) + '</strong></div><div class="fwb commons">' +
+            '<div class="chsteam commons"><label class="c_red">' + show_team +'</label> @ <strong class="light" id="ioradio_id">' + parseFloat(me.text()).toFixed(2) + '</strong></div><div class="fwb commons">' +
             '<input type="checkbox" checked/> 自动接收较佳赔率</div>' +
             '<div class="tranDetail commons"><p>交易金额：' +
             '<input id="money" type="text" onkeyup="return countWinGold()" maxlength="5"/></p><p>可赢金额：<span id="canwin">0</span></p><p>单注最低：10</p><p>单注最高：10000</p></div>' +

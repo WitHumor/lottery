@@ -20,10 +20,14 @@
 }
 
 .car-item > div:nth-of-type(1) {
-    background: url(../img/football_banner1.png) no-repeat 100%;
+    background: url(../img/AppleC.png) no-repeat 100%;
 }
 
 .car-item > div:nth-of-type(2) {
+    background: url(../img/football_banner1.png) no-repeat 100%;
+}
+
+.car-item > div:nth-of-type(3) {
     background: url(../img/basketball_banner1.png) no-repeat 100%;
 }
 

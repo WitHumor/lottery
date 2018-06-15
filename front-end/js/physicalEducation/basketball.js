@@ -3,7 +3,7 @@ var CDS = 3,
 $(function() {
     init();
     getAllDatas(config.today_BK);
-    countDown();
+    // countDown();
 });
 
 var positions = {},
@@ -86,12 +86,12 @@ function getAllDatas(reqData) {
                 })
             }
         },
-        error: function(error) {
-            layer.msg('网络连接失败，请稍后再试', {
-                time: 2000,
-                icon: 2
-            })
-        }
+        // error: function(error) {
+        //     layer.msg('网络连接失败，请稍后再试', {
+        //         time: 2000,
+        //         icon: 2
+        //     })
+        // }
     });
 }
 
@@ -139,7 +139,7 @@ function analysis(datas) {
         }
         select_option += '</select>';
     }
-    var html = '<div class="listcontainer"><div class="listss listtitle"><span>' + $('#navType a.active').text() + '：篮球美式足球（' + gCountObj["BK_" + ctype] + '）</span></div>' +
+    var html = '<div class="listcontainer"><div class="listss listtitle"><span>' + $('#navType a.active').text() + '：篮球（' + gCountObj["BK_" + ctype] + '）</span></div>' +
         '<div class="listss listinfo"><span> ' + (currentPage + 1) + '/' + (fields.gpages == "0" ? "1" : fields.gpages) + ' 页&nbsp;&nbsp;</span>' + select_option + '<button class="refreshBtn" onclick="getActiveTab();">刷新（' + countdown + '）</button></div><table>';
     html += config['html_BK'];
     if (fields.glists.length == 0) {
@@ -180,13 +180,13 @@ function analysis(datas) {
                 '<td rowspan="2">' + timeabout + '</td>' +
                 '<td class="coal" rowspan="2">' + item[withdraws('team_h')] + '<br>' + item[withdraws('team_c')] + '</td>' +
                 '<td><a href="javascript:void(0);" class="canclick" vi="ior_MH">' + item[withdraws('ior_MH')] + '</a></td>' +
-                '<td class="t_right" fonts="' + (item[withdraws('strong')] == 'H' ? 'ratio' : '') + '">' + (item[withdraws('strong')] == 'H' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RH">' + item[withdraws('ior_RH')] + '</a></td>' +
+                '<td class="t_right" fonts="' + (item[withdraws('strong')] == 'H' ? 'ratio' : '') + '" vals="' + item[withdraws('ratio')] + '">' + (item[withdraws('strong')] == 'H' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RH">' + item[withdraws('ior_RH')] + '</a></td>' +
                 '<td fonts="ratio_o">' + item[withdraws('ratio_o')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUC">' + item[withdraws('ior_OUC')] + '</a></td>' +
                 '<td class="t_right bgFCF9E7" fonts="ratio_ouho">' + item[withdraws('ratio_ouho')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUHO">' + item[withdraws('ior_OUHO')] + '</a></td>' +
                 '<td class="t_right bgFCF9E7" fonts="ratio_ouhu">' + item[withdraws('ratio_ouhu')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUHU">' + item[withdraws('ior_OUHU')] + '</a></td>' +
                 '</tr>';
-            html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="C"><td><a href="javascript:void(0);" class="canclick" vi="ior_MC">' + item[withdraws('ior_MC')] + '</a></td>' +
-                '<td class="t_right" fronts="' + (item[withdraws('strong')] == 'C' ? 'ratio' : '') + '">' + (item[withdraws('strong')] == 'C' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RC">' + item[withdraws('ior_RC')] + '</a></td>' +
+            html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="C"><td class="hide"></td><td class="hide"></td><td><a href="javascript:void(0);" class="canclick" vi="ior_MC">' + item[withdraws('ior_MC')] + '</a></td>' +
+                '<td class="t_right" fonts="' + (item[withdraws('strong')] == 'C' ? 'ratio' : '') + '" vals="' + item[withdraws('ratio')] + '">' + (item[withdraws('strong')] == 'C' ? item[withdraws('ratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick" vi="ior_RC">' + item[withdraws('ior_RC')] + '</a></td>' +
                 '<td fonts="ratio_u">' + item[withdraws('ratio_u')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUH">' + item[withdraws('ior_OUH')] + '</a></td>' +
                 '<td class="t_right bgECE3C4" fonts="ratio_ouco">' + item[withdraws('ratio_ouco')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUCO">' + item[withdraws('ior_OUCO')] + '</a></td>' +
                 '<td class="t_right bgECE3C4" fonts="ratio_oucu">' + item[withdraws('ratio_oucu')].replace("O", "<label class=\"c_24B335\">大</label>").replace("U", "<label class=\"c_B48438\">小</label>") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUCU">' + item[withdraws('ior_OUCU')] + '</a></td>' +
@@ -210,7 +210,6 @@ function analysis(datas) {
             finfo = JSON.parse(me.parents('tr').siblings('tr[fgid="f' + tgid + '"]').attr('finfo').replace(/'/g, '"')),
             navtype = $('#navType a.active').attr('tabType'),
             balltype = 'BK';
-        console.log(tgid, navtype, balltype, finfo);
         var indextext = $('.theads th').eq(me.parents('tr').children('td').index(me.parents('td'))).text();
         // if(me.hasClass('halfs')) {
         //     getData.gid = finfo.hgid;
@@ -238,13 +237,30 @@ function analysis(datas) {
             dsinfojson.iorRatio = fonts;
         }
         var dsinfo = JSON.stringify(dsinfojson).replace(/"/g, '\'');
+        var show_team = (tmtype == "H" ? finfo.team_h : (tmtype == "C" ? finfo.team_c : '和局'));
+        if (indextext == '大小') {
+            show_team = '';
+        }
+        if (indextext == '让分') {
+            if (fonts) {
+                show_team += '（让方）';
+            } else {
+                show_team += '（受让方）'
+            }
+            show_team += '[' + me.parents('td').attr('vals') + ']';
+        } else {
+            if (fonts) {
+                var front_es = me.parent('td').text().replace(me.text(),'');
+                show_team += '&nbsp;[' + front_es + ']';
+            }
+        }
         var html = '<div class="dtitle">交易单</div>' +
-            '<div class="dleague"><span>篮球美式足球</span></div>' +
+            '<div class="dleague"><span>篮球</span></div>' +
             '<div class="tinfo commons">' +
-            '<p>' + finfo.league + '</p><p>' + indextext + '</p>' +
+            '<p>' + finfo.league + '</p><p class="c_red">' + indextext + '</p>' +
             '<p><span class="tName">' + finfo.team_h + ' <font class="radio">vs</font> ' + finfo.team_c +
             '</span></p></div>' +
-            '<div class="chsteam commons"><label class="c_red">' + (tmtype == "H" ? finfo.team_h : finfo.team_c) + '</label> @ <strong class="light" id="ioradio_id">' + parseFloat(me.text()).toFixed(2) + '</strong></div><div class="fwb commons">' +
+            '<div class="chsteam commons"><label class="c_red">' + show_team + '</label> @ <strong class="light" id="ioradio_id">' + parseFloat(me.text()).toFixed(2) + '</strong></div><div class="fwb commons">' +
             '<input type="checkbox" checked/> 自动接收较佳赔率</div>' +
             '<div class="tranDetail commons"><p>交易金额：' +
             '<input id="money" type="text" onkeyup="return countWinGold()" maxlength="5"/></p><p>可赢金额：<span id="canwin">0</span></p><p>单注最低：10</p><p>单注最高：10000</p></div>' +

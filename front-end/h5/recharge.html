@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="wap-font-scale" content="no">
+    <meta name="format-detection" content="telephone=no">
+    <title>永利高 -- 充值</title>
+    <link rel="stylesheet" href="css/font/iconfont.css">
+    <link rel="stylesheet" href="js/layer_mobile/need/layer.css">
+    <link rel="stylesheet" href="css/public.css?v=1">
+    <link rel="stylesheet" href="css/recharge.css?v=1">
+</head>
+
+<body>
+    <div class="vessel">
+        <div class="navTop">
+            <div class="leftBtn" onclick="javascript:history.back(-1);"><i class="iconfont icon-back f24_"></i></div>
+            <div class="ctitle">
+                <!-- <img src="img/apple.png"> -->
+                <span>立即充值</span>
+            </div>
+            <div class="rightBtn">
+                <i class="iconfont icon-kefu"></i>
+            </div>
+        </div>
+        <div class="acontainer nobottom">
+            <div class="show_step">
+                <div class="step1 steps bnormal">1</div>
+                <span class="stepl1 stepl bfirsthand"></span>
+                <div class="step2 steps bfirsthand">2</div>
+            </div>
+            <div id="firsts" class="total_box mT10">
+                <div class="input_box">
+                    <i class="iconfont icon-bi i_text begin_icon primary">充值币种</i>
+                    <input type="text" id="coinType" class="pl0r100" readonly vals="BTC" value="比特币（BTC）" />
+                    <i class="iconfont icon-moreunfold normal_icon"></i>
+                </div>
+                <div class="input_box">
+                    <i class="iconfont icon-icon-test i_text begin_icon primary">货币汇率</i>
+                    <input type="text" id="coinRate" class="pl0r100" readonly disabled />
+                    <i class="iconfont icon-shuaxin2 normal_icon"></i>
+                </div>
+                <div class="input_box">
+                    <i class="iconfont icon-cela_chongzhijine i_text begin_icon primary">充值限额</i>
+                    <input type="text" id="payQuota" class="pl0r100 danger" readonly disabled />
+                </div>
+                <div class="input_box">
+                    <i class="iconfont icon-caiwufeiyongqianjinbihuobi i_text begin_icon primary">充值币额</i>
+                    <input type="text" id="payAmount" class="pl0r100 pdr50" placeholder="请输入充值币额" itype="paw" istr="充值币额" need />
+                    <i class="iconfont icon-close clear_all onlys hide"></i>
+                    <div class="total_tip">
+                        <span class="tip_text smile hide"></span>
+                    </div>
+                </div>
+                <div class="input_box">
+                    <i class="iconfont icon-dianshu i_text begin_icon primary">充值点数</i>
+                    <input type="text" id="payCount" class="pl0r100" readonly disabled />
+                </div>
+                <div class="input_box">
+                    <i class="iconfont icon-youhui i_text begin_icon primary">充值优惠</i>
+                    <input type="text" id="payDiscount" class="pl0r100" readonly disabled />
+                </div>
+                <div class="input_box">
+                    <i class="iconfont icon-jine i_text begin_icon primary">到账金额</i>
+                    <input type="text" id="toAccount" class="pl0r100" readonly disabled />
+                </div>
+                <div class="input_box">
+                    <button class="to_next bnormal">下 一 步</button>
+                </div>
+            </div>
+            <div id="nexts" class="total_box mT10 hide">
+                <div class="input_box">
+                    <label class="title_text">订单号</label>
+                    <input type="text" id="orderNum" class="plr10 pdr50" readonly disabled />
+                    <button id="btn-copy-order" class="btn-copy copy_btn" target="orderNum">复 制</button>
+                </div>
+                <div class="input_box">
+                    <label class="title_text">可得优惠</label>
+                    <input type="text" id="getDiscounts" class="plr10" readonly disabled />
+                    <div class="total_tip">
+                        <span class="tip_text warning">优惠将在充值到账后，30分钟内自动添加</span>
+                    </div>
+                </div>
+                <div class="input_box">
+                    <label class="title_text">充值金额</label>
+                    <input type="text" id="payMoney" class="plr10" />
+                </div>
+                <div class="input_box">
+                    <label class="title_text">收款地址</label>
+                    <input type="text" id="payCount" class="plr10 pdr50" readonly disabled value="0x196b522DB2e0EEd8bEf28d5446C0F4001DF02F4D" />
+                    <!-- data-clipboard-text="0x196b522DB2e0EEd8bEf28d5446C0F4001DF02F4D"  -->
+                    <!--  data-clipboard-action="copy" -->
+                    <button id="btn-copy-address" target="payCount" class="btn-copy copy_btn">复 制</button>
+                </div>
+                <div class="input_box text-center">
+                    <img src="img/ewm.jpg" width="80%" height="80%" />
+                    <div class="total_tip">
+                        <span class="tip_text">您可通过复制或二维码扫描，以获得收款地址来进行充值。</span>
+                    </div>
+                </div>
+                <div class="input_box">
+                    <div class="total_tip bfirsthand primary bradius5">
+                        <span class="tip_text">如果您还没有属于自己的钱包，可以直接在场外交易平台（http://www.otcbtc.com/）或交易所购买数字币，并使用我们的上方的收款地址做为提币地址。</span>
+                    </div>
+                </div>
+                <div class="input_box finish-div"></div>
+                <div class="input_box">
+                    <div class="warning-tip">
+                        <span class="tip_text font-blod">温馨提示：订单有效期为24小时，请于有效期内完成转账汇款，如订单失效，则需重新提交充值申请，并按照最新汇率换算。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+<script src="js/jquery-3.3.1.min.js"></script>
+<!-- <script src="js/clipboard.js"></script> -->
+<script src="js/ZeroClipboard.js"></script>
+<script src="js/layer_mobile/layer.js"></script>
+<script src="js/sha1.js"></script>
+<script src="js/public.js"></script>
+<script src="js/recharge.js"></script>
+
+</html>

@@ -1,7 +1,11 @@
-// var ServerUrl = 'http://www.ylg51888.com/springBoot';
-var ServerUrl = 'http://192.168.43.20:8080';
+// var BasePath = 'http://ylg51888.com';
+var BasePath = window.location.hostname;
+
+// var ServerUrl = 'http://ylg51888.com/springBoot';
+var ServerUrl = 'http://'+ BasePath +'/springBoot';
+// var ServerUrl = 'http://192.168.43.20:8080';
 // var ServerUrl = 'http://172.20.10.2:8080';
-var BasePath = 'http://ylg51888.com';
+
 var H5Path = 'http://wap.ylg51888.com';
 var HttpService = function() {
     this.MAX_VALUE = 100000;
@@ -361,7 +365,6 @@ var common = {
 
     //初始化
     initPage: function() {
-        console.log(window.location.hostname);
         //页面共同代码
         if ($('#thisisheader').length == 0) {
             var html = '';
@@ -417,6 +420,10 @@ var common = {
         // 在线咨询
         $('body').append('<script>var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?bdcca757f17f3439b840ebb0a44084a2";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();</script>');
 
+        if ($('#thisishome').length == 0 && $('#thisisft').length == 0 && $('#thisisbk').length == 0) {
+            $('body').append('<div class="hyperchannel"><li><a href="football.html"><i class="iconfont icon-xiaoyuan-"></i>&nbsp;足球</a></li><li><a href="basketball.html"><i class="iconfont icon-lanqiu"></i>&nbsp;篮球</a></li><li><a href="javascript:void(0);" class="lotteryBetting"><i class="iconfont icon-taiqiu"></i></i>&nbsp;彩票</a></li></div>');
+        }
+
         if ($('.lotteryBetting').length > 0) {
             $('.lotteryBetting').click(function() {
                 var userinfo = sessionStorage.getItem("userinfo");
@@ -433,10 +440,6 @@ var common = {
                     }, 2000);
                 }
             });
-        }
-
-        if ($('#thisishome').length == 0 && $('#thisisft').length == 0 && $('#thisisbk').length == 0) {
-            $('body').append('<div class="hyperchannel"><li><a href="football.html"><i class="iconfont icon-xiaoyuan-"></i>&nbsp;足球</a></li><li><a href="basketball.html"><i class="iconfont icon-lanqiu"></i>&nbsp;篮球</a></li><li><a href="javascript:void(0);" class="lotteryBetting"><i class="iconfont icon-taiqiu"></i></i>&nbsp;彩票</a></li></div>');
         }
     },
 

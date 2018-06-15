@@ -15,7 +15,7 @@ var config = {
             "name": "足球",
             "tabtype": "FT"
         }, {
-            "name": "篮球美式足球",
+            "name": "篮球",
             "tabtype": "BK"
         },
         // {"name":"网球","tabtype":"TN"},

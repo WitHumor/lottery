@@ -29,7 +29,7 @@ var register = {
             truename = $('#true_name').val(),
             withpass = $('#with_pass').val(),
             invitationcode = $('#invitation_code').val();
-        if (public.checkinput('r')) {
+        if (public.checkinput({type: 'r'})) {
             var reqData = {
                 name: regname,
                 password: hex_sha1(regpass),

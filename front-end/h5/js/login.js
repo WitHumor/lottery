@@ -4,6 +4,7 @@ $(function() {
 
 var login = {
     ajax: new HttpService(),
+    where: public.getParameter('where'),
     initPage: function() {
         $('.icon-zhuye').click(function() {
             window.location.href = 'index.html';
@@ -15,11 +16,10 @@ var login = {
     userLogin: function(flags) {
         var logName = $('#login_name').val(),
             logPass = $('#login_pass').val();
-        if (public.checkinput('l')) {
+        if (public.checkinput()) {
             var reqData = {
                 "name": logName,
                 "password": hex_sha1(logPass)
-                    // "password": logPass
             };
             this.ajax.post('/member/login-member', reqData, function(data) {
                 if (data.code == '2018') {
@@ -33,7 +33,7 @@ var login = {
                     });
                     setTimeout(function() {
                         layer.closeAll();
-                        window.location.href = 'index.html';
+                        window.location.href = login.where ? (login.where + '.html') : 'index.html';
                     }, 2000);
                 } else {
                     layer.open({

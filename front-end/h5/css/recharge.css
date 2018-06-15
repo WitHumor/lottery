@@ -1,0 +1,25 @@
+.show_step {
+    padding: 20px 0;
+    color: #fff;
+    text-align: center;
+    background-color: #fff;
+}
+
+.steps {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    font-weight: bold;
+    border-radius: 30px;
+    text-align: center;
+    line-height: 30px;
+    vertical-align: middle;
+}
+
+.stepl {
+    display: inline-block;
+    width: 150px;
+    height: 3px;
+    border-radius: 10px;
+    vertical-align: middle;
+}
