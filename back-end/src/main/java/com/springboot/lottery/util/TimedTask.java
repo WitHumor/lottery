@@ -20,31 +20,29 @@ public class TimedTask {
 	private MemberController memberController;
 	
 	/**
-	 * 3秒查找一次赛果
+	 * 3秒查找一次赛果与下注防护
 	 */
 	@Scheduled(fixedDelay = 3000)
 	public void singleNote() {
+		System.out.println(Thread.currentThread().getName() +"足球篮球防作弊启动..");
+		memberController.singleNoteDefend();
 		System.out.println(Thread.currentThread().getName() +"足球篮球结算定时任务启动..");
-		boolean member;
 		try {
-			member = memberController.singleNoteAccount();
-			if(member) {
-				System.out.println("---------");
-			}
+			memberController.singleNoteAccount();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	/**
-	 * 每隔一分钟查询超过24小时未结算的结果
+	 * 每隔一分钟查询超过4小时未结算的结果
 	 */
 	@Scheduled(cron = "0 0/1 * * * ?")
 	public void amidithionOvertime() {
 		System.out.println(Thread.currentThread().getName() + "扫描超过24小时未结算足球篮球定时任务启动..");
 		boolean amidithion = memberController.amidithionOvertime();
 		if(amidithion == false) {
-			System.err.println("无超过24小时未结算数据");
+			System.err.println("无超过4小时未结算数据");
 		}
 	}
 	

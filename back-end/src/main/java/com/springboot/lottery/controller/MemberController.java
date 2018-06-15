@@ -70,6 +70,13 @@ public class MemberController {
 			return result;
 		}
 		Cache cache = getCache();
+		String name = member.getName();
+		String verifyMember = memberService.verifyMember(name);
+		if (verifyMember != null) {
+			// 用户名已存在
+			result.setCode(MessageUtil.NAME_EXIST);
+			return result;
+		}
 		String mid = BeanLoad.getId();
 		String role = member.getRole();
 		member.setAddress(ipAddress);// 设置IP地址
@@ -436,24 +443,6 @@ public class MemberController {
 				}
 			}
 		}
-		if (cache.get(ipAddress) != null) {
-			// 获取token
-			String cacheToken = (String) cache.get(ipAddress).get();
-			if (cache.get(cacheToken) != null) {
-				// 获取token中会员信息
-				Member tokenMember = (Member) cache.get(cacheToken).get();
-				// 同一地址允许管理员和会员同时登录
-				if (tokenMember.getRole().equals(member.getRole())) {
-					if (ipAddress.equals(tokenMember.getAddress())) {
-						// 移除mid缓存
-						cache.evict(tokenMember.getMid());
-						// 移除IP地址缓存
-						cache.evict(tokenMember.getAddress());
-					}
-				}
-			}
-		}
-
 		// 设置IP地址
 		member.setAddress(ipAddress);
 		// 设置token
@@ -720,12 +709,8 @@ public class MemberController {
 	/**
 	 * 20180508在线存款
 	 * 
-	 * @param money
-	 *            存款金额
-	 * @param discountsMoeny
-	 *            优惠金额
 	 * @param currency
-	 *            货币
+	 *            货币类型
 	 * @param currencyCount
 	 *            货币个数
 	 * @return
@@ -796,7 +781,11 @@ public class MemberController {
 			result.setCode(MessageUtil.INSERT_ERROR);
 			return result;
 		}
-		result.setResult(number);
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("number", number);
+		resultMap.put("money", String.format("%.2f", money));
+		resultMap.put("discounts", String.format("%.2f", discounts));
+		result.setResult(resultMap);
 		return result;
 	}
 
@@ -1119,7 +1108,7 @@ public class MemberController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("mid", mid = tokenMember.getRole().equals("0") ? mid : null);// 会员id
 		map.put("invitationCode", tokenMember.getName());// 邀请码
-		map.put("state", "-1");// 已取消不参与返利
+		map.put("state", "1");// 已结算才参与返利
 		map.put("beginTime", StringUtils.isBlank(beginTime) ? null : beginTime);// 开始时间
 		map.put("endTime", StringUtils.isBlank(endTime) ? null : endTime);// 结束时间
 		map.put("keyword", keyword);// 关键字
@@ -1242,6 +1231,8 @@ public class MemberController {
 			return result;
 		}
 		member = memberList.get(0);
+		// 盘口字段
+		String tapeField = iorRatio;
 		// 获取比率
 		if (StringUtils.isBlank(iorRatio) || mapData.get(iorRatio).equals("单") || mapData.get(iorRatio).equals("双")) {
 			iorRatio = null;
@@ -1321,6 +1312,7 @@ public class MemberController {
 		MemberSingleNote memberSingleNote = new MemberSingleNote();
 		memberSingleNote.setSnid(snid);// 设置主键id
 		memberSingleNote.setMid(mid);// 设置会员id
+		memberSingleNote.setGid(gid);// 比赛gid
 		memberSingleNote.setNumber(BeanLoad.getNumber());// 设置注单号
 		memberSingleNote.setBet_time(new Date());// 设置时间
 		memberSingleNote.setStart_time(startTime);// 设置开始比赛时间
@@ -1331,11 +1323,19 @@ public class MemberController {
 		memberSingleNote.setOccasion(occasion);// 设置场次
 		memberSingleNote.setIor_type(ratioType);// 设置比率类型
 		memberSingleNote.setIor_ratio(iorRatio);// 设置比率
+		memberSingleNote.setTape_field(tapeField);// 设置盘口字段
 		memberSingleNote.setRatio(ratioData);// 设置赔率
 		memberSingleNote.setBet(bet);// 设置下注对象
 		memberSingleNote.setBet_type(betType);// 设置下注类型
 		memberSingleNote.setStrong(StringUtils.isBlank(strong) ? null : strong);// 让球方
-		memberSingleNote.setState("0");// 设置状态
+		// 获取防护类型
+		String defend = JsoupUtil.getDefend();
+		// 防护类型中存在需要防护的类型，则修改为下注中状态
+		if(defend.contains(ratioType)) {
+			memberSingleNote.setState("-2");// 设置状态
+		} else {
+			memberSingleNote.setState("0");// 设置状态
+		}
 		memberSingleNote.setLeague(league);// 设置联赛
 		memberSingleNote.setMoney(money);// 设置下注金额
 		memberSingleNote.setValid_money(String.format("%.2f", validMoney));// 设置有效金额
@@ -1455,6 +1455,7 @@ public class MemberController {
 		map.put("mid", singleNoteDTO.getMid());// 设置会员id
 		map.put("money", String.format("%.2f", Float.parseFloat(money)));// 设置余额
 		map.put("snid", snid);// 设置注单id
+		map.put("state", "-1");
 		// 根据mid修改余额
 		int updateSum = memberService.cancelSingleNote(map);
 		if (updateSum <= 0) {
@@ -1791,16 +1792,16 @@ public class MemberController {
 		// 根据时间获取前一天
 		Date dBefore = JsoupUtil.previousDay(new Date());
 		// 设置时间格式
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月");
 		// 格式化前一天
 		String previousDay = sdf.format(dBefore);
 		map.put("betTime", previousDay);
-		map.put("state", "-1");// 已取消注单不参与返利
+		map.put("state", "1");// 已结算注单返利
 		// 利用迭代器循环会员信息
 		Iterator<Member> memberIterator = queryMember.iterator();
 		while (memberIterator.hasNext()) {
 			Member member = memberIterator.next();
-			// 根据会员名查询返利金额
+			// 根据邀请码查询返利金额
 			map.put("invitationCode", member.getName());
 			List<SingleNoteDTO> generalizeRebate = memberService.generalizeRebate(map);
 			// 判断会员是否有邀请的人
@@ -1832,6 +1833,90 @@ public class MemberController {
 			}
 		}
 	}
+	
+	/**
+	 * 注单防护
+	 */
+	public void singleNoteDefend(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 根据下注中查询所有注单
+		map.put("state", "-2");
+		// 防护类型
+		String iorTypes = JsoupUtil.getDefend();
+		map.put("iorTypes", iorTypes);
+		List<MemberSingleNote> singleNotelist = memberService.querySingleNote(map);
+		if(singleNotelist == null || singleNotelist.size() <= 0) {
+			System.out.println("需要防护的数据不存在");
+		}else {
+			map.remove("iorRatios");
+			map.remove("state");
+			// 循环遍历下注中的数据
+			Iterator<MemberSingleNote> iterator = singleNotelist.iterator();
+			while(iterator.hasNext()) {
+				MemberSingleNote singleNote = iterator.next();
+				// 获得两个时间的毫秒时间差异
+				long distance = new Date().getTime() - singleNote.getBet_time().getTime();
+				// 计算差多少天
+				long day = distance / (1000 * 24 * 60 * 60);
+				// 计算差多少小时
+				long hour = (distance % (1000 * 24 * 60 * 60)) / (1000 * 60 * 60);
+				// 计算差多少分
+				long min = (distance % (1000 * 24 * 60 * 60) % (1000 * 60 * 60)) / (1000 * 60);
+				// 计算差多少秒
+				long second = (distance % (1000 * 24 * 60 * 60) % (1000 * 60 * 60) % (1000 * 60)) / 1000;
+				// 计算总共相差多少秒
+				long time = (day * 60 * 60 * 24) + (hour * 60 * 60) + (min * 60) + second;
+				// 判断下注时间是否有60秒
+				if(time < 60) {
+					continue;
+				}
+				String gid = singleNote.getGid();// 获取比赛gid
+				String type = singleNote.getBet_type();// 获取下注类型
+				// 根据下注类型获取url地址
+				String url = JsoupUtil.getUrl(type);
+				// 根据url地址获取所有数据
+				String stringAll = JsoupUtil.getStringAll(url);
+
+				// 根据所有数据进行切割获取数据
+				List<Map<String, String>> list = JsoupUtil.listFieldAndData(stringAll);
+				if (list == null) {
+					System.err.println("数据切割错误！");
+					continue;
+				}
+				String snid = singleNote.getSnid();// 获取注单id
+				map.put("snid", snid);// 设置注单id
+				// 获取地址中与gid匹配的数据
+				Map<String, String> mapData = JsoupUtil.getMapData(list, gid);
+				if (mapData == null) {
+					String money = singleNote.getMoney();// 获取下注金额
+					map.put("mid", singleNote.getMid());// 设置会员id
+					map.put("money", String.format("%.2f", Float.parseFloat(money)));// 设置余额
+					map.put("state", "-1");
+					// 根据mid修改余额
+					memberService.cancelSingleNote(map);
+				} else {
+					// 获取比率
+					String iorRatio = mapData.get(singleNote.getTape_field());
+					// 判断比率是否存在字母
+					iorRatio = iorRatio.contains("O") ? iorRatio.replace("O", "") : iorRatio;
+					iorRatio = iorRatio.contains("U") ? iorRatio.replace("U", "") : iorRatio;
+					// 匹配
+					if(iorRatio.equals(singleNote.getIor_ratio())) {
+						map.put("state", "0");
+						memberService.singleNoteAccount(map);
+					}else {
+						String money = singleNote.getMoney();// 获取下注金额
+						map.put("mid", singleNote.getMid());// 设置会员id
+						map.put("money", String.format("%.2f", Float.parseFloat(money)));// 设置余额
+						map.put("state", "-1");
+						// 根据mid修改余额
+						memberService.cancelSingleNote(map);
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * 足球篮球结算
 	 * 

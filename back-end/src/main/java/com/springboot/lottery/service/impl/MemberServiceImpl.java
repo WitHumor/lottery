@@ -2,6 +2,7 @@ package com.springboot.lottery.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -267,7 +268,7 @@ public class MemberServiceImpl implements MemberService {
 			// 根据FT与BK查询滚球
 			if (betType.equals("FT") || betType.equals("BK")) {
 				if (StringUtils.isNotBlank(state) && state.equals("0")) {
-					String states = "'0','2'";
+					String states = "'0','2','-2'";
 					map.put("states", states);
 				}
 				map.put("betTypes", betType);
@@ -348,6 +349,17 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	/**
+	 * 查询注单记录
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public List<MemberSingleNote> querySingleNote(Map<String, Object> map) {
+		return memberDao.querySingleNote(map);
+	}
+	
+	/**
 	 * 查询资金流水记录
 	 * 
 	 * @param map
@@ -427,9 +439,10 @@ public class MemberServiceImpl implements MemberService {
 		// 根据snid修改数据
 		singleNoteMap.put("snid", map.get("snid"));
 		// 往map里添加需要修改的字段
-		singleNoteMap.put("state", "-1");
-		singleNoteMap.put("winLose", "0");
+		singleNoteMap.put("state", map.get("state"));
+//		singleNoteMap.put("winLose", "0");
 		singleNoteMap.put("dealMoney", "0");
+		singleNoteMap.put("endTime", new Date());
 		// 根据snid修改注单状态
 		cancelSingleNote = singleNoteAccount(singleNoteMap);
 		if (cancelSingleNote <= 0) {
@@ -535,6 +548,7 @@ public class MemberServiceImpl implements MemberService {
 		singleNoteMap.put("state", "1");
 		singleNoteMap.put("winLose", winLose);
 		singleNoteMap.put("score", amidithion);
+		singleNoteMap.put("endTime", new Date());
 		money = sum - (memberByMoney + money);
 		// 保留两位小数
 		String dealMoney = String.format("%.2f", money);
@@ -744,9 +758,7 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	public Map<String, Object> toGeneralizeRebate(SingleNoteDTO dto) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月");
-		String betTime = format.format(dto.getBet_time());
-		map.put("time", betTime);// 时间
+		map.put("time", dto.getEndTime());// 时间
 		map.put("name", dto.getName());// 会员名
 		String money = dto.getMoney();
 		map.put("betMoney", money);// 下注金额

@@ -161,6 +161,14 @@ public interface MemberService {
 	Page<Map<String, Object>> queryGeneralizeRebate(Map<String, Object> map);
 	
 	/**
+	 * 查询注单记录
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<MemberSingleNote> querySingleNote(Map<String, Object> map);
+	
+	/**
 	 * 查询推广返利
 	 * 
 	 * @param map
