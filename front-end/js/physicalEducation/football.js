@@ -3,7 +3,7 @@ var CDS = 3,
 $(function() {
     init();
     getAllDatas(config.today_FT);
-    // countDown();
+    countDown();
 });
 
 var positions = {},
@@ -190,7 +190,7 @@ function analysis(datas) {
                 '<td class="t_right" fonts="ratio_u">' + item[withdraws('ratio_u')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick" vi="ior_OUH">' + item[withdraws('ior_OUH')] + '</a></td>' +
                 '<td fonts="str_even">' + item[withdraws('str_even')] + '&nbsp;<a href="javascript:void(0);" class="canclick odd_even" vi="ior_EOE">' + item[withdraws('ior_EOE')] + '</a></td>' +
                 '<td class="bgF0F1B5"><a href="javascript:void(0);" class="canclick halfs" vi="ior_HMC">' + item[withdraws('ior_HMC')] + '</a></td>' +
-                '<td class="t_right bgF0F1B5" fonts="' + (item[withdraws('hstrong')] == 'H' ? 'hratio' : '') + '" vals="' + item[withdraws('hratio')] + '">' + (item[withdraws('hstrong')] == 'C' ? item[withdraws('hratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick halfs" vi="ior_HRC">' + item[withdraws('ior_HRC')] + '</a></td>' +
+                '<td class="t_right bgF0F1B5" fonts="' + (item[withdraws('hstrong')] == 'C' ? 'hratio' : '') + '" vals="' + item[withdraws('hratio')] + '">' + (item[withdraws('hstrong')] == 'C' ? item[withdraws('hratio')] + "&nbsp;" : '') + '<a href="javascript:void(0);" class="canclick halfs" vi="ior_HRC">' + item[withdraws('ior_HRC')] + '</a></td>' +
                 '<td class="t_right bgF0F1B5" fonts="hratio_u">' + item[withdraws('hratio_u')].replace("O", "大").replace("U", "小") + '&nbsp;<a href="javascript:void(0);" class="canclick halfs" vi="ior_HOUH">' + item[withdraws('ior_HOUH')] + '</a></td>' +
                 '</tr>';
             html += '<tr gid="' + item[withdraws('gid')] + '" tmtype="N"><td class="hide"></td><td class="hide"></td><td><a href="javascript:void(0);" class="canclick" vi="ior_MN">' + item[withdraws('ior_MN')] + '</a></td>' +

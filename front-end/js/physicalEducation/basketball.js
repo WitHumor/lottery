@@ -3,7 +3,7 @@ var CDS = 3,
 $(function() {
     init();
     getAllDatas(config.today_BK);
-    // countDown();
+    countDown();
 });
 
 var positions = {},

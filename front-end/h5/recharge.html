@@ -73,8 +73,8 @@
             <div id="nexts" class="total_box mT10 hide">
                 <div class="input_box">
                     <label class="title_text">订单号</label>
-                    <input type="text" id="orderNum" class="plr10 pdr50" readonly disabled />
-                    <button id="btn-copy-order" class="btn-copy copy_btn" target="orderNum">复 制</button>
+                    <input type="text" id="orderNum" class="disabled plr10 pdr50" readonly />
+                    <button id="btn-copy-order" data-clipboard-target="#orderNum" data-clipboard-action="copy" class="btn-copys copy_btn">复 制</button>
                 </div>
                 <div class="input_box">
                     <label class="title_text">可得优惠</label>
@@ -89,10 +89,8 @@
                 </div>
                 <div class="input_box">
                     <label class="title_text">收款地址</label>
-                    <input type="text" id="payCount" class="plr10 pdr50" readonly disabled value="0x196b522DB2e0EEd8bEf28d5446C0F4001DF02F4D" />
-                    <!-- data-clipboard-text="0x196b522DB2e0EEd8bEf28d5446C0F4001DF02F4D"  -->
-                    <!--  data-clipboard-action="copy" -->
-                    <button id="btn-copy-address" target="payCount" class="btn-copy copy_btn">复 制</button>
+                    <input type="text" id="gatheringAddress" class="disabled plr10 pdr50" readonly value="0x196b522DB2e0EEd8bEf28d5446C0F4001DF02F4D" />
+                    <button id="btn-copy-address" data-clipboard-target="#gatheringAddress" data-clipboard-action="copy" class="btn-copy copy_btn">复 制</button>
                 </div>
                 <div class="input_box text-center">
                     <img src="img/ewm.jpg" width="80%" height="80%" />
@@ -115,10 +113,8 @@
         </div>
 </body>
 <script src="js/jquery-3.3.1.min.js"></script>
-<!-- <script src="js/clipboard.js"></script> -->
-<script src="js/ZeroClipboard.js"></script>
+<script src="js/clipboard.js"></script>
 <script src="js/layer_mobile/layer.js"></script>
-<script src="js/sha1.js"></script>
 <script src="js/public.js"></script>
 <script src="js/recharge.js"></script>
 

@@ -171,7 +171,7 @@ var TD = {
         ],
     },
     xzjl: {
-        select: '<option value="" selected>全部</option><option value="0">未结算</option><option value="1">已结算</option><option value="2">待结算</option>',
+        select: '<option value="" selected>全部</option><option value="-2">下注中</option><option value="0">未结算</option><option value="1">已结算</option><option value="2">待结算</option><option value="-1">被取消</option>',
         types: '<option value="" selected>所有类型</option><option value="RFT">足球</option><option value="REFT">滚球-足球</option><option value="RBK">篮球</option><option value="REBK">滚球-篮球</option>',
         cols: [
             [{
@@ -225,7 +225,7 @@ var TD = {
                 title: '注单选项',
                 minWidth: 280,
                 templet: function(data) {
-                    var strArr = ['大','小','单大','单小','单','双'];
+                    var strArr = ['大', '小', '单大', '单小', '单', '双'];
                     var st = data.occasion ? data.occasion : '';
                     if (data.iorType == '大' || data.iorType == '小') {
                         st += '大小'
@@ -237,11 +237,11 @@ var TD = {
                         st += data.iorType;
                     }
                     var alltype = data.iorType;
-                    if(strArr.indexOf(alltype) > -1) {
-                        if(alltype == '单大') {
+                    if (strArr.indexOf(alltype) > -1) {
+                        if (alltype == '单大') {
                             alltype = '大';
                         }
-                        if(alltype == '单小') {
+                        if (alltype == '单小') {
                             alltype = '小';
                         }
                     } else {
@@ -289,6 +289,12 @@ var TD = {
                             break;
                         case '2':
                             st = '待结算';
+                            break;
+                        case '-1':
+                            st = '被取消';
+                            break;
+                        case '-2':
+                            st = '下注中';
                             break;
                         default:
                             st = '-';

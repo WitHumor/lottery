@@ -76,7 +76,7 @@ var config = {
         glists: ["g([", "]);"], //列表数据
     },
     html_FT: '<tr class="theads"><th>时间</th><th>赛事</th><th>独赢</th><th>全场 - 让球</th><th>全场 - 大小</th><th>单双</th><th>独赢</th><th>半场 - 让球</th><th>半场 - 大小</th></tr>',
-    html_BK: '<tr class="theads"><th>时间</th><th>赛事</th><th>独赢</th><th>让分</th><th>大小</th><th colspan="2">球队积分：大小</th></tr>',
+    html_BK: '<tr class="theads"><th>时间</th><th>赛事</th><th>独赢</th><th>让分</th><th>大小</th><th colspan="2">球队积分：大小</th><th class="hide">球队积分：大小</th></tr>',
     dataless: '<tr><td colspan="9" style="color:#000;line-height:50px;">您选择的项目暂时没有赛事。请修改您的选项或迟些再返回。</td></tr>',
 
     corder: {

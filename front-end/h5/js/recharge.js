@@ -5,37 +5,32 @@ $(function() {
 var recharge = {
     ajax: new HttpService(),
     initPage: function() {
-        // 全局设置
-        // ZeroClipboard.setDefaults({
-        //     moviePath: 'js/ZeroClipboard.swf'
-        // });
-        // new ZeroClipboard([document.getElementById("btn-copy-address"), document.getElementById("btn-copy-order")],{
-        //   moviePath: 'js/ZeroClipboard.swf'
-        // }).on('complete', function(client, args) {
-        //     layer.open({
-        //         content: '内容已经复制！',
-        //         skin: 'msg',
-        //         time: 2
-        //     });
-        // });
-        $('.btn-copy').click(function() {
-            var ids = $(this).attr('target');
-            var ctxt = document.getElementById(ids);
-            ctxt.select();
-            document.execCommand("Copy");
+        // 实例化 ClipboardJS对象;
+        var copyBtn = new ClipboardJS('.btn-copy');
+        copyBtn.on("success", function(e) {
+            console.log(e);
+            // 复制成功
             layer.open({
                 content: '已复制，可贴粘',
                 skin: 'msg',
-                time: 2
+                time: 1
             });
+            e.clearSelection();
         });
+        copyBtn.on("error", function(e) {
+            //复制失败
+            console.log(e.action);
+        });
+
         public.currency('0', 'first');
         public.payInput('0');
         $('#payAmount').next('i.clear_all').on('click', function() {
             $(this).siblings('input').val('');
             $(this).hide();
             public.aboutChange('0');
-            public.checkinput({domlist: $('#payAmount')});
+            public.checkinput({
+                domlist: $('#payAmount')
+            });
         });
         $('#coinType').click(function() {
             public.getManyType({}, function(data) {
@@ -72,9 +67,21 @@ var recharge = {
                                 $('.stepl1, .step2').removeClass('bfirsthand').addClass('bnormal');
                                 var res = data.result;
                                 $('#orderNum').val(res.number);
-                                $('#btn-copy-order').attr('data-clipboard-text', data.result);
+                                new ClipboardJS('.btn-copys', {
+                                    text: function() {
+                                        return res.number;
+                                    }
+                                }).on('success', function(e) {
+                                    layer.open({
+                                        content: '已复制，可贴粘',
+                                        skin: 'msg',
+                                        time: 1
+                                    });
+                                    e.clearSelection();
+                                })
                                 $('#getDiscounts').val(res.discounts + ' 点');
                                 $('#payMoney').val(coinNum + ' ' + coinName + ' = ' + res.money + ' 点');
+
                                 $('#firsts').hide();
                                 $('#nexts').show();
                                 $('#nexts .finish-div').html('<button class="to_finish bdanger" onclick="recharge.finishPay();">完 成 支 付</button>');

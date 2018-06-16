@@ -159,6 +159,10 @@ em {
     font-weight: bold;
 }
 
+.disabled {
+    background-color: rgb(235, 235, 228);
+}
+
 .hide {
     display: none;
 }
