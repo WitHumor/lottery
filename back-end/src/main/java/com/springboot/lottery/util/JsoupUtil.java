@@ -684,6 +684,8 @@ public class JsoupUtil {
 	 */
 	public static Document loadUrl(String url) {
 		try {
+			// 超时时间设置为30秒
+//			Document doc = Jsoup.connect(url).timeout(30000).get();
 			Document doc = Jsoup.connect(url).get();
 			return doc;
 		} catch (IOException e) {
