@@ -1330,12 +1330,14 @@ public class MemberController {
 		memberSingleNote.setStrong(StringUtils.isBlank(strong) ? null : strong);// 让球方
 		// 获取防护类型
 		String defend = JsoupUtil.getDefend();
+		String state = null;
 		// 防护类型中存在需要防护的类型，则修改为下注中状态
 		if(defend.contains(ratioType)) {
-			memberSingleNote.setState("-2");// 设置状态
+			state = ratioType.equals("单") || ratioType.equals("双") ? "0" : "-2";
 		} else {
-			memberSingleNote.setState("0");// 设置状态
+			state = "0";
 		}
+		memberSingleNote.setState(state);
 		memberSingleNote.setLeague(league);// 设置联赛
 		memberSingleNote.setMoney(money);// 设置下注金额
 		memberSingleNote.setValid_money(String.format("%.2f", validMoney));// 设置有效金额
@@ -1842,18 +1844,28 @@ public class MemberController {
 		// 根据下注中查询所有注单
 		map.put("state", "-2");
 		// 防护类型
-		String iorTypes = JsoupUtil.getDefend();
-		map.put("iorTypes", iorTypes);
+//		String iorTypes = JsoupUtil.getDefend();
+//		map.put("iorTypes", iorTypes);
 		List<MemberSingleNote> singleNotelist = memberService.querySingleNote(map);
 		if(singleNotelist == null || singleNotelist.size() <= 0) {
 			System.out.println("需要防护的数据不存在");
 		}else {
-			map.remove("iorRatios");
+			map.remove("iorTypes");
 			map.remove("state");
 			// 循环遍历下注中的数据
 			Iterator<MemberSingleNote> iterator = singleNotelist.iterator();
 			while(iterator.hasNext()) {
 				MemberSingleNote singleNote = iterator.next();
+				String snid = singleNote.getSnid();// 获取注单id
+				map.put("snid", snid);// 设置注单id
+				if(singleNote.getIor_type().equals("单") || singleNote.getIor_type().equals("双")) {
+					String money = singleNote.getMoney();// 获取下注金额
+					map.put("mid", singleNote.getMid());// 设置会员id
+					map.put("money", String.format("%.2f", Float.parseFloat(money)));// 设置余额
+					map.put("state", "-1");
+					// 根据mid修改余额
+					memberService.cancelSingleNote(map);
+				}
 				// 获得两个时间的毫秒时间差异
 				long distance = new Date().getTime() - singleNote.getBet_time().getTime();
 				// 计算差多少天
@@ -1883,8 +1895,6 @@ public class MemberController {
 					System.err.println("数据切割错误！");
 					continue;
 				}
-				String snid = singleNote.getSnid();// 获取注单id
-				map.put("snid", snid);// 设置注单id
 				// 获取地址中与gid匹配的数据
 				Map<String, String> mapData = JsoupUtil.getMapData(list, gid);
 				if (mapData == null) {
