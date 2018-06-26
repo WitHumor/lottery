@@ -1,7 +1,8 @@
 body {
     position: relative;
     background-color: #f0f3f4;
-    /*overflow: hidden;*/
+    overflow: hidden;
+    height: 100%;
     font-size: 16px;
 }
 
@@ -155,7 +156,15 @@ em {
     text-align: right;
 }
 
-.font-blod {
+.text-underline {
+    text-decoration: underline;
+}
+
+.vertical-middle {
+    vertical-align: middle;
+}
+
+.font-bold {
     font-weight: bold;
 }
 
@@ -201,6 +210,10 @@ em {
 
 .mB10 {
     margin-bottom: 10px;
+}
+
+.f12 {
+    font-size: 12px;
 }
 
 .f14 {
@@ -409,19 +422,15 @@ a:focus {
 
 .acontainer {
     position: relative;
-    border-top: 50px solid transparent;
-    border-bottom: 100px solid transparent;
-    height: 100%;
-    overflow: hidden;
-    /*overflow-y: scroll;*/
-}
-
-.acontainer.notop {
     border-top: none;
+    height: 100%;
+    margin-bottom: 10px;
+    overflow-y: scroll;
 }
 
-.acontainer.nobottom {
-    border-bottom: none;
+.navTop + .acontainer {
+    border-top: 47px solid transparent;
+    height: calc(100% - 47px);
 }
 
 
@@ -442,9 +451,9 @@ a:focus {
 }
 
 .footer {
-    position: absolute;
+    /*position: absolute;
     left: 0;
-    bottom: 50px;
+    bottom: 0;*/
     text-align: center;
     color: #55402F;
     height: 30px;
@@ -453,7 +462,27 @@ a:focus {
 }
 
 .vessel {
+    /*position: relative;*/
+    position: fixed;
     color: #55402F;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    /*overflow: hidden;*/
+}
+
+.vessel.hasBottom {
+    bottom: 50px;
+}
+
+.vessel.hasFooter {
+    bottom: 40px;
+}
+
+.vessel.hasBottom.hasFooter {
+    bottom: 90px;
 }
 
 
@@ -477,6 +506,8 @@ a:focus {
 }
 
 .each_card {
+    display: block;
+    color: #55402F;
     border-top: 1px solid #DDDDDD;
     padding: 0 10px;
 }
@@ -530,7 +561,12 @@ a:focus {
     /*background-color: #FF1A1A;*/
 }
 
-.input_box > i {
+.input_div {
+    position: relative;
+}
+
+.input_box > i,
+.input_div > i {
     position: absolute;
     top: 0;
     /*margin: 8px 0;*/
@@ -543,6 +579,7 @@ a:focus {
 .input_box .begin_icon {
     left: 0;
     border-right: 1px solid #DDD5C4;
+    z-index: 10;
 }
 
 .input_box .clear_all.onlys,
@@ -639,6 +676,10 @@ i.i_text:before {
     padding-right: 50px !important;
 }
 
+.top20 {
+    top: 20px;
+}
+
 .copy_btn {
     width: 50px !important;
     position: absolute;
@@ -681,6 +722,7 @@ i.i_text:before {
     position: relative;
     background-color: #f2f2f2;
 }
+
 .li_list ul {
     overflow: scroll;
     /*height: 170px;*/
@@ -764,6 +806,310 @@ i.i_text:before {
     color: #fff;
     background-color: #009f95;
     border: 1px solid #009f95;
+}
+
+
+/*tab单页切换*/
+
+.pagenavi {
+    text-align: left;
+    background: #f3f3f3;
+    height: 38px;
+    line-height: 38px;
+    width: 100%;
+    display: -webkit-box;
+    padding-bottom: 3px;
+}
+
+.pagenavi li {
+    position: relative;
+    -webkit-box-flex: 1;
+    font-size: 18px;
+    display: block;
+    color: #000;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+}
+
+.pagenavi li a {
+    color: #000;
+    display: inline-block;
+    height: 38px;
+    padding: 0 5px;
+}
+
+.pagenavi a.active {
+    color: #f00;
+    border-bottom: 2px solid #f00;
+}
+
+
+/*浏览器判断*/
+
+#browser-redirect {
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99999999999999999;
+}
+
+#browser-redirect img {
+    display: block;
+    margin: 0 auto;
+}
+
+
+/*无数据样式*/
+
+.nodatas {
+    margin: 120px auto 0;
+    display: block;
+    text-align: center;
+}
+
+
+/*底线*/
+
+.baseline {
+    line-height: 25px;
+    text-align: center;
+    border-width: 1px 0 0;
+    border-style: solid;
+    border-color: #e6e6e6;
+    margin: 10px 15% 0;
+}
+
+.baseline legend {
+    margin-left: 20px;
+    padding: 0 15px;
+    font-weight: 300;
+}
+
+.i_nodatas {
+    font-size: 160px;
+    margin: 120px auto;
+    display: block;
+    color: #62BFE3;
+    text-align: center;
+}
+
+.filtrate_btn {
+    line-height: 30px;
+    text-align: center;
+    font-size: 14px;
+    background-color: #fff;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.list_container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+    overflow-y: scroll;
+}
+
+.list_box {
+    margin-bottom: 15px;
+    background-color: #fff;
+}
+
+.each_box {
+    position: relative;
+    margin: 15px 15px 0;
+    line-height: 28px;
+    padding: 0 5px 0 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+
+/*筛选右侧弹框*/
+
+.filtrate {
+    position: fixed;
+    top: 0;
+    right: -101%;
+    background-color: #fff;
+    width: 70%;
+    height: 100%;
+    z-index: 99990;
+}
+
+.filtrate_modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, .3);
+    width: 100%;
+    height: 100%;
+    z-index: 99980;
+    display: none;
+}
+
+.fi_container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 80px;
+    display: none;
+    overflow: scroll;
+}
+
+.fi_container.activate {
+    display: block;
+}
+
+.fi_title {
+    padding-left: 15px;
+    height: 30px;
+    line-height: 30px;
+    color: #8A8A8A;
+    background-color: #f2f2f2;
+}
+
+.fi_types {
+    position: relative;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.fi_types p {
+    margin-left: 5%;
+    height: 35px;
+    line-height: 35px;
+}
+
+.fi_types .i_inputs {
+    position: relative;
+}
+
+.i_inputs i {
+    position: absolute;
+    top: 0;
+    right: 18px;
+    line-height: 30px;
+    /*color: #B2B9C4;*/
+    color: #fff;
+}
+
+.fi_types input {
+    width: 90%;
+    /*height: 30px;*/
+    line-height: 30px;
+    margin-left: 5%;
+    padding: 0 30px 0 8px;
+    border-radius: 2px;
+    background-color: #E6E3E3;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.fi_types .options {
+    padding-left: 4%;
+}
+
+.fi_types .options label {
+    display: inline-block;
+    width: 30%;
+    margin-left: 1%;
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 10px 5px;
+    border-radius: 5px;
+    background-color: #E6E3E3;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.fi_types .options label.active {
+    background-color: #FCC192;
+    color: #fff;
+}
+
+.bottom_btn_reset_submit {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 80px;
+    line-height: 80px;
+    text-align: right;
+    padding-right: 4%;
+}
+
+.bottom_btn_reset_submit button {
+    border-radius: 0;
+    width: 90px;
+    text-align: center;
+    color: #fff;
+}
+
+.bottom_btn_reset_submit .btn_reset {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background: -webkit-linear-gradient(left, #EEF280, #F09210);
+    background: -o-linear-gradient(left, #EEF280, #F09210);
+    background: -moz-linear-gradient(left, #EEF280, #F09210);
+    background: -mos-linear-gradient(left, #EEF280, #F09210);
+    background: linear-gradient(left, #EEF280, #F09210);
+}
+
+.bottom_btn_reset_submit .btn_submit {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    background: -webkit-linear-gradient(left, #F0924C, #F45E46);
+    background: -o-linear-gradient(left, #F0924C, #F45E46);
+    background: -moz-linear-gradient(left, #F0924C, #F45E46);
+    background: -mos-linear-gradient(left, #F0924C, #F45E46);
+    background: linear-gradient(left, #F0924C, #F45E46);
+}
+
+
+/*标签，徽章*/
+
+.biaoqian {
+    width: auto;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    color: #D8D8D8;
+    border: 1px solid #D8D8D8;
+    border-radius: 2px;
+    font-size: 12px;
+    margin-right: 3px;
+    display: inline-block;
+    padding: 0 2px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
+/*返回顶部*/
+.back_to_top{
+    position: fixed;
+    bottom:30px;
+    right: 30px;
+    /*border:1px solid #888;*/
+    display: none;
+    z-index: 99999;
+    font-size: 30px;
+    transform:rotate(180deg);
+    -ms-transform:rotate(180deg); /* IE 9 */
+    -webkit-transform:rotate(180deg); /* Safari and Chrome */
 }
 
 

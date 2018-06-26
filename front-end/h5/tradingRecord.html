@@ -1,0 +1,210 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="wap-font-scale" content="no">
+    <meta name="format-detection" content="telephone=no">
+    <title>永利高 -- 交易记录</title>
+    <link rel="stylesheet" href="css/font/iconfont.css">
+    <link rel="stylesheet" href="js/layer_mobile/need/layer.css">
+    <link rel="stylesheet" href="css/mobiscroll/mobiscroll.custom-3.0.0-beta2.min.css" />
+    <link rel="stylesheet" href="css/public.css?v=1">
+    <link rel="stylesheet" href="css/tradingRecord.css?v=1">
+</head>
+
+<body>
+    <div class="vessel">
+        <div class="navTop">
+            <div id="backs" class="leftBtn"><i class="iconfont icon-back f24_"></i></div>
+            <div class="ctitle">
+                <!-- <img src="img/apple.png"> -->
+                <span>交易记录</span>
+            </div>
+            <div class="rightBtn"><i class="iconfont icon-kefu"></i></div>
+        </div>
+        <div class="acontainer">
+            <div class="pagenavi">
+                <li><a href="javascript:void(0);" class="active" atype="1">提现记录</a></li>
+                <li><a href="javascript:void(0);" atype="0">充值记录</a></li>
+            </div>
+            <div class="filtrate_btn"><i class="iconfont icon-shaixuan"></i> 记录筛选</div>
+            <i class="back_to_top iconfont icon-open"></i>
+            <div class="swipe list_container" style="top: 75px;">
+                <ul id='sliders'>
+                    <div class="list_box" atype="1">
+                        <!-- <img src="img/nodata.png" class="nodatas"> -->
+                        <!-- <div class="each_box">
+                            <img class="order_type" src="img/bq.png">
+                            <div class="order_type">等待处理</div>
+                            <div class="timers">
+                                <label>2018-06-15 03:14</label>
+                                <label class="fr f12">本地钱包</label>
+                            </div>
+                            <div class="con_part">
+                                <p><i class="iconfont icon-dingdanhao f12"></i>
+                                    <label>BW1529046850791</label>
+                                </p>
+                                <p><i class="iconfont icon-jine1 f12"></i>
+                                    <label>100000点</label>
+                                </p>
+                                <p class="mB5"><i class="iconfont icon-qianbaodizhi f12"></i>
+                                    <label>sdajskd121dsa1222</label>
+                                </p>
+                                <div class="clear mores">
+                                    <a href="javascript:void(0);" con="hsjskfhsdhjksj" class="showMore">相关备注</a>
+                                    <a href="javascript:void(0);" con="hsjskfhsdhjksj" class="showMore">审核意见</a>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="list_box" atype="0">
+                        <!-- <div class="each_box">
+                            <img class="order_type" src="img/bq.png">
+                            <div class="order_type">等待处理</div>
+                            <div class="timers">
+                                <label>2018-06-15 03:14</label>
+                                <label class="fr f12">本地钱包</label>
+                            </div>
+                            <div class="con_part">
+                                <p><i class="iconfont icon-dingdanhao f12"></i>
+                                    <label>BW1529046850791</label>
+                                </p>
+                                <p><i class="iconfont icon-jine1 f12"></i>
+                                    <label>100000点</label>
+                                </p>
+                                <p class="mB5"><i class="iconfont icon-qianbaodizhi f12"></i>
+                                    <label>sdajskd121dsa1222</label>
+                                </p>
+                                <div class="clear mores">
+                                    <a  href="javascript:void(0);" con="hsjskfhsdhjksj" class="showMore">确认支付</a>
+                                    <a  href="javascript:void(0);" con="hsjskfhsdhjksj" class="showMore">审核意见</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="each_box">
+                            <img class="order_type" src="img/bq.png">
+                            <div class="order_type">等待处理</div>
+                            <div class="timers">
+                                <label>2018-06-15 03:14</label>
+                                <label class="fr f12">本地钱包</label>
+                            </div>
+                            <div class="con_part">
+                                <p><i class="iconfont icon-dingdanhao f12"></i>
+                                    <label>BW1529046850791</label>
+                                </p>
+                                <p><i class="iconfont icon-jine1 f12"></i>
+                                    <label>100000点</label>
+                                </p>
+                                <p class="mB5"><i class="iconfont icon-qianbaodizhi f12"></i>
+                                    <label>sdajskd121dsa1222</label>
+                                </p>
+                                <div class="clear mores">
+                                    <a  href="javascript:void(0);" con="hsjskfhsdhjksj" class="showMore onlyone">审核意见</a>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="screens">
+        <div class="filtrate">
+            <div class="fi_container activate">
+                <div class="fi_title">提现记录筛选</div>
+                <div class="fi_types">
+                    <p>申请时间区间</p>
+                    <div class="i_inputs">
+                        <i class="iconfont icon-cha"></i>
+                        <input type="text" class="timeSection ipts mB10" disabled readonly want="time_stand" />
+                    </div>
+                </div>
+                <div class="fi_types">
+                    <p>提现申请状态</p>
+                    <div class="options" want="state">
+                        <label value="0">等待处理</label>
+                        <label value="1">审核中</label>
+                        <label value="2">支付完成</label>
+                        <label value="-1">已取消</label>
+                        <label value="-2">审批拒绝</label>
+                    </div>
+                </div>
+            </div>
+            <div class="fi_container">
+                <div class="fi_title">充值记录筛选</div>
+                <div class="fi_types">
+                    <p>申请时间区间</p>
+                    <div class="i_inputs">
+                        <i class="iconfont icon-cha"></i>
+                        <input type="text" class="timeSection ipts mB10" disabled readonly want="time_stand" />
+                    </div>
+                </div>
+                <div class="fi_types">
+                    <p>充值币种</p>
+                    <div class="options" want="type">
+                        <label value="BTC">比特币</label>
+                        <label value="EOS">柚子币</label>
+                        <label value="ETH">以太币</label>
+                        <label value="XRP">瑞波币</label>
+                        <label value="LTC">莱特币</label>
+                        <label value="QTUM">量子币</label>
+                        <label value="AppleC">苹果币</label>
+                    </div>
+                </div>
+                <div class="fi_types">
+                    <p>充值申请状态</p>
+                    <div class="options" want="state">
+                        <label value="0">等待支付</label>
+                        <label value="1">支付成功</label>
+                        <label value="-1">审核中</label>
+                        <label value="2">充值成功</label>
+                        <label value="-2">充值失败</label>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom_btn_reset_submit">
+                <button class="btn_reset">重 置</button>
+                <button class="btn_submit">确 定</button>
+            </div>
+        </div>
+        <div class="filtrate_modal"></div>
+    </div>
+</body>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/layer_mobile/layer.js"></script>
+<script src="js/mobiscroll.custom-3.0.0-beta2.min.js"></script>
+<script src="js/touchslider.js"></script>
+<script src="js/public.js"></script>
+<!-- <script src="js/tradingRecord.js"></script> -->
+<script type="text/javascript">
+var touchslider = new TouchSlider('sliders', {
+    duration: 100,
+    direction: 0,
+    autoplay: false,
+    fullsize: true
+});
+touchslider.on('before', function(m, n) {
+    var as = $('.pagenavi a');
+    as[m].className = '';
+    as[n].className = 'active';
+});
+$('.pagenavi a').click(function() {
+    var thisindex = $(this).parent('li').index();
+    touchslider.slide(thisindex);
+    $($('.filtrate .fi_container')[thisindex]).addClass('activate').siblings('.fi_container').removeClass('activate');
+});
+$('.showMore').on('click', function() {
+    var content = $(this).attr('con');
+    console.log(content);
+    if (content) {
+        layer.open({
+            content: content,
+            skin: 'footer'
+        });
+    }
+});
+</script>
+
+</html>

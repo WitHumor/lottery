@@ -947,3 +947,23 @@ input.btn-submit {
     border-bottom-left-radius: 0;
     vertical-align: middle;
 }
+
+
+/*浏览器判断*/
+
+#browser-redirect {
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99999999999999999;
+}
+
+#browser-redirect img {
+    display: block;
+    margin: 0 auto;
+}

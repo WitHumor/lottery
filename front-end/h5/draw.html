@@ -15,7 +15,7 @@
 <body>
     <div class="vessel">
         <div class="navTop">
-            <div class="leftBtn" onclick="javascript:history.back(-1);"><i class="iconfont icon-back f24_"></i></div>
+            <div id="backs" class="leftBtn"><i class="iconfont icon-back f24_"></i></div>
             <div class="ctitle">
                 <!-- <img src="img/apple.png"> -->
                 <span>申请提现</span>
@@ -24,7 +24,7 @@
                 <i class="iconfont icon-kefu"></i>
             </div>
         </div>
-        <div class="acontainer nobottom">
+        <div class="acontainer nofooter">
             <div class="total_box mT10">
                 <div class="input_box">
                     <i class="iconfont icon-wallet i_text begin_icon primary">提现类型</i>
@@ -43,8 +43,10 @@
                 </div>
                 <div class="input_box">
                     <i class="iconfont icon-dianshu i_text begin_icon primary">提现点数</i>
-                    <input type="text" id="countDian" class="pl0r100 pdr50" placeholder="提现金额至少100点" itype="wap" istr="提现点数" need />
-                    <i class="iconfont icon-close clear_all onlys hide"></i>
+                    <div class="input_div">
+                        <input type="text" id="countDian" class="pl0r100 pdr50" placeholder="提现金额至少100点" itype="wap" istr="提现点数" need />
+                        <i class="iconfont icon-close clear_all onlys hide"></i>
+                    </div>
                     <div class="total_tip">
                         <span class="tip_text smile hide"></span>
                     </div>
@@ -55,25 +57,31 @@
                 </div>
                 <div class="input_box">
                     <i class="iconfont icon-phone i_text begin_icon primary">电话号码</i>
-                    <input type="text" id="telephone" class="pl0r100" maxlength="11" itype="telephone" istr="电话号码" need />
-                    <i class="iconfont icon-close clear_all onlys hide"></i>
+                    <div class="input_div">
+                        <input type="text" id="telephone" class="pl0r100" maxlength="11" itype="telephone" istr="电话号码" need />
+                        <i class="iconfont icon-close clear_all onlys hide"></i>
+                    </div>
                     <div class="total_tip">
                         <span class="tip_text smile hide"></span>
                     </div>
                 </div>
                 <div class="input_box">
                     <i class="iconfont icon-pin i_text begin_icon primary">钱包地址</i>
-                    <input type="text" id="walletAddress" class="pl0r100" itype="" istr="钱包地址" need />
-                    <i class="iconfont icon-close clear_all onlys hide"></i>
+                    <div class="input_div">
+                        <input type="text" id="walletAddress" class="pl0r100" itype="" istr="钱包地址" need />
+                        <i class="iconfont icon-close clear_all onlys hide"></i>
+                    </div>
                     <div class="total_tip">
                         <span class="tip_text smile hide"></span>
                     </div>
                 </div>
                 <div class="input_box">
                     <i class="iconfont icon-password i_text begin_icon primary">取款密码</i>
-                    <input type="password" id="drawPassword" class="pl0r100" maxlength="4" itype="withpassord" istr="取款密码" need />
-                    <i class="iconfont icon-close clear_all hide"></i>
-                    <i class="iconfont icon-iconcloseeye eyes"></i>
+                    <div class="input_div">
+                        <input type="password" id="drawPassword" class="pl0r100" maxlength="4" itype="withp-assord" istr="取款密码" need />
+                        <i class="iconfont icon-close clear_all hide"></i>
+                        <i class="iconfont icon-iconcloseeye eyes"></i>
+                    </div>
                     <div class="total_tip">
                         <span class="tip_text smile hide"></span>
                     </div>
@@ -83,7 +91,7 @@
                 </div>
                 <div class="input_box">
                     <div class="total_tip">
-                        <span class="tip_text warning"><span class="font-blod">取款须知：</span>① 下注量必须达到最后一次存款金额的三倍以上才能进行取款！② 请仔细检查钱包地址，由于您自己的失误造成的转账错误本网站概不负责！</span>
+                        <span class="tip_text warning"><span class="font-bold">取款须知：</span>① 下注量必须达到最后一次存款金额的三倍以上才能进行取款！② 请仔细检查钱包地址，由于您自己的失误造成的转账错误本网站概不负责！</span>
                     </div>
                 </div>
                 <div class="input_box">
@@ -91,6 +99,7 @@
                 </div>
             </div>
         </div>
+    </div>
 </body>
 <script src="js/jquery-3.3.1.min.js"></script>
 <!-- <script src="js/clipboard.js"></script> -->

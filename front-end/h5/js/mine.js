@@ -1,5 +1,5 @@
 $(function() {
-  mine.initPage();
+    mine.initPage();
 });
 
 var mine = {
@@ -12,11 +12,19 @@ var mine = {
         mine.refreshAccount();
 
         $('.refresh_sum').click(function() {
-          $('.residual p').text('**** 点');
-          mine.refreshAccount();
+            $('.residual p').text('**** 点');
+            mine.refreshAccount();
         });
         $('.exit-btn button').click(function() {
-          mine.loginout();
+            mine.loginout();
+        });
+        $('.yqm_about').click(function() {
+            layui.use('layer', function() {
+                layui.layer.tips('Tip：受邀会员每月下注流水总额的1%作为推广返利！', '.yqm_about', {
+                    tips: [3, '#78BA32']
+                    // #4073B9
+                });
+            });
         });
     },
     refreshAccount: function() {

@@ -30,6 +30,7 @@
                 <option value="XRP">瑞波币（XRP）</option>
                 <option value="LTC">莱特币（LTC）</option>
                 <option value="QTVM">量子币（QTVM）</option>
+                <option value="AppleC">苹果币（AppleC）</option>
             </select>
         </div>
         <div class="layui-inline">
@@ -133,6 +134,9 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                             break;
                         case 'QTUM':
                             st = '量子币';
+                            break;
+                        case 'AppleC':
+                            st = '苹果币';
                             break;
                         default:
                             st = '-';

@@ -363,8 +363,36 @@ var common = {
         return reBool;
     },
 
+    browserRedirect: function() {
+        var sUserAgent = navigator.userAgent.toLowerCase();
+        var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+        var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+        var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+        var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+        var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+        var bIsAndroid = sUserAgent.match(/android/i) == "android";
+        var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+        var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+        // if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+        //     console.log('H5',window.location.href)
+        //     if (window.location.href != 'http://localhost/h5') {
+        //         $('body').append('<div id="browser-redirect"></div>');
+        //         window.location.href = "http://localhost/h5";
+        //         // window.location.href = "http://wap.ylg51888.com";
+        //     }
+        // } else {
+        //     console.log('pc',window.location.href);
+        //     if (window.location.href != 'http://localhost/html/physicalEducation/home.html') {
+        //         $('body').append('<div id="browser-redirect"></div>');
+        //         window.location.href = 'http://localhost/html/physicalEducation/home.html';
+        //         // window.location.href = "http://www.ylg51888.com";
+        //     }
+        // }
+    },
+
     //初始化
     initPage: function() {
+        common.browserRedirect();
         //页面共同代码
         if ($('#thisisheader').length == 0) {
             var html = '';
@@ -448,7 +476,7 @@ var common = {
         layer.closeAll();
         if (sessionStorage.getItem('toid') && sessionStorage.getItem('userinfo')) {
             var names = JSON.parse(sessionStorage.getItem('userinfo')).name;
-            var h = '<div class="icodes">' + names + '</div><div class="netaddr"><label>'+ BasePath +'?icode=' + names + '</label><button id="btn-copy-qrcode" data-clipboard-text="'+ BasePath +'?icode='+ names +'">复 制</button></div><div id="qrcode"></div><div class="qrcode-tip">Tip：受邀会员每月下注流水总额的1%作为推广返利</div>';
+            var h = '<div class="icodes">' + names + '</div><div class="netaddr"><label>' + BasePath + '?icode=' + names + '</label><button id="btn-copy-qrcode" data-clipboard-text="' + BasePath + '?icode=' + names + '">复 制</button></div><div id="qrcode"></div><div class="qrcode-tip">Tip：受邀会员每月下注流水总额的1%作为推广返利</div>';
             layer.alert(h, {
                 skin: 'layui-layer-molv',
                 area: ['420px', '370px'],
@@ -463,7 +491,7 @@ var common = {
                         layer.msg('内容已经复制，你可以使用Ctrl+V 粘贴！');
                     });
                     new QRCode(document.getElementById("qrcode"), {
-                        text: H5Path +"/register.html?icode=" + names,
+                        text: H5Path + "/register.html?icode=" + names,
                         width: 128,
                         height: 128,
                         colorDark: "#000000",

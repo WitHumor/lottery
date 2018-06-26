@@ -177,7 +177,34 @@ var public = {
         }
         return result;
     },
+    browserRedirect: function() {
+        var sUserAgent = navigator.userAgent.toLowerCase();
+        var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+        var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+        var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+        var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+        var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+        var bIsAndroid = sUserAgent.match(/android/i) == "android";
+        var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+        var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+        // if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+        //     console.log('H5',window.location.href)
+        //     if (window.location.href != 'http://localhost/h5/') {
+        //         $('body').append('<div id="browser-redirect"><img src="img/apple.png"></div>');
+        //         window.location.href = "http://localhost/h5";
+        //         // window.location.href = "http://wap.ylg51888.com";
+        //     }
+        // } else {
+        //     console.log('pc',window.location.href);
+        //     if (window.location.href != 'http://localhost/html/physicalEducation/home.html') {
+        //         $('body').append('<div id="browser-redirect"><img src="img/apple.png"></div>');
+        //         window.location.href = 'http://localhost/html/physicalEducation/home.html';
+        //         // window.location.href = "http://www.ylg51888.com";
+        //     }
+        // }
+    },
     init: function() {
+        public.browserRedirect();
         if ($('#thisisindex').length > 0 || $('#thisismine').length > 0) {
             $('.vessel').append('<div class="navBottom">' +
                 '<div class="items btn-click" htmls="index"><i class="iconfont icon-zhuye"></i><span class="icon-name">首页</span></div>' +
@@ -186,8 +213,8 @@ var public = {
                 '<div class="cd-bouncy-nav-modal">' +
                 '<nav>' +
                 '<ul class="cd-bouncy-nav">' +
-                '<li><a class="cz" href="recharge.html">充值</a></li>' +
-                '<li><a class="tx" href="draw.html">提现</a></li>' +
+                '<li><a class="cz validate" href="javascript:void(0);" htmls="recharge">充值</a></li>' +
+                '<li><a class="tx validate" href="javascript:void(0);" htmls="draw">提现</a></li>' +
                 '</ul>' +
                 '</nav>' +
                 '<a href="javascript:void(0);" class="cd-close">Close modal</a>' +
@@ -212,10 +239,24 @@ var public = {
                     }
                 }
             });
+            $('.validate').click(function() {
+                if (!sessionStorage.getItem('toid')) {
+                    window.location.href = 'login.html?where=' + $(this).attr('htmls');
+                } else {
+                    window.location.href = $(this).attr('htmls') + '.html';
+                }
+            });
         }
         // 在线咨询
         $('body').append('<script>var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?bdcca757f17f3439b840ebb0a44084a2";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();</script>');
 
+        $('#backs').click(function() {
+            if (document.referrer.indexOf('login.html') > -1) {
+                history.go(-2);
+            } else {
+                history.back(-1);
+            }
+        });
         $('.icon-kefu').on('click', function() {
             $('#nb_icon_wrap').click();
         });
@@ -255,12 +296,20 @@ var public = {
             var ivalue = $(item).val(),
                 itype = $(item).attr('itype'),
                 istr = $(item).attr('istr'),
-                tips = $(item).siblings('.total_tip').find('.tip_text');
+                tips = $(item).parents('.input_div').siblings('.total_tip').find('.tip_text');
             if (!ivalue) {
                 tips.text(istr + '必须填写').removeClass('smile').addClass('cry').show();
                 $(item).addClass('deposit-m');
                 reBool = false;
                 return;
+            }
+            if (itype == 'new-pass-cipher') {
+                var state = $('.pagenavi a.active').attr('state');
+                if (state == '1') {
+                    itype = 'password-cipher';
+                } else if (state == '0') {
+                    itype = 'withpass-cipher';
+                }
             }
             if (itype == 'account') {
                 if (!reg1.test(ivalue)) {
@@ -308,18 +357,18 @@ var public = {
                     return;
                 }
             }
-            if (o.type == 'w' && itype.indexOf('cipher') > -1) {
+            if (itype.indexOf('cipher') > -1) {
                 var before = $(item).parents('.input_box').prev('.input_box').find('input').val();
                 if (ivalue == before) {
-                    tips.text('旧密码与新密码不能相同').removeClass('smile').addClass('cry').show();
+                    tips.text('原密码与新密码不能相同').removeClass('smile').addClass('cry').show();
                     $(item).addClass('deposit-m');
                     reBool = false;
                     return;
                 }
             }
-            if (itype.indexOf('surepass') > -1) {
+            if (itype.indexOf('sure-pass') > -1) {
                 var before = $(item).parents('.input_box').prev('.input_box').find('input').val();
-                if (ivalue == before) {
+                if (ivalue != before) {
                     tips.text('两次密码输入不一致，请确认').removeClass('smile').addClass('cry').show();
                     $(item).addClass('deposit-m');
                     reBool = false;
@@ -408,11 +457,11 @@ var public = {
     },
 
     getManyType: function(obj, callback) {
-        var o = $.extend({},{
+        var o = $.extend({}, {
             type: 'coin',
             text: '选择币种',
             length: 4
-        },obj);
+        }, obj);
         var ulheight = 170,
             layerheight = 200;
         switch (o.length) {
@@ -432,7 +481,7 @@ var public = {
                 ulheight = 170;
                 layerheight = 200;
         };
-        var lcontent = '<ul style="height: ' + ulheight +'px;">';
+        var lcontent = '<ul style="height: ' + ulheight + 'px;">';
         $.each(jsons[o.type], function(i, item) {
             if (o.type = 'coin') {
                 lcontent += '<li val="' + item.value + '">' + item.name + '（' + item.value + '）</li>';
@@ -441,14 +490,14 @@ var public = {
             }
         });
         lcontent += '</ul>';
-        var content = '<div class="Clear bottom_choose"><label class="cl">取消</label><label>'+ o.text +'</label><label class="sure normal">完成</label></div><div class="li_list">' + lcontent + '</div>';
+        var content = '<div class="Clear bottom_choose"><label class="cl">取消</label><label>' + o.text + '</label><label class="sure normal">完成</label></div><div class="li_list">' + lcontent + '</div>';
         var index = layer.open({
             type: 1,
             content: content,
             shadeClose: false,
             anim: 'up',
             /*170-4-200 130-3-160  90-2-120 45-1-75*/
-            style: 'position:fixed; bottom:0; left:0; width: 100%; height: '+ layerheight +'px; padding:5px 0; border:none;',
+            style: 'position:fixed; bottom:0; left:0; width: 100%; height: ' + layerheight + 'px; padding:5px 0; border:none;',
             success: function(e) {
                 console.log();
                 $('body').css({
@@ -537,6 +586,90 @@ var public = {
             }
         });
     },
+
+    filtrate: function(option, callback) {
+        var opts = $.extend({}, option);
+        // var contain = $('.filtrate .fi_container')[opts.type];
+        // if (contain) {
+        //     $(contain).addClass('activate').siblings('.fi_container').removeClass('activate');
+        // }
+        $('.timeSection').mobiscroll().range({
+            theme: 'mobiscroll',
+            lang: 'zh',
+            display: 'bottom',
+            mode: 'rangeBasic',
+            // dateFormat: 'yy-mm-dd',
+            controls: ['calendar', 'time'],
+            defaultValue: [new Date(), new Date()],
+            max: new Date()
+        });
+        $(".filtrate_btn").click(function() {
+            $(".filtrate").animate({
+                right: '0'
+            }, 150);
+            setTimeout(function() {
+                $('.filtrate_modal').show();
+            }, 150);
+            $('.filtrate_modal').on('click', function() {
+                $(".filtrate").animate({
+                    right: '-101%'
+                }, 150);
+                $('.filtrate_modal').hide();
+            });
+        });
+
+        $('.i_inputs i.icon-cha').on('click', function() {
+            $(this).siblings('input').val('');
+        });
+        $('.filtrate .options label').on('click', function() {
+            if (!$(this).hasClass('active')) {
+                $(this).addClass('active').siblings('label').removeClass('active');
+            } else {
+                $(this).removeClass('active')
+            }
+        });
+        $('.bottom_btn_reset_submit .btn_reset').on('click', function() {
+            var some_container = $('.filtrate .fi_container.activate');
+            some_container.find('input').val('');
+            some_container.find('.options label').removeClass('active');
+            var data = {
+                // fitype: opts.type,
+                rs: 'reset'
+            };
+            setTimeout(function() {
+                $('.filtrate_modal').click();
+            }, 50);
+            if (typeof(callback) == "function") {
+                return callback(data);
+            } else {
+                console.log("the method is no a function!");
+            }
+        });
+        $('.bottom_btn_reset_submit .btn_submit').on('click', function() {
+            var data = {
+                // fitype: opts.type,
+                rs: 'submit'
+            };
+            $.each($('.filtrate .fi_container.activate *[want]'), function(i, item) {
+                var _this = $(item);
+                if (_this.hasClass('ipts')) {
+                    data[_this.attr('want')] = _this.val();
+                } else if (_this.hasClass('options')) {
+                    data[_this.attr('want')] = _this.find('label.active').attr('value') || "";
+                } else {
+                    data[_this.attr('want')] = _this.text();
+                }
+            });
+            setTimeout(function() {
+                $('.filtrate_modal').click();
+            }, 50);
+            if (typeof(callback) == "function") {
+                return callback(data);
+            } else {
+                console.log("the method is no a function!");
+            }
+        });
+    }
 };
 
 $(function() {

@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="wap-font-scale" content="no">
+    <meta name="format-detection" content="telephone=no">
+    <title>永利高 -- 我的下注</title>
+    <link rel="stylesheet" href="css/font/iconfont.css">
+    <link rel="stylesheet" href="js/layer_mobile/need/layer.css">
+    <link rel="stylesheet" href="css/mobiscroll/mobiscroll.custom-3.0.0-beta2.min.css" />
+    <link rel="stylesheet" href="css/public.css?v=1">
+    <link rel="stylesheet" href="css/bet.css?v=1">
+</head>
+
+<body>
+    <div class="vessel">
+        <div class="navTop">
+            <div id="backs" class="leftBtn"><i class="iconfont icon-back f24_"></i></div>
+            <div class="ctitle">
+                <!-- <img src="img/apple.png"> -->
+                <span>我的下注</span>
+            </div>
+            <div class="rightBtn"><i class="iconfont icon-kefu"></i></div>
+        </div>
+        <div class="acontainer">
+            <div class="filtrate_btn"><i class="iconfont icon-shaixuan"></i> 注单筛选</div>
+            <i class="back_to_top iconfont icon-open"></i>
+            <div class="list_container" style="top: 34px;">
+                <div class="list_box">
+                    <!-- <img src="img/nodata.png" class="nodatas"> -->
+                    <!-- <div class="each_box br-green">
+                        <i class="type_icon iconfont icon-lanqiu f26"></i>
+                        <div class="bprimary w-l-b">滚球</div>
+                        <div class="con_part">
+                            <p>注单号：BW1529046850791</p>
+                            <p>东南澳大利亚篮球联赛</p>
+                            <p class="font-bold">盟特甘比尔先锋 VS 基尔塞斯眼镜蛇</p>
+                            <p>下注时间：2018-06-15 03:14</p>
+                            <p class="normal">下注额度：1000点</p>
+                            <p><span class="vertival-middle">比赛结果：100-85</span>
+                                <label class="biaoqian bq_type">已结算</label>
+                            </p>
+                            <p>注单选项：半场大小 [ 大1.5/2 @0.96 ]</p>
+                        </div>
+                        <div class="profit">
+                            <label class="biaoqian bq_state bprimary">赢</label>
+                            <span class="primary">+100.00点</span>
+                            <a class="details">展开更多</a>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="screens">
+        <div class="filtrate">
+            <div class="fi_container activate">
+                <div class="fi_title">注单筛选</div>
+                <div class="fi_types">
+                    <p>联赛名称/球队名称</p>
+                    <div class="i_inputs">
+                        <i class="iconfont icon-cha"></i>
+                        <input type="text" class="ipts mB10" want="keyword" />
+                    </div>
+                </div>
+                <div class="fi_types">
+                    <p>下注时间区间</p>
+                    <div class="i_inputs">
+                        <i class="iconfont icon-cha"></i>
+                        <input id="timeSection" type="text" class="ipts mB10" disabled readonly want="time_stand" />
+                    </div>
+                </div>
+                <div class="fi_types">
+                    <p>下注类型</p>
+                    <div class="options" want="betType">
+                        <label value="RFT">今日-足球</label>
+                        <label value="REFT">滚球-足球</label>
+                        <label value="RBK">今日-篮球</label>
+                        <label value="REBK">滚球-篮球</label>
+                    </div>
+                </div>
+                <div class="fi_types">
+                    <p>注单状态</p>
+                    <div class="options" want="state">
+                        <label value="-2">下注中</label>
+                        <label value="0">未结算</label>
+                        <label value="1">已结算</label>
+                        <label value="2">待结算</label>
+                        <label value="-1">被取消</label>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom_btn_reset_submit">
+                <button class="btn_reset">重 置</button>
+                <button class="btn_submit">确 定</button>
+            </div>
+        </div>
+        <div class="filtrate_modal"></div>
+    </div>
+</body>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/layer_mobile/layer.js"></script>
+<script src="js/mobiscroll.custom-3.0.0-beta2.min.js"></script>
+<script src="js/public.js"></script>
+<script src="js/bet.js"></script>
+
+</html>
