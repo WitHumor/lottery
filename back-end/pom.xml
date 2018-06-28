@@ -60,17 +60,17 @@
 			<optional>true</optional>
 		</dependency>
 		<!-- jsp标签库 -->
-	 	<!-- <dependency>
+<!-- 	 	<dependency>
 			<groupId>javaweb</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.1.2</version>
-		</dependency>  -->
+		</dependency> -->
 		<!-- 配置servlet -->
- 		<!-- <dependency>
+ 	<!-- 	<dependency>
 			<groupId>javaweb</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
-		</dependency>  -->
+		</dependency> -->
 		<!-- jsp -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -85,7 +85,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
-		</dependency> 
+		</dependency>
 		<!-- jsp -->
 		<!-- 配置连接池 -->
 		<dependency>
@@ -151,14 +151,5 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<resources>
-        	<resource>
-            <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
 	</build>
 </project>
