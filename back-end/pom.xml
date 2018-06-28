@@ -66,7 +66,7 @@
 			<version>1.1.2</version>
 		</dependency>
 		<!-- 配置servlet -->
- 		<dependency>
+		<dependency>
 			<groupId>javaweb</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
@@ -77,22 +77,6 @@
 			<artifactId>druid</artifactId>
 			<version>1.0.25</version>
 		</dependency>
-		<!-- jsp -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>2.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-		</dependency>
-		<!-- jsp -->
 		<!-- mysql 数据库驱动 -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -134,8 +118,27 @@
 	</dependencies>
 	<build>
 		<finalName>springBoot</finalName>
+		<!-- 如果不添加此节点mybatis的mapper.xml文件都会被漏掉。 -->
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
 		<plugins>
-		<!-- 如果要打成jar包并使用 java -jar **.jar运行，请不要注释spring-boot-maven-plugin -->
+			<!-- 如果要打成jar包并使用 java -jar **.jar运行，请不要注释spring-boot-maven-plugin -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -147,6 +150,14 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<!-- 资源文件拷贝插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>

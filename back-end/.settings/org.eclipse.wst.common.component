@@ -4,7 +4,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
-        <property name="context-root" value="lottery"/>
+        <property name="context-root" value="springBoot"/>
         <property name="java-output-path" value="/lottery/target/classes"/>
     </wb-module>
 </project-modules>
