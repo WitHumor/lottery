@@ -77,6 +77,22 @@
 			<artifactId>druid</artifactId>
 			<version>1.0.25</version>
 		</dependency>
+		<!-- jsp -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+		<!-- jsp -->
 		<!-- mysql 数据库驱动 -->
 		<dependency>
 			<groupId>mysql</groupId>
