@@ -177,34 +177,34 @@
 <script src="js/mobiscroll.custom-3.0.0-beta2.min.js"></script>
 <script src="js/touchslider.js"></script>
 <script src="js/public.js"></script>
-<!-- <script src="js/tradingRecord.js"></script> -->
+<script src="js/tradingRecord.js"></script>
 <script type="text/javascript">
-var touchslider = new TouchSlider('sliders', {
-    duration: 100,
-    direction: 0,
-    autoplay: false,
-    fullsize: true
-});
-touchslider.on('before', function(m, n) {
-    var as = $('.pagenavi a');
-    as[m].className = '';
-    as[n].className = 'active';
-});
-$('.pagenavi a').click(function() {
-    var thisindex = $(this).parent('li').index();
-    touchslider.slide(thisindex);
-    $($('.filtrate .fi_container')[thisindex]).addClass('activate').siblings('.fi_container').removeClass('activate');
-});
-$('.showMore').on('click', function() {
-    var content = $(this).attr('con');
-    console.log(content);
-    if (content) {
-        layer.open({
-            content: content,
-            skin: 'footer'
-        });
-    }
-});
+// var touchslider = new TouchSlider('sliders', {
+//     duration: 100,
+//     direction: 0,
+//     autoplay: false,
+//     fullsize: true
+// });
+// touchslider.on('before', function(m, n) {
+//     var as = $('.pagenavi a');
+//     as[m].className = '';
+//     as[n].className = 'active';
+// });
+// $('.pagenavi a').click(function() {
+//     var thisindex = $(this).parent('li').index();
+//     touchslider.slide(thisindex);
+//     $($('.filtrate .fi_container')[thisindex]).addClass('activate').siblings('.fi_container').removeClass('activate');
+// });
+// $('.showMore').on('click', function() {
+//     var content = $(this).attr('con');
+//     console.log(content);
+//     if (content) {
+//         layer.open({
+//             content: content,
+//             skin: 'footer'
+//         });
+//     }
+// });
 </script>
 
 </html>

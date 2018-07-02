@@ -31,7 +31,7 @@ bet = {
             var scrollTop = $(this).scrollTop();
             var objHeight = $(this).height();
             var scrollHeight = $('.list_box').height();
-            if (scrollTop > objHeight) {
+            if (scrollTop > 100) {
                 $('.back_to_top').fadeIn();
             } else {
                 $('.back_to_top').fadeOut();

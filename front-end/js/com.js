@@ -1,8 +1,8 @@
 // var BasePath = 'http://ylg51888.com';
 var BasePath = window.location.hostname;
 
-// var ServerUrl = 'http://ylg51888.com/springBoot';
-var ServerUrl = 'http://'+ BasePath +'/springBoot';
+var ServerUrl = 'http://ylg51888.com/springBoot';
+// var ServerUrl = 'http://'+ BasePath +'/springBoot';
 // var ServerUrl = 'http://192.168.43.20:8080';
 // var ServerUrl = 'http://172.20.10.2:8080';
 

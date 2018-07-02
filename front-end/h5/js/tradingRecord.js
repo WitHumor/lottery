@@ -71,7 +71,7 @@ var TR = {
             var scrollTop = $(this).scrollTop();
             var objHeight = $(this).height();
             var scrollHeight = $('.list_box[atype="' + atype + '"]').height();
-            if (scrollTop > objHeight) {
+            if (scrollTop > 100) {
                 $('.back_to_top').fadeIn();
             } else {
                 $('.back_to_top').fadeOut();
@@ -99,7 +99,10 @@ var TR = {
             }, 800);
         });
 
-        $('.showMore').on('click', function() {
+        $('.list_box').on('click', '.showMore', function() {
+            if($(this).hasClass('notclick')){
+                return;
+            }
             var content = $(this).attr('con');
             if (content) {
                 layer.open({
@@ -192,7 +195,7 @@ var TR = {
                             switch (item.state) {
                                 case '0':
                                     states = '等待支付';
-                                    surepay = '<a href="javascript:void(0);" onclick="TR.surePay("' + item.number + '");">确认支付</a>';
+                                    surepay = '<a href="javascript:void(0);" onclick="TR.surePay(this, \'' + item.number + '\');">确认支付</a>';
                                     break;
                                 case '1':
                                     states = '支付成功';
@@ -226,7 +229,7 @@ var TR = {
                                 '<label>' + item.discounts + ' 点</label>' +
                                 '</p>' +
                                 '<div class="clear mores">' + surepay +
-                                '<a href="javascript:void(0);" con="' + (item.resultRemark ? item.resultRemark : '暂无') + '" class="showMore">审核意见</a></div></div></div>';
+                                '<a href="javascript:void(0);" con="' + (item.resultRemark ? item.resultRemark : '暂无') + '" class="showMore" style="'+ (surepay ? '' : 'width: 100%;border-right: none;') +'" disabled>审核意见</a></div></div></div>';
                         }
                         $('.list_box[atype="' + atype + '"]').append(html);
                     });
@@ -255,27 +258,36 @@ var TR = {
             });
         });
     },
-    surePay: function(oId) {
+    surePay: function(e, oId) {
+        if($(e).hasClass('notclick')) {
+            return;
+        }
         this.ajax.post('/member/member-pay', {
             number: oId
         }, function(data) {
             if (data.code == '2018') {
+                $('.list_box[atype="0"] .mores a').addClass('notclick');
                 layer.open({
                     content: '确认支付提交成功，请耐心等待工作人员处理',
                     skin: 'msg',
                     time: 2
                 });
                 setTimeout(function() {
+                    TR.cz.pageNo = '1';
                     TR.loadList(TR.cz.fidata);
+                    // $('.list_box[atype="0"] .mores a').removeClass('notclick');
                 }, 1500);
             } else if (data.code == '1117') {
+                $('.list_box[atype="0"] .mores a').addClass('notclick');
                 layer.open({
                     content: '您没有在规定时间内完成操作，订单已失效',
                     skin: 'msg',
                     time: 2
                 });
                 setTimeout(function() {
+                    TR.cz.pageNo = '1';
                     TR.loadList(TR.cz.fidata);
+                    // $('.list_box[atype="0"] .mores a').removeClass('notclick');
                 }, 1500);
             } else {
                 layer.open({

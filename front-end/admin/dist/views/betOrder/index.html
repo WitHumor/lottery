@@ -28,7 +28,7 @@
 <div class="layui-fluid">
     <div class="layui-form">
         <div class="layui-inline">
-            <input id="allTime" type="text" readonly placeholder="下注时间区间" class="layui-input" style="width: 270px;" />
+            <input id="allTime" type="text" readonly placeholder="下注时间区间" class="layui-input" />
         </div>
         <div class="layui-inline">
             <select id="betType">
@@ -42,13 +42,15 @@
         <div class="layui-inline">
             <select id="betState">
                 <option value="">结算与否</option>
+                <option value="-2">下注中</option>
                 <option value="0">未结算</option>
                 <option value="1">已结算</option>
                 <option value="2">待结算</option>
+                <option value="-1">已取消</option>
             </select>
         </div>
         <div class="layui-inline">
-            <input id="keyword" type="text" placeholder="联赛名称/球队名称/下注单号/下注用户" class="layui-input" style="width: 270px;" />
+            <input id="keyword" type="text" placeholder="联赛名称/球队名称/下注单号/下注用户" class="layui-input" />
         </div>
         <div class="layui-inline">
             <button id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i>查询</button>
@@ -196,6 +198,9 @@ layui.use(['admin', 'table', 'laydate', 'common'], function() {
                             break;
                         case '-1':
                             st = '已取消';
+                            break;
+                        case '-2':
+                            st = '下注中';
                             break;
                         default:
                             st = '-';

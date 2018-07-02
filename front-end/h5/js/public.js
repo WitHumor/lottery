@@ -47,6 +47,23 @@ var jsons = {
         QTUM: 2,
         AppleC: 100
     },
+    // 数据解析
+    anal: {
+        gheads: ["_.GameHead = [", "];"], //列表数据解析字段
+        gpages: ["_.t_page = ", "_.gamount"], //列表页数
+        gptotals: ["_.gamount = ", ";"], //列表每页的数据条数
+        gcounts: ["_.gameCount = ", ";"], //ball-type的各个类型的数据
+        glists: ["g([", "]);"], //列表数据
+    },
+    // 数据解析请求参数
+    together: {
+        uid: '41E1C90D347A90C6A60811350',
+        langx: 'zh-cn',
+        page_no: 0,
+        mtype: 3,
+        league_id: '',
+        hot_game: ''
+    },
 };
 var HttpService = function() {
     this.MAX_VALUE = 100000;

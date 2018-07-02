@@ -1,0 +1,195 @@
+.run_today {
+    line-height: 30px;
+    margin: 5px 5%;
+}
+
+.run_today a {
+    display: block;
+    width: 45%;
+    float: left;
+    margin-right: 5%;
+    color: #333;
+    text-align: center;
+    border-radius: 4px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+.run_today a:last-of-type {
+    margin-right: 0;
+}
+
+.run_today a.active {
+    color: #fff;
+    background-color: orange;
+    border: 1px solid orange;
+}
+
+.list_container {
+    top: 45px;
+    bottom: 50px;
+    background-color: #f0f3f4;
+}
+
+.list_box {
+    background-color: #f0f3f4;
+}
+
+.each_box {
+    box-shadow: 1px 1px 2px #888888;
+    padding: 0;
+}
+
+.each_box .league {
+    background-color: #fff;
+    line-height: 40px;
+    font-size: 14px;
+    padding: 0 6px;
+    border-radius: 2px;
+    /*border: 1px solid #ddd;*/
+}
+
+.leng_child {
+    line-height: 18px;
+    font-size: 14px;
+    border-top: 1px solid #ddd;
+    background-color: rgba(255, 255, 255, .4);
+}
+
+.leng_child > * {
+    padding: 0 25px;
+}
+
+.leng_child .teams {
+    padding-top: 4px;
+}
+
+.leng_child .game_info {
+    font-size: 12px;
+    line-height: 16px;
+    padding-bottom: 4px;
+}
+
+.leng_child .game_option {
+    padding: 4px 30px;
+    border-top: 1px solid #ddd;
+    background-color: #ddd;
+}
+
+.each_option {
+    float: left;
+    width: 38%;
+    margin-right: 24%;
+    text-align: center;
+}
+
+.each_option:nth-of-type(2n) {
+    margin-right: 0;
+}
+
+.every_choice {
+    margin-bottom: 20px;
+}
+
+.every_choice > p {
+    margin-bottom: 6px;
+    padding: 2px 0;
+    background-color: #fff;
+    border-radius: 4px;
+    min-height: 36px;
+}
+
+.every_choice > p > label {
+    display: block;
+}
+
+.biaoqian {
+    line-height: 12px;
+    height: 12px;
+    margin-right: 10px;
+    color: #38BC9C;
+    border: 1px solid #38BC9C;
+}
+
+/*分页*/
+.pagings {
+    width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    line-height: 45px;
+    text-align: center;
+    background-color: #fff;
+}
+
+.pagings a {
+    display: inline-block;
+    line-height: 18px;
+    padding: 2px 5px;
+    margin-right: 5px;
+    border-radius: 2px;
+    text-align: center;
+    color: #1E9FFF;
+    border: 1px solid #1E9FFF;
+}
+
+/*下注单*/
+.layertitle {
+    position: relative;
+    line-height: 40px;
+    background-color: #f2f2f2;
+    text-align: center;
+    padding: 0 15px;
+}
+
+.layertitle .iconclose {
+    position: absolute;
+    top: 0;
+    left: 15px;
+    line-height: 40px;
+    padding: 0 5px;
+    font-size: 20px;
+}
+
+.thiscontent {
+    position: fixed;
+    padding: 20px;
+    top: 45px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.order_s_cont {
+    line-height: 25px;
+    padding-bottom: 5px;
+}
+
+.order_s_cont input {
+    width: 45px;
+    line-height: 18px;
+    padding: 2px 15px;
+    border: none;
+    border-bottom: 1px solid rgba(79,147,213,.5);
+    /*background-color: #E1D6C2;*/
+}
+
+.order_s_cont button {
+    width: 80px;
+    color: #fff;
+    background-color: #999;
+}
+
+.order_s_cont button.order_sure {
+    background-color: #4F93D5;
+}
+
+.bottom_button {
+    position: absolute;
+    bottom: 30px;
+    right: 35px;
+}
+
+.back_to_top {
+    bottom: 60px;
+}
