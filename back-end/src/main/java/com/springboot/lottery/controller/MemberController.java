@@ -279,96 +279,94 @@ public class MemberController {
 		// 获取登录密码
 		String password = member.getPassword();
 		ObjectResult result = new ObjectResult();
-		result.setCode(MessageUtil.MEMBER_NOT);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("name", name);
+		List<Member> list = memberService.queryMember(map);
+		// 判断list对象是否为空
+		if (list == null || list.size() != 1) {
+			// 会员不存在
+			result.setCode(MessageUtil.MEMBER_NOT);
+			return result;
+		}
+		// 获取数据匹配密码
+		member = list.get(0);
+		String role = member.getRole();
+		if (!role.equals("0")) {
+			// 会员不存在
+			result.setCode(MessageUtil.MEMBER_NOT);
+			return result;
+		}
+		if (!member.getPassword().equals(password)) {
+			// 密码错误
+			result.setCode(MessageUtil.PASSWORD_ERROR);
+			return result;
+		}
+		// 产生token
+		String token = BeanLoad.getUUID();
+		// 获取IP地址
+		String ipAddress = getIpAddress();
+		if (ipAddress.equals(MessageUtil.IP_ADDRESS)) {
+			// IP地址获取失败
+			result.setCode(MessageUtil.IP_ADDRESS);
+			return result;
+		}
+		if (cache.get(ipAddress) != null && cache.get(member.getMid()) != null) {
+			// 获取token
+			String cacheToken = (String) cache.get(member.getMid()).get();
+			if (cache.get(cacheToken) != null) {
+				// 获取token中会员信息
+				Member tokenMember = (Member) cache.get(cacheToken).get();
+				// 设置新token比较旧token
+				tokenMember.setToken(token);
+				// 移除旧token
+				cache.evict(cacheToken);
+				// 再添加旧token
+				cache.put(cacheToken, tokenMember);
+			}
+		}
+		if (cache.get(member.getMid()) != null) {
+			// 获取token
+			String cacheToken = (String) cache.get(member.getMid()).get();
+			if (cache.get(cacheToken) != null) {
+				// 获取token中会员信息
+				Member tokenMember = (Member) cache.get(cacheToken).get();
+				if (member.getMid().equals(tokenMember.getMid())) {
+					// 移除mid缓存
+					cache.evict(tokenMember.getMid());
+					// 移除IP地址缓存
+					cache.evict(tokenMember.getAddress());
+				}
+			}
+		}
+		if (cache.get(ipAddress) != null) {
+			// 获取token
+			String cacheToken = (String) cache.get(ipAddress).get();
+			if (cache.get(cacheToken) != null) {
+				// 获取token中会员信息
+				Member tokenMember = (Member) cache.get(cacheToken).get();
+				// 同一地址允许管理员和会员同时登录
+				if (tokenMember.getRole().equals(member.getRole())) {
+					if (ipAddress.equals(tokenMember.getAddress())) {
+						// 移除mid缓存
+						cache.evict(tokenMember.getMid());
+						// 移除IP地址缓存
+						cache.evict(tokenMember.getAddress());
+					}
+				}
+			}
+		}
+		// 设置IP地址
+		member.setAddress(ipAddress);
+		// 设置token
+		member.setToken(token);
+		// 把token做为key放入ehcache缓存中
+		cache.put(token, member);
+		// 把mid作为key放入ehcache缓存中
+		cache.put(member.getMid(), token);
+		// 把IP地址作为key放入ehcache缓存中
+		cache.put(ipAddress, token);
+		result.setResult(toMapByMember(member, token));
 		return result;
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		map.put("name", name);
-//		List<Member> list = memberService.queryMember(map);
-//		// 判断list对象是否为空
-//		if (list == null || list.size() != 1) {
-//			// 会员不存在
-//			result.setCode(MessageUtil.MEMBER_NOT);
-//			return result;
-//		}
-//		// 获取数据匹配密码
-//		member = list.get(0);
-//		String role = member.getRole();
-//		if (!role.equals("0")) {
-//			// 会员不存在
-//			result.setCode(MessageUtil.MEMBER_NOT);
-//			return result;
-//		}
-//		if (!member.getPassword().equals(password)) {
-//			// 密码错误
-//			result.setCode(MessageUtil.PASSWORD_ERROR);
-//			return result;
-//		}
-//		// 产生token
-//		String token = BeanLoad.getUUID();
-//		// 获取IP地址
-//		String ipAddress = getIpAddress();
-//		if (ipAddress.equals(MessageUtil.IP_ADDRESS)) {
-//			// IP地址获取失败
-//			result.setCode(MessageUtil.IP_ADDRESS);
-//			return result;
-//		}
-//		if (cache.get(ipAddress) != null && cache.get(member.getMid()) != null) {
-//			// 获取token
-//			String cacheToken = (String) cache.get(member.getMid()).get();
-//			if (cache.get(cacheToken) != null) {
-//				// 获取token中会员信息
-//				Member tokenMember = (Member) cache.get(cacheToken).get();
-//				// 设置新token比较旧token
-//				tokenMember.setToken(token);
-//				// 移除旧token
-//				cache.evict(cacheToken);
-//				// 再添加旧token
-//				cache.put(cacheToken, tokenMember);
-//			}
-//		}
-//		if (cache.get(member.getMid()) != null) {
-//			// 获取token
-//			String cacheToken = (String) cache.get(member.getMid()).get();
-//			if (cache.get(cacheToken) != null) {
-//				// 获取token中会员信息
-//				Member tokenMember = (Member) cache.get(cacheToken).get();
-//				if (member.getMid().equals(tokenMember.getMid())) {
-//					// 移除mid缓存
-//					cache.evict(tokenMember.getMid());
-//					// 移除IP地址缓存
-//					cache.evict(tokenMember.getAddress());
-//				}
-//			}
-//		}
-//		if (cache.get(ipAddress) != null) {
-//			// 获取token
-//			String cacheToken = (String) cache.get(ipAddress).get();
-//			if (cache.get(cacheToken) != null) {
-//				// 获取token中会员信息
-//				Member tokenMember = (Member) cache.get(cacheToken).get();
-//				// 同一地址允许管理员和会员同时登录
-//				if (tokenMember.getRole().equals(member.getRole())) {
-//					if (ipAddress.equals(tokenMember.getAddress())) {
-//						// 移除mid缓存
-//						cache.evict(tokenMember.getMid());
-//						// 移除IP地址缓存
-//						cache.evict(tokenMember.getAddress());
-//					}
-//				}
-//			}
-//		}
-//		// 设置IP地址
-//		member.setAddress(ipAddress);
-//		// 设置token
-//		member.setToken(token);
-//		// 把token做为key放入ehcache缓存中
-//		cache.put(token, member);
-//		// 把mid作为key放入ehcache缓存中
-//		cache.put(member.getMid(), token);
-//		// 把IP地址作为key放入ehcache缓存中
-//		cache.put(ipAddress, token);
-//		result.setResult(toMapByMember(member, token));
-//		return result;
 	}
 
 	/**
