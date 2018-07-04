@@ -20,24 +20,52 @@ var TR = {
     }, //提现1
 
     initPage: function() {
-        var touchslider = new TouchSlider('sliders', {
-            duration: 100,
-            direction: 0,
-            autoplay: false,
-            fullsize: true
-        });
-        touchslider.on('before', function(m, n) {
-            var as = $('.pagenavi a');
-            as[m].className = '';
-            as[n].className = 'active';
+        // var touchslider = new TouchSlider('sliders', {
+        //     duration: 100,
+        //     direction: 0,
+        //     autoplay: false,
+        //     fullsize: true
+        // });
+        // touchslider.on('before', function(m, n) {
+        //     var as = $('.pagenavi a');
+        //     as[m].className = '';
+        //     as[n].className = 'active';
+        // });
+        TR.loadList(TR.tx.fidata, '1');
+        // TR.loadList(TR.cz.fidata, '0');
+        var mySwiper = new Swiper('#mySwiperes', {
+            autoHeight: true,
+            spaceBetween: 20,
+            observer: true,
+            observeParents: true,
+            on: {
+                slideChangeTransitionEnd: function() {
+                    var aIndex = this.activeIndex;
+                    var tIndex = $('.pagenavi a.active').parent('li').index();
+                    if (aIndex == tIndex) return;
+                    $('.pagenavi a').removeClass('active');
+                    $($('.pagenavi > li')[aIndex]).find('a').addClass('active');
+                    $($('.filtrate .fi_container')[aIndex]).addClass('activate').siblings('.fi_container').removeClass('activate');
+                    $('.bottom_btn_reset_submit .btn_reset').click();
+                    mySwiper.updateSize();
+                },
+            },
         });
         $('.pagenavi a').click(function() {
-            var thisindex = $(this).parent('li').index();
-            touchslider.slide(thisindex);
-            $($('.filtrate .fi_container')[thisindex]).addClass('activate').siblings('.fi_container').removeClass('activate');
+            if ($(this).hasClass('active')) {
+                $('.bottom_btn_reset_submit .btn_reset').click();
+                mySwiper.updateSize();
+                return;
+            } else {
+                var thisindex = $(this).parent('li').index();
+                mySwiper.slideTo(thisindex, 100, true);
+            }
+            // var thisindex = $(this).parent('li').index();
+            // $(this).addClass('active').parent('li').siblings('li').find('a').removeClass('active');
+            // $($('.filtrate .fi_container')[aIndex]).addClass('activate').siblings('.fi_container').removeClass('activate');
+            // $('.bottom_btn_reset_submit .btn_reset').click();
+            // mySwiper.updateSize();
         });
-        TR.loadList(TR.tx.fidata, '1');
-        TR.loadList(TR.cz.fidata, '0');
         public.filtrate({}, function(data) {
             if (data.rs != 'reset') {
                 var alltimes = data.time_stand.split(' - ');
@@ -100,7 +128,7 @@ var TR = {
         });
 
         $('.list_box').on('click', '.showMore', function() {
-            if($(this).hasClass('notclick')){
+            if ($(this).hasClass('notclick')) {
                 return;
             }
             var content = $(this).attr('con');
@@ -229,7 +257,7 @@ var TR = {
                                 '<label>' + item.discounts + ' 点</label>' +
                                 '</p>' +
                                 '<div class="clear mores">' + surepay +
-                                '<a href="javascript:void(0);" con="' + (item.resultRemark ? item.resultRemark : '暂无') + '" class="showMore" style="'+ (surepay ? '' : 'width: 100%;border-right: none;') +'" disabled>审核意见</a></div></div></div>';
+                                '<a href="javascript:void(0);" con="' + (item.resultRemark ? item.resultRemark : '暂无') + '" class="showMore" style="' + (surepay ? '' : 'width: 100%;border-right: none;') + '" disabled>审核意见</a></div></div></div>';
                         }
                         $('.list_box[atype="' + atype + '"]').append(html);
                     });
@@ -259,7 +287,7 @@ var TR = {
         });
     },
     surePay: function(e, oId) {
-        if($(e).hasClass('notclick')) {
+        if ($(e).hasClass('notclick')) {
             return;
         }
         this.ajax.post('/member/member-pay', {

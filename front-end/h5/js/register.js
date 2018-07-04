@@ -51,29 +51,29 @@ var register = {
                     });
                     setTimeout(function() {
                         layer.closeAll();
-                        if (register.icode) {
-                            layer.open({
-                                type: 1,
-                                content: '<div class="modales"><p>恭喜您，您已成为永利高的会员，为了让您有更好的用户体验，请尽量使用电脑访问以下地址进行娱乐</p><p class="netaddr"><input id="copy-text" value="'+ BasePath +'" readonly /><button>复 制</button></p></div>',
-                                shadeClose: false,
-                                anim: 'up',
-                                style: 'position:fixed; bottom:10%; left:15px; right:15px; padding:10px 0; border:none;border-radius:10px;',
-                                success: function(elem) {
-                                    $('.netaddr button').click(function() {
-                                        var ctxt = document.getElementById("copy-text");
-                                        ctxt.select();
-                                        document.execCommand("Copy");
-                                        layer.open({
-                                            content: '已复制，可贴粘',
-                                            skin: 'msg',
-                                            time: 2
-                                        });
-                                    });
-                                }
-                            });
-                        } else {
+                        // if (register.icode) {
+                        //     layer.open({
+                        //         type: 1,
+                        //         content: '<div class="modales"><p>恭喜您，您已成为永利高的会员，为了让您有更好的用户体验，请尽量使用电脑访问以下地址进行娱乐</p><p class="netaddr"><input id="copy-text" value="'+ BasePath +'" readonly /><button>复 制</button></p></div>',
+                        //         shadeClose: false,
+                        //         anim: 'up',
+                        //         style: 'position:fixed; bottom:10%; left:15px; right:15px; padding:10px 0; border:none;border-radius:10px;',
+                        //         success: function(elem) {
+                        //             $('.netaddr button').click(function() {
+                        //                 var ctxt = document.getElementById("copy-text");
+                        //                 ctxt.select();
+                        //                 document.execCommand("Copy");
+                        //                 layer.open({
+                        //                     content: '已复制，可贴粘',
+                        //                     skin: 'msg',
+                        //                     time: 2
+                        //                 });
+                        //             });
+                        //         }
+                        //     });
+                        // } else {
                             window.location.href = 'index.html';
-                        }
+                        // }
 
                     }, 2000);
                 } else {

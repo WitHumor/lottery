@@ -11,6 +11,13 @@ bet = {
     fidata: {},
     initPage: function() {
         bet.loadList(bet.fidata);
+        $('.i-category').on('click', function() {
+            var c = '<div class="categorys"><a href="basketball.html" class="primary"><i class="iconfont icon-tiyu-lanqiu f26"></i><p>篮球</p></a><a href="football.html" class="warning"><i class="iconfont icon-tiqiu f26"></i><p>足球</p></a><a href="javascript:void(0);" class="normal"><i class="iconfont icon-21466 f26"></i><p>彩票</p></a><a href="index.html" class="danger"><i class="iconfont icon-shouye f26"></i><p>首页</p></a></div>';
+            layer.open({
+                content: c,
+                skin: 'footer'
+            });
+        });
         public.filtrate({}, function(data) {
             if (data.rs != 'reset') {
                 var alltimes = data.time_stand.split(' - ');

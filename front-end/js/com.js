@@ -1,8 +1,8 @@
 // var BasePath = 'http://ylg51888.com';
 var BasePath = window.location.hostname;
 
-var ServerUrl = 'http://ylg51888.com/springBoot';
-// var ServerUrl = 'http://'+ BasePath +'/springBoot';
+// var ServerUrl = 'http://ylg51888.com/springBoot';
+var ServerUrl = 'http://'+ BasePath +'/springBoot';
 // var ServerUrl = 'http://192.168.43.20:8080';
 // var ServerUrl = 'http://172.20.10.2:8080';
 
@@ -364,28 +364,26 @@ var common = {
     },
 
     browserRedirect: function() {
-        var sUserAgent = navigator.userAgent.toLowerCase();
-        var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
-        var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
-        var bIsMidp = sUserAgent.match(/midp/i) == "midp";
-        var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
-        var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
-        var bIsAndroid = sUserAgent.match(/android/i) == "android";
-        var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
-        var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+        // var sUserAgent = navigator.userAgent.toLowerCase();
+        // var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+        // var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+        // var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+        // var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+        // var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+        // var bIsAndroid = sUserAgent.match(/android/i) == "android";
+        // var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+        // var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
         // if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
         //     console.log('H5',window.location.href)
         //     if (window.location.href != 'http://localhost/h5') {
-        //         $('body').append('<div id="browser-redirect"></div>');
-        //         window.location.href = "http://localhost/h5";
-        //         // window.location.href = "http://wap.ylg51888.com";
+        //         // window.location.href = "http://localhost/h5";
+        //         window.location.href = "http://wap.ylg51888.com";
         //     }
         // } else {
         //     console.log('pc',window.location.href);
         //     if (window.location.href != 'http://localhost/html/physicalEducation/home.html') {
-        //         $('body').append('<div id="browser-redirect"></div>');
-        //         window.location.href = 'http://localhost/html/physicalEducation/home.html';
-        //         // window.location.href = "http://www.ylg51888.com";
+        //         // window.location.href = 'http://localhost/html/physicalEducation/home.html';
+        //         window.location.href = "http://www.ylg51888.com";
         //     }
         // }
     },

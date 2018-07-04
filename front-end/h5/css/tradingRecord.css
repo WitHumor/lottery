@@ -1,11 +1,12 @@
-.swipe {
+.swiper-container {
     overflow-x: hidden;
     width: 100%;
+    top: 75px;
 }
 
-.swipe ul {
+/*.swiper-container .swiper-wrapper {
     overflow: hidden;
-}
+}*/
 
 .each_box p {
     line-height: 20px;

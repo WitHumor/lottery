@@ -111,7 +111,9 @@
     border: 1px solid #38BC9C;
 }
 
+
 /*分页*/
+
 .pagings {
     width: 100%;
     position: fixed;
@@ -133,7 +135,9 @@
     border: 1px solid #1E9FFF;
 }
 
+
 /*下注单*/
+
 .layertitle {
     position: relative;
     line-height: 40px;
@@ -170,7 +174,7 @@
     line-height: 18px;
     padding: 2px 15px;
     border: none;
-    border-bottom: 1px solid rgba(79,147,213,.5);
+    border-bottom: 1px solid rgba(79, 147, 213, .5);
     /*background-color: #E1D6C2;*/
 }
 

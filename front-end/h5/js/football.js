@@ -13,6 +13,13 @@ var FT = {
     initPage: function() {
         this.initList();
         this.countDown();
+        $('.i-category').on('click', function() {
+            var c = '<div class="categorys"><a href="basketball.html" class="primary"><i class="iconfont icon-tiyu-lanqiu f26"></i><p>篮球</p></a><a href="javascript:void(0);" class="normal"><i class="iconfont icon-21466 f26"></i><p>彩票</p></a><a href="bet.html" class="warning"><i class="iconfont icon-xiazhu- f26"></i><p>注单</p></a><a href="index.html" class="danger"><i class="iconfont icon-shouye f26"></i><p>首页</p></a></div>';
+            layer.open({
+                content: c,
+                skin: 'footer'
+            });
+        });
         $('.run_today a').on('click', function() {
             $(this).addClass('active').siblings('a').removeClass('active');
             FT.currentPage = 0;
