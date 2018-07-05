@@ -236,6 +236,18 @@ em {
     font-size: 24px;
 }
 
+.f26 {
+    font-size: 26px;
+}
+
+.f30 {
+    font-size: 30px;
+}
+
+.f20_ {
+    font-size: 20px !important;
+}
+
 .f22_ {
     font-size: 22px !important;
 }
@@ -246,14 +258,6 @@ em {
 
 .f26_ {
     font-size: 26px !important;
-}
-
-.f26 {
-    font-size: 26px;
-}
-
-.f30 {
-    font-size: 30px;
 }
 
 .firsthand {
@@ -455,10 +459,14 @@ a:focus {
     left: 0;
     bottom: 0;*/
     text-align: center;
-    color: #55402F;
+    color: #999;
     height: 30px;
     line-height: 30px;
     width: 100%;
+}
+
+.footer a {
+    color: #999;
 }
 
 .vessel {

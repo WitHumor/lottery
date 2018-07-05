@@ -10,6 +10,12 @@ PR = {
     being: false,
     initPage: function() {
         PR.loadList();
+        $('.rightBtn').click(function() {
+            layer.open({
+                content: '<div style="color: #F7636D;"><div>推广返利当月月底结算</div><div>受邀会员每月下注流水总额的1%作为推广返利！</div></div>',
+                skin: 'footer',
+            });
+        });
         $('.acontainer').scroll(function() {
             var scrollTop = $(this).scrollTop();
             var objHeight = $(this).height();

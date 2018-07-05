@@ -472,9 +472,14 @@ var TD = {
                 // data: data,
                 cols: cols,
                 done: function(res, curr, count) {
-                    console.log(res);
-                    if (res.code == '1109' || res.code == '1114') {
-                        layer.msg('登录超时，请重新登陆', {
+                    // console.log(res);
+                    if (data.code == '1114') {
+                        layer.msg("请先登录", {
+                            icon: 2,
+                            time: 2000
+                        });
+                    } else if (res.code == '1109') {
+                        layer.msg('登录超时，请重新登录', {
                             time: 2000,
                             icon: 2
                         });

@@ -74,12 +74,11 @@ var HttpService = function() {
 
     var _ajax = function(type, url, data, succ, failed, bSend) {
         var userinfo = sessionStorage.getItem("userinfo");
-        var toid = null;
+        var toid = '';
         var index = '';
         if (userinfo) {
             toid = JSON.parse(userinfo).token
         }
-
         $.ajax({
             headers: {
                 "content-type": "application/x-www-form-urlencoded",
@@ -110,9 +109,15 @@ var HttpService = function() {
                             $('.mine').remove();
                         }, 500);
                     }
-                    if (data.code == '1109' || data.code == '1114') {
+                    if(data.code == '1114') {
                         layer.open({
-                            content: '登录超时，请重新登陆',
+                            content: '请先登录',
+                            skin: 'msg',
+                            time: 2
+                        });
+                    } else if (data.code == '1109') {
+                        layer.open({
+                            content: '登录超时，请重新登录',
                             skin: 'msg',
                             time: 2
                         });
@@ -169,6 +174,7 @@ var HttpService = function() {
 
 var public = {
     ajax: new HttpService(),
+    basePath: window.location.hostname,
     firstpay: false,
     regs1: /^([1-9]\d*|0)(\.\d+)?$/, //充值币额验证正则
     regs2: /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/, //提现点数验证正则
@@ -195,28 +201,26 @@ var public = {
         return result;
     },
     browserRedirect: function() {
-        // var sUserAgent = navigator.userAgent.toLowerCase();
-        // var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
-        // var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
-        // var bIsMidp = sUserAgent.match(/midp/i) == "midp";
-        // var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
-        // var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
-        // var bIsAndroid = sUserAgent.match(/android/i) == "android";
-        // var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
-        // var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
-        // if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
-        //     console.log('H5',window.location.href)
-        //     if (window.location.href != 'http://localhost/h5/') {
-        //         // window.location.href = "http://localhost/h5";
-        //         window.location.href = "http://wap.ylg51888.com";
-        //     }
-        // } else {
-        //     console.log('pc',window.location.href);
-        //     if (window.location.href != 'http://localhost/html/physicalEducation/home.html') {
-        //         // window.location.href = 'http://localhost/html/physicalEducation/home.html';
-        //         window.location.href = "http://www.ylg51888.com";
-        //     }
-        // }
+        var sUserAgent = navigator.userAgent.toLowerCase();
+        var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+        var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+        var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+        var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+        var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+        var bIsAndroid = sUserAgent.match(/android/i) == "android";
+        var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+        var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+        if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+            if (window.location.href.indexOf('wap.ylg51888.com') <= -1) {
+                // window.location.href = "http://localhost/h5";
+                window.location.href = "http://wap.ylg51888.com";
+            }
+        } else {
+            if (window.location.href.indexOf('wap.ylg51888.com') > -1) {
+                // window.location.href = 'http://localhost/html/physicalEducation/home.html';
+                window.location.href = "http://www.ylg51888.com";
+            }
+        }
     },
     init: function() {
         public.browserRedirect();

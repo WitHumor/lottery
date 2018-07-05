@@ -342,6 +342,11 @@ function sureDeal(datastr) {
                 time: 2000
             });
         }
+        // else if (data.code == '1114') {
+        //     layer.msg("请先登录", {
+        //         icon: 2,
+        //         time: 2000
+        //     });
         // else if (data.code == '1109' || data.code == '1114') {
         //     layer.msg("用户登录过期，请重新登录", {
         //         icon: 2,

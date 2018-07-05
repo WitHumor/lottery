@@ -55,7 +55,7 @@ layui.define(function(exports) {
                 },
                 headers: {
                     "content-type": "application/x-www-form-urlencoded",
-                    "token": layui.sessionData(setter.tableName)[setter.request.tokenName]
+                    "token": layui.sessionData(setter.tableName)[setter.request.tokenName] || ''
                 },
                 cellMinWidth: 80,
                 loading: true,
@@ -65,8 +65,14 @@ layui.define(function(exports) {
                 done: function(res, curr, count) {
                     var codeArr = ['1109', '1114', '1121', '1122'];
                     if (codeArr.indexOf(res[setter.response.statusName]) > -1) {
-                        if (setter.response.statusCode['logout'].indexOf(res[setter.response.statusName]) > -1) {
-                            layer.msg('登录超时，请重新登陆', {
+                        if (res[setter.response.statusName] == '1114') {
+                            layer.msg('请先登录', {
+                                offset: '15px',
+                                time: 1500,
+                                icon: 2
+                            });
+                        } else if (res[setter.response.statusName] == '1109') {
+                            layer.msg('登录超时，请重新登录', {
                                 offset: '15px',
                                 time: 1500,
                                 icon: 2

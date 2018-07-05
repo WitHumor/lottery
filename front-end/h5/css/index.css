@@ -50,14 +50,23 @@
 
 .ft i {
     color: #FF5300;
+    background-image: -webkit-gradient(linear, 0 0, 0 bottom, from(#EDD870), to(#FB0E04));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .bk i {
     color: #B52EBC;
+    background-image: -webkit-gradient(linear, 0 0, 0 bottom, from(#F40969), to(#584759));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .lt i {
     color: #4738C9;
+    background-image: -webkit-gradient(linear, 0 0, 0 bottom, from(#11DAED), to(#2D17E6));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .notice {

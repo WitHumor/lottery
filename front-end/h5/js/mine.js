@@ -19,11 +19,20 @@ var mine = {
             mine.loginout();
         });
         $('.yqm_about').click(function() {
-            layui.use('layer', function() {
-                layui.layer.tips('Tip：受邀会员每月下注流水总额的1%作为推广返利！', '.yqm_about', {
-                    tips: [3, '#78BA32']
-                    // #4073B9
-                });
+            layer.open({
+                className: "yqm_tip",
+                title: '我的邀请二维码',
+                content: '<div class="y_tips">Tip：受邀会员每月下注流水总额的1%作为推广返利！</div><div id="qrcode"></div>',
+                success: function() {
+                    new QRCode(document.getElementById("qrcode"), {
+                        text: public.basePath + "/register.html?icode=" + (JSON.parse(sessionStorage.getItem('userinfo')).name || ""),
+                        width: 150,
+                        height: 150,
+                        colorDark: "#222222",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                },
             });
         });
     },
