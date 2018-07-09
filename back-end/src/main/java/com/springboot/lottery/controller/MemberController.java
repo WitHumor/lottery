@@ -2324,7 +2324,7 @@ public class MemberController {
 				}
 			}
 		}
-		if (iorType.equals("让球")) {
+		if (iorType.equals("让球") || iorType.equals("让分")) {
 			if (singleNote.getStrong().equals(singleNote.getBet())) {
 				// 根据比率计算让球输赢
 				if (ratio.contains("/") && ratio.contains(".")) {
@@ -2502,88 +2502,88 @@ public class MemberController {
 				}
 			}
 		}
-		if (iorType.equals("让分")) {
-			if (singleNote.getStrong().equals(singleNote.getBet())) {
-				if (ratio.contains(".")) {
-					// 全赢
-					if (score > Float.parseFloat(ratio)) {
-						sum = memberByMoney + money + validMoney;
-						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1",
-								amidithion);
-						return stateUpdate ? true : false;
-					}
-					// 全输
-					if (score < Float.parseFloat(ratio)) {
-						sum = memberByMoney;
-						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1",
-								amidithion);
-						return stateUpdate ? true : false;
-					}
-				} else if (!ratio.contains(".")) {
-					// 全赢
-					if (score > Integer.parseInt(ratio)) {
-						sum = memberByMoney + money + validMoney;
-						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1",
-								amidithion);
-						return stateUpdate ? true : false;
-					}
-					// 全输
-					if (score < Integer.parseInt(ratio)) {
-						sum = memberByMoney;
-						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1",
-								amidithion);
-						return stateUpdate ? true : false;
-					}
-					// 不输不赢
-					if (score - Integer.parseInt(ratio) == 0) {
-						sum = memberByMoney + money;
-						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0",
-								amidithion);
-						return stateUpdate ? true : false;
-					}
-				}
-			}
-			if (!singleNote.getStrong().equals(singleNote.getBet())) {
-				if (ratio.contains(".")) {
-					// 全输
-					if (score > Float.parseFloat(ratio)) {
-						sum = memberByMoney;
-						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1",
-								amidithion);
-						return stateUpdate ? true : false;
-					}
-					// 全赢
-					if (score < Float.parseFloat(ratio)) {
-						sum = memberByMoney + money + validMoney;
-						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1",
-								amidithion);
-						return stateUpdate ? true : false;
-					}
-				} else if (!ratio.contains(".")) {
-					// 全输
-					if (score > Integer.parseInt(ratio)) {
-						sum = memberByMoney;
-						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1",
-								amidithion);
-						return stateUpdate ? true : false;
-					}
-					// 全赢
-					if (score < Integer.parseInt(ratio)) {
-						sum = memberByMoney + money + validMoney;
-						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1",
-								amidithion);
-						return stateUpdate ? true : false;
-					}
-					// 不输不赢
-					if (score - Integer.parseInt(ratio) == 0) {
-						sum = memberByMoney + money;
-						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0",
-								amidithion);
-						return stateUpdate ? true : false;
-					}
-				}
-			}
-		}
+//		if (iorType.equals("让分")) {
+//			if (singleNote.getStrong().equals(singleNote.getBet())) {
+//				if (ratio.contains(".")) {
+//					// 全赢
+//					if (score > Float.parseFloat(ratio)) {
+//						sum = memberByMoney + money + validMoney;
+//						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1",
+//								amidithion);
+//						return stateUpdate ? true : false;
+//					}
+//					// 全输
+//					if (score < Float.parseFloat(ratio)) {
+//						sum = memberByMoney;
+//						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1",
+//								amidithion);
+//						return stateUpdate ? true : false;
+//					}
+//				} else if (!ratio.contains(".")) {
+//					// 全赢
+//					if (score > Integer.parseInt(ratio)) {
+//						sum = memberByMoney + money + validMoney;
+//						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1",
+//								amidithion);
+//						return stateUpdate ? true : false;
+//					}
+//					// 全输
+//					if (score < Integer.parseInt(ratio)) {
+//						sum = memberByMoney;
+//						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1",
+//								amidithion);
+//						return stateUpdate ? true : false;
+//					}
+//					// 不输不赢
+//					if (score - Integer.parseInt(ratio) == 0) {
+//						sum = memberByMoney + money;
+//						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0",
+//								amidithion);
+//						return stateUpdate ? true : false;
+//					}
+//				}
+//			}
+//			if (!singleNote.getStrong().equals(singleNote.getBet())) {
+//				if (ratio.contains(".")) {
+//					// 全输
+//					if (score > Float.parseFloat(ratio)) {
+//						sum = memberByMoney;
+//						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1",
+//								amidithion);
+//						return stateUpdate ? true : false;
+//					}
+//					// 全赢
+//					if (score < Float.parseFloat(ratio)) {
+//						sum = memberByMoney + money + validMoney;
+//						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1",
+//								amidithion);
+//						return stateUpdate ? true : false;
+//					}
+//				} else if (!ratio.contains(".")) {
+//					// 全输
+//					if (score > Integer.parseInt(ratio)) {
+//						sum = memberByMoney;
+//						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "-1",
+//								amidithion);
+//						return stateUpdate ? true : false;
+//					}
+//					// 全赢
+//					if (score < Integer.parseInt(ratio)) {
+//						sum = memberByMoney + money + validMoney;
+//						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "1",
+//								amidithion);
+//						return stateUpdate ? true : false;
+//					}
+//					// 不输不赢
+//					if (score - Integer.parseInt(ratio) == 0) {
+//						sum = memberByMoney + money;
+//						stateUpdate = memberService.stateUpdate(mid, sum, memberByMoney, money, singleNote, "0",
+//								amidithion);
+//						return stateUpdate ? true : false;
+//					}
+//				}
+//			}
+//		}
 		// 如果赛事下注赢实行的操作
 		if (bet.equals(singleNote.getBet())) {
 			if (iorType.equals("独赢")) {
